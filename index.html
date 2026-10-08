@@ -35,13 +35,12 @@ body {
     color: var(--text-color);
     margin: 0;
     height: 100dvh;
-    overflow: hidden;               /* APP FIJA: sin scroll de página */
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-/* ===== PANTALLAS (fijas, centradas) ===== */
 .screen {
     display: none;
     position: fixed;
@@ -84,7 +83,6 @@ h1 {
     margin-bottom: 10px;
 }
 
-/* ===== SELECTOR DE IDIOMA ===== */
 .selector-title {
     text-align: center;
     color: #94a3b8;
@@ -138,7 +136,6 @@ h1 {
 }
 .selector-warning.show { display: block; }
 
-/* ===== INPUTS Y BOTONES ===== */
 .intro-input {
     width: 100%; padding: 18px; border-radius: 12px;
     border: 2px solid var(--border-color); background-color: #090d16;
@@ -167,7 +164,6 @@ h1 {
 .main-btn:active { transform: scale(0.97); }
 .main-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-/* ===== HEADER EN JUEGO ===== */
 .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; }
 .header-top h2 { font-size: 1.1rem; color: #fff; }
 
@@ -239,7 +235,6 @@ h1 {
 .input-group input[type="text"]:focus { border-color: var(--accent-color); box-shadow: var(--neon-glow); }
 .input-group input[type="text"].input-error { border-color: var(--error-color); box-shadow: var(--neon-glow-error); }
 
-/* ===== FEEDBACK ===== */
 .feedback {
     padding: 14px; border-radius: 12px; margin-top: 12px; font-weight: 500;
     text-align: center; display: none; line-height: 1.5;
@@ -259,7 +254,6 @@ h1 {
     padding: 8px; background: rgba(0,0,0,0.3); border-radius: 8px; letter-spacing: 0.5px;
 }
 
-/* ===== PANTALLA FINAL ===== */
 .final-scroll { overflow-y: auto; min-height: 0; margin-bottom: 15px; }
 .stats-summary { background: #0b1121; border-radius: 16px; padding: 15px 20px; border: 1px solid var(--border-color); }
 .stat-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); font-size: 1rem; }
@@ -293,10 +287,9 @@ h1 {
 </head>
 <body>
 
-<!-- PANTALLA 1: INTRO -->
 <div id="screen-intro" class="screen active">
     <div class="container">
-        <h1 id="ui-title">Entrenador Idiomas VIP</h1>
+        <h1>Entrenador Idiomas VIP</h1>
         <p style="text-align: center; color: #94a3b8; margin: 0 0 18px 0; font-size: 0.9rem;">
             Sistema de repetición espaciada en bloques. Domina el cuento completo.
         </p>
@@ -315,11 +308,9 @@ h1 {
             </div>
         </div>
         <div class="selector-warning" id="selector-warning">⚠️ Elige un idioma para comenzar</div>
-        <button class="main-btn" id="start-btn" onclick="startGame()">Comenzar Desafío ➔</button>
+        <button class="main-btn" onclick="startGame()">Comenzar Desafío ➔</button>
     </div>
 </div>
-
-<!-- PANTALLA 2: JUEGO -->
 <div id="screen-game" class="screen">
     <div class="container">
         <div class="header-top">
@@ -346,7 +337,6 @@ h1 {
     </div>
 </div>
 
-<!-- PANTALLA 3: FINAL -->
 <div id="screen-final" class="screen">
     <div class="container">
         <h1>¡Misión Cumplida!</h1>
@@ -374,7 +364,6 @@ h1 {
 </div>
 
 <script>
-// ==================== DATOS (25 oraciones) ====================
 const database = [
     { es: "En una pequeña ciudad", de: "In einer kleinen Stadt", en: "In a small town" },
     { es: "un hombre viejo vivía solo.", de: "ein alter Mann lebte allein.", en: "an old man lived alone." },
@@ -403,24 +392,22 @@ const database = [
     { es: "Y su corazón, finalmente, descansó.", de: "Und sein Herz ruhte endlich.", en: "And his heart finally rested." }
 ];
 
-// ==================== ESTADO ====================
 const REQUIRED_STREAK = 3;
 const MAX_ROUNDS = 3;
 
 let state = {
     lang: null,
     round: 1,
-    items: [],          // { idx, streak, errors, mastered }
-    queue: [],          // índices pendientes de la vuelta actual
+    items: [],
+    queue: [],
     current: null,
-    checked: false,     // si ya se comprobó la respuesta actual
+    checked: false,
     totalChecks: 0,
     correctChecks: 0,
     startTime: null,
     timerInterval: null
 };
 
-// ==================== UTILIDADES ====================
 function normalize(str) {
     return str.toLowerCase()
         .replace(/[.,!?¿¡:;"«»]/g, '')
@@ -433,12 +420,212 @@ function fireConfetti(opts) {
 }
 
 function showScreen(id) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
     document.getElementById(id).classList.add('active');
 }
 
-// ==================== INTRO ====================
 function selectLanguage(lang) {
     state.lang = lang;
     document.getElementById('card-de').classList.toggle('selected', lang === 'de');
-    document.getElementById('card-es').classList
+    document.getElementById('card-es').classList.toggle('selected', lang === 'es');
+    document.getElementById('selector-warning').classList.remove('show');
+}
+
+function startGame() {
+    if (!state.lang) {
+        document.getElementById('selector-warning').classList.add('show');
+        return;
+    }
+    const name = document.getElementById('player-name').value.trim();
+    document.getElementById('mode-badge').textContent = state.lang === 'de' ? 'ES ➔ DE' : 'DE ➔ ES';
+
+    state.items = database.map(function(_, i) { return { idx: i, streak: 0, errors: 0, mastered: false }; });
+    state.queue = state.items.map(function(it) { return it.idx; });
+    state.round = 1;
+    state.current = null;
+    state.checked = false;
+    state.totalChecks = 0;
+    state.correctChecks = 0;
+    state.startTime = Date.now();
+
+    state.timerInterval = setInterval(updateTimer, 1000);
+
+    if (name) {
+        document.getElementById('final-greeting').textContent =
+            '¡' + name + ', has dominado el cuento completo!';
+    }
+
+    showScreen('screen-game');
+    nextItem();
+}
+
+function getTargetSentence(item) {
+    return state.lang === 'de' ? database[item.idx].es : database[item.idx].de;
+}
+function getCorrectAnswer(item) {
+    return state.lang === 'de' ? database[item.idx].de : database[item.idx].es;
+}
+
+function nextItem() {
+    if (state.queue.length === 0) {
+        const remaining = state.items.filter(function(it) { return !it.mastered; });
+        if (remaining.length === 0 || state.round >= MAX_ROUNDS) {
+            endGame();
+            return;
+        }
+        state.round++;
+        state.queue = remaining.map(function(it) { return it.idx; });
+    }
+
+    const idx = state.queue.shift();
+    state.current = state.items[idx];
+    state.checked = false;
+
+    const data = database[idx];
+    document.getElementById('round-title').textContent = 'Vuelta ' + state.round;
+    document.getElementById('instruction-label').textContent =
+        state.lang === 'de' ? 'Traduce al Alemán:' : 'Traduce al Español:';
+    document.getElementById('target-el').textContent = getTargetSentence(state.current);
+    document.getElementById('english-el').textContent = data.en;
+
+    const input = document.getElementById('user-input');
+    input.value = '';
+    input.disabled = false;
+    input.classList.remove('input-error');
+    input.focus();
+
+    const btn = document.getElementById('action-btn');
+    btn.textContent = 'Comprobar';
+    btn.disabled = false;
+
+    const fb = document.getElementById('feedback-msg');
+    fb.className = 'feedback';
+    fb.innerHTML = '';
+
+    updateStats();
+}
+
+function updateStats() {
+    const mastered = state.items.filter(function(it) { return it.mastered; }).length;
+    document.getElementById('progress-text').textContent =
+        'Progreso: ' + mastered + '/' + database.length;
+    document.getElementById('streak-text').textContent =
+        'Racha: ' + (state.current ? state.current.streak : 0) + '/' + REQUIRED_STREAK;
+    document.getElementById('progress-fill').style.width =
+        (mastered / database.length * 100) + '%';
+}
+
+function updateTimer() {
+    const secs = Math.floor((Date.now() - state.startTime) / 1000);
+    const m = String(Math.floor(secs / 60)).padStart(2, '0');
+    const s = String(secs % 60).padStart(2, '0');
+    const el = document.getElementById('stat-time');
+    if (el) el.textContent = m + ':' + s;
+}
+
+function flashPrompt(cls) {
+    const box = document.getElementById('prompt-box');
+    box.classList.remove('success-flash', 'error-flash');
+    void box.offsetWidth;
+    box.classList.add(cls);
+}
+
+function handleAction() {
+    if (state.current === null) return;
+    if (state.checked) { nextItem(); return; }
+    checkAnswer();
+}
+
+function checkAnswer() {
+    const input = document.getElementById('user-input');
+    const btn = document.getElementById('action-btn');
+    const fb = document.getElementById('feedback-msg');
+    const userAnswer = normalize(input.value);
+    const correct = normalize(getCorrectAnswer(state.current));
+    state.totalChecks++;
+    state.checked = true;
+
+    if (userAnswer === correct) {
+        state.correctChecks++;
+        state.current.streak++;
+        fb.className = 'feedback success';
+        fb.innerHTML = state.current.streak >= REQUIRED_STREAK
+            ? '✅ <b>¡Dominada por completo!</b>'
+            : '✅ ¡Correcto! (' + state.current.streak + '/' + REQUIRED_STREAK + ')';
+        flashPrompt('success-flash');
+
+        if (state.current.streak >= REQUIRED_STREAK) {
+            state.current.mastered = true;
+            fireConfetti({ particleCount: 60, spread: 70, origin: { y: 0.6 }, scalar: 0.8 });
+        }
+        updateStats();
+        input.disabled = true;
+        btn.textContent = 'Continuar ➔';
+    } else {
+        state.current.errors++;
+        state.current.streak = 0;
+        input.classList.add('input-error');
+        fb.className = 'feedback error';
+        fb.innerHTML = '❌ Casi... La respuesta correcta es:' +
+            '<span class="correct-answer-highlight">' + getCorrectAnswer(state.current) + '</span>';
+        flashPrompt('error-flash');
+        updateStats();
+        input.disabled = true;
+        btn.textContent = 'Continuar ➔';
+    }
+}
+
+document.getElementById('user-input').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); handleAction(); }
+});
+
+function endGame() {
+    clearInterval(state.timerInterval);
+    updateTimer();
+
+    const acc = state.totalChecks > 0
+        ? Math.round(state.correctChecks / state.totalChecks * 100) : 100;
+    document.getElementById('stat-accuracy').textContent = acc + '%';
+
+    const sorted = state.items.slice().sort(function(a, b) { return b.errors - a.errors; });
+    const hard = sorted.filter(function(it) { return it.errors > 0; });
+    const easy = sorted.filter(function(it) { return it.errors === 0; });
+
+    const listHard = document.getElementById('list-hard');
+    const listEasy = document.getElementById('list-easy');
+    listHard.innerHTML = '';
+    listEasy.innerHTML = '';
+
+    if (hard.length === 0) {
+        listHard.innerHTML = '<li><span style="color:#64748b">¡Perfecto! Sin errores.</span></li>';
+    } else {
+        hard.slice(0, 8).forEach(function(it) {
+            const data = database[it.idx];
+            const li = document.createElement('li');
+            li.innerHTML = '<span>' + data.es + '<br><b>' + data.de + '</b></span>' +
+                '<span class="error-badge">' + it.errors + ' error(es)</span>';
+            listHard.appendChild(li);
+        });
+    }
+
+    if (easy.length === 0) {
+        listEasy.innerHTML = '<li><span style="color:#64748b">Sigue practicando.</span></li>';
+    } else {
+        easy.slice(0, 8).forEach(function(it) {
+            const data = database[it.idx];
+            const li = document.createElement('li');
+            li.innerHTML = '<span>' + data.es + '<br><b>' + data.de + '</b></span>' +
+                '<span class="success-badge">✔</span>';
+            listEasy.appendChild(li);
+        });
+    }
+
+    showScreen('screen-final');
+
+    fireConfetti({ particleCount: 180, spread: 100, origin: { y: 0.6 } });
+    setTimeout(function() { fireConfetti({ particleCount: 120, angle: 60, spread: 60, origin: { x: 0 } }); }, 300);
+    setTimeout(function() { fireConfetti({ particleCount: 120, angle: 120, spread: 60, origin: { x: 1 } }); }, 500);
+}
+</script>
+</body>
+</html>
