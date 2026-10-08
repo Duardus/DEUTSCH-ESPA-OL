@@ -1,598 +1,444 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrenador Interactivo: Cuento Alemán-Español</title>
-    <!-- Librería para los fuegos artificiales -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600&display=swap');
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Entrenador Interactivo: Cuento Alemán-Español</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;600&display=swap');
 
-        :root {
-            --bg-color: #0b0f19;
-            --card-bg: #151f32;
-            --text-color: #f8fafc;
-            --accent-color: #00f0ff;
-            --accent-hover: #00c3ff;
-            --success-color: #00ff88;
-            --error-color: #ff0055;
-            --border-color: #1e293b;
-            --neon-glow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3);
-            --neon-glow-error: 0 0 10px rgba(255, 0, 85, 0.5);
-            --neon-glow-success: 0 0 10px rgba(0, 255, 136, 0.5);
-        }
+:root {
+    --bg-color: #0b0f19;
+    --card-bg: #151f32;
+    --text-color: #f8fafc;
+    --accent-color: #00f0ff;
+    --accent-hover: #00c3ff;
+    --success-color: #00ff88;
+    --error-color: #ff0055;
+    --border-color: #1e293b;
+    --neon-glow: 0 0 10px rgba(0, 240, 255, 0.5), 0 0 20px rgba(0, 240, 255, 0.3);
+    --neon-glow-error: 0 0 10px rgba(255, 0, 85, 0.5);
+    --neon-glow-success: 0 0 10px rgba(0, 255, 136, 0.5);
+}
 
-        * { box-sizing: border-box; }
+* { box-sizing: border-box; }
 
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background-color: var(--bg-color);
-            background-image:
-                radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.05), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(255, 0, 85, 0.05), transparent 25%);
-            color: var(--text-color);
-            margin: 0;
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+html, body { height: 100%; }
 
-        .screen {
-            display: none;
-            width: 100%;
-            max-width: 500px;
-            animation: fadeIn 0.4s ease-out forwards;
-        }
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--bg-color);
+    background-image:
+        radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.05), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(255, 0, 85, 0.05), transparent 25%);
+    color: var(--text-color);
+    margin: 0;
+    height: 100dvh;
+    overflow: hidden;               /* APP FIJA: sin scroll de página */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        .screen.active { display: block; }
+/* ===== PANTALLAS (fijas, centradas) ===== */
+.screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    padding: 14px;
+    animation: fadeIn 0.4s ease-out forwards;
+}
+.screen.active { display: flex; }
 
-        .container {
-            background-color: rgba(21, 31, 50, 0.85);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1);
-            padding: 25px;
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            position: relative;
-        }
+.container {
+    background-color: rgba(21, 31, 50, 0.85);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255,255,255,0.1);
+    padding: 25px;
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    max-height: calc(100dvh - 28px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
 
-        h1, h2, h3 {
-            font-family: 'Rajdhani', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 0;
-        }
+h1, h2, h3 {
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
 
-        h1 {
-            font-size: 1.8rem;
-            color: var(--accent-color);
-            text-shadow: var(--neon-glow);
-            text-align: center;
-            margin-bottom: 10px;
-        }
+h1 {
+    font-size: 1.8rem;
+    color: var(--accent-color);
+    text-shadow: var(--neon-glow);
+    text-align: center;
+    margin-bottom: 10px;
+}
 
-        /* ===== SELECTOR DE IDIOMA (Pantalla inicial) ===== */
-        .selector-title {
-            text-align: center;
-            color: #94a3b8;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin: 15px 0 12px 0;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
+/* ===== SELECTOR DE IDIOMA ===== */
+.selector-title {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 15px 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
 
-        .lang-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
+.lang-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+}
 
-        .lang-card {
-            background: rgba(9, 13, 22, 0.9);
-            border: 2px solid var(--border-color);
-            border-radius: 16px;
-            padding: 18px 10px;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-            position: relative;
-            user-select: none;
-        }
+.lang-card {
+    background: rgba(9, 13, 22, 0.9);
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 18px 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    user-select: none;
+}
+.lang-card:hover { transform: translateY(-3px); border-color: rgba(0, 240, 255, 0.4); }
+.lang-card .flag { font-size: 2.2rem; display: block; margin-bottom: 8px; }
+.lang-card .lang-name {
+    font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1.05rem;
+    color: #fff; text-transform: uppercase; letter-spacing: 1px;
+}
+.lang-card .lang-desc { font-size: 0.72rem; color: #64748b; margin-top: 6px; line-height: 1.4; }
+.lang-card.selected {
+    border-color: var(--accent-color);
+    box-shadow: var(--neon-glow), inset 0 0 20px rgba(0, 240, 255, 0.08);
+    transform: scale(1.04);
+}
+.lang-card.selected::after {
+    content: '✔'; position: absolute; top: 8px; right: 10px;
+    color: var(--success-color); font-weight: bold; font-size: 1rem;
+    text-shadow: var(--neon-glow-success);
+}
 
-        .lang-card:hover {
-            transform: translateY(-3px);
-            border-color: rgba(0, 240, 255, 0.4);
-        }
+.selector-warning {
+    display: none; text-align: center; color: var(--error-color);
+    font-size: 0.85rem; font-weight: 600; margin: -10px 0 12px 0;
+    animation: popIn 0.3s ease;
+}
+.selector-warning.show { display: block; }
 
-        .lang-card .flag {
-            font-size: 2.2rem;
-            display: block;
-            margin-bottom: 8px;
-        }
+/* ===== INPUTS Y BOTONES ===== */
+.intro-input {
+    width: 100%; padding: 18px; border-radius: 12px;
+    border: 2px solid var(--border-color); background-color: #090d16;
+    color: white; font-size: 1.2rem; text-align: center; outline: none;
+    margin-bottom: 20px; transition: all 0.3s;
+    font-family: 'Rajdhani', sans-serif; font-weight: 600;
+}
+.intro-input:focus { border-color: var(--accent-color); box-shadow: var(--neon-glow); }
 
-        .lang-card .lang-name {
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 700;
-            font-size: 1.05rem;
-            color: #fff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
+.main-btn {
+    background: linear-gradient(135deg, var(--accent-color), #0077ff);
+    color: #000; border: none; border-radius: 12px; padding: 16px;
+    font-size: 1.1rem; font-weight: 700; cursor: pointer; width: 100%;
+    transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+    font-family: 'Rajdhani', sans-serif; position: relative; overflow: hidden;
+}
+.main-btn::before {
+    content: ''; position: absolute; top: 0; left: -100%;
+    width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    transition: left 0.5s;
+}
+.main-btn:hover::before { left: 140%; }
+.main-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5); filter: brightness(1.1); }
+.main-btn:active { transform: scale(0.97); }
+.main-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        .lang-card .lang-desc {
-            font-size: 0.72rem;
-            color: #64748b;
-            margin-top: 6px;
-            line-height: 1.4;
-        }
+/* ===== HEADER EN JUEGO ===== */
+.header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; }
+.header-top h2 { font-size: 1.1rem; color: #fff; }
 
-        .lang-card.selected {
-            border-color: var(--accent-color);
-            box-shadow: var(--neon-glow), inset 0 0 20px rgba(0, 240, 255, 0.08);
-            transform: scale(1.04);
-        }
+.mode-badge {
+    background: rgba(0, 240, 255, 0.1); border: 1px solid rgba(0, 240, 255, 0.4);
+    color: var(--accent-color); padding: 6px 12px; border-radius: 20px;
+    font-size: 0.75rem; font-weight: 700; font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 1px; white-space: nowrap;
+}
 
-        .lang-card.selected::after {
-            content: '✔';
-            position: absolute;
-            top: 8px;
-            right: 10px;
-            color: var(--success-color);
-            font-weight: bold;
-            font-size: 1rem;
-            text-shadow: var(--neon-glow-success);
-        }
+.stats {
+    display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8;
+    margin-bottom: 10px; border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px; font-weight: 600;
+}
 
-        .selector-warning {
-            display: none;
-            text-align: center;
-            color: var(--error-color);
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin: -10px 0 12px 0;
-            animation: popIn 0.3s ease;
-        }
+.progress-bar-wrap {
+    background: #05080f; border-radius: 20px; height: 12px;
+    overflow: hidden; margin-bottom: 16px; border: 1px solid var(--border-color);
+}
+.progress-bar-fill {
+    height: 100%; width: 0%;
+    background: linear-gradient(90deg, #0077ff, var(--accent-color), var(--success-color));
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+    transition: width 0.6s cubic-bezier(0.34, 1.3, 0.64, 1);
+    border-radius: 20px; box-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+}
+@keyframes shimmer { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
 
-        .selector-warning.show { display: block; }
+.prompt-box {
+    background: linear-gradient(180deg, #090d16 0%, #111827 100%);
+    border-radius: 16px; padding: 22px 25px; margin-bottom: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+    flex-shrink: 0;
+}
+.prompt-box::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+    background: var(--accent-color); box-shadow: var(--neon-glow);
+}
+.prompt-box.success-flash { animation: successPulse 0.5s ease; }
+.prompt-box.error-flash { animation: errorShake 0.45s ease; }
 
-        /* ===== INPUTS Y BOTONES ===== */
-        .intro-input {
-            width: 100%;
-            padding: 18px;
-            border-radius: 12px;
-            border: 2px solid var(--border-color);
-            background-color: #090d16;
-            color: white;
-            font-size: 1.2rem;
-            text-align: center;
-            outline: none;
-            margin-bottom: 20px;
-            transition: all 0.3s;
-            font-family: 'Rajdhani', sans-serif;
-            font-weight: 600;
-        }
+@keyframes successPulse {
+    0% { box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 0 0 rgba(0,255,136,0); }
+    40% { box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 0 30px rgba(0,255,136,0.5); }
+    100% { box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 0 0 rgba(0,255,136,0); }
+}
+@keyframes errorShake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-5px); }
+    80% { transform: translateX(5px); }
+}
 
-        .intro-input:focus {
-            border-color: var(--accent-color);
-            box-shadow: var(--neon-glow);
-        }
+.label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1.5px; color: #94a3b8; margin-bottom: 10px; font-weight: 600; }
+.target-sentence { font-size: 1.4rem; font-weight: 700; color: #ffffff; margin-bottom: 10px; line-height: 1.3; }
+.english-hint { font-size: 0.85rem; color: #64748b; font-style: italic; }
 
-        .main-btn {
-            background: linear-gradient(135deg, var(--accent-color), #0077ff);
-            color: #000;
-            border: none;
-            border-radius: 12px;
-            padding: 16px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.2s;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
-            font-family: 'Rajdhani', sans-serif;
-            position: relative;
-            overflow: hidden;
-        }
+.input-group input[type="text"] {
+    width: 100%; padding: 16px; border-radius: 12px;
+    border: 2px solid var(--border-color); background-color: #05080f;
+    color: white; font-size: 1.1rem; outline: none;
+    transition: all 0.3s; margin-bottom: 15px;
+}
+.input-group input[type="text"]:focus { border-color: var(--accent-color); box-shadow: var(--neon-glow); }
+.input-group input[type="text"].input-error { border-color: var(--error-color); box-shadow: var(--neon-glow-error); }
 
-        .main-btn::before {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%;
-            width: 60%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
-            transition: left 0.5s;
-        }
+/* ===== FEEDBACK ===== */
+.feedback {
+    padding: 14px; border-radius: 12px; margin-top: 12px; font-weight: 500;
+    text-align: center; display: none; line-height: 1.5;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow-y: auto; max-height: 110px; flex-shrink: 0;
+}
+.feedback.success {
+    background-color: rgba(0, 255, 136, 0.1); color: var(--success-color);
+    border: 1px solid var(--success-color); box-shadow: var(--neon-glow-success); display: block;
+}
+.feedback.error {
+    background-color: rgba(255, 0, 85, 0.1); color: var(--error-color);
+    border: 1px solid var(--error-color); box-shadow: var(--neon-glow-error); display: block;
+}
+.correct-answer-highlight {
+    display: block; font-size: 1.15rem; color: #fff; margin: 8px 0; font-weight: bold;
+    padding: 8px; background: rgba(0,0,0,0.3); border-radius: 8px; letter-spacing: 0.5px;
+}
 
-        .main-btn:hover::before { left: 140%; }
+/* ===== PANTALLA FINAL ===== */
+.final-scroll { overflow-y: auto; min-height: 0; margin-bottom: 15px; }
+.stats-summary { background: #0b1121; border-radius: 16px; padding: 15px 20px; border: 1px solid var(--border-color); }
+.stat-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed rgba(255,255,255,0.1); font-size: 1rem; }
+.stat-row:last-child { border: none; }
+.stat-label { color: #94a3b8; }
+.stat-value { font-weight: bold; font-size: 1.1rem; color: #fff; }
+.stat-value.highlight-blue { color: var(--accent-color); text-shadow: 0 0 5px rgba(0,240,255,0.5); }
+.stat-value.highlight-green { color: var(--success-color); text-shadow: 0 0 5px rgba(0,255,136,0.5); }
 
-        .main-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 240, 255, 0.5);
-            filter: brightness(1.1);
-        }
+.list-title { color: var(--accent-color); font-size: 1rem; margin: 15px 0 10px 0; display: flex; align-items: center; gap: 8px; }
+.word-list { list-style: none; padding: 0; margin: 0; font-size: 0.85rem; }
+.word-list li {
+    background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px;
+    margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; gap: 8px;
+}
+.error-badge { background: rgba(255, 0, 85, 0.2); color: var(--error-color); padding: 2px 8px; border-radius: 12px; font-weight: bold; font-size: 0.75rem; white-space: nowrap; }
+.success-badge { background: rgba(0, 255, 136, 0.2); color: var(--success-color); padding: 2px 8px; border-radius: 12px; font-weight: bold; font-size: 0.75rem; white-space: nowrap; }
 
-        .main-btn:active { transform: scale(0.97); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes popIn { 0% { opacity: 0; transform: scale(0.95); } 100% { opacity: 1; transform: scale(1); } }
 
-        .main-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* ===== HEADER EN JUEGO ===== */
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            gap: 8px;
-        }
-
-        .header-top h2 { font-size: 1.1rem; color: #fff; }
-
-        .mode-badge {
-            background: rgba(0, 240, 255, 0.1);
-            border: 1px solid rgba(0, 240, 255, 0.4);
-            color: var(--accent-color);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            font-family: 'Rajdhani', sans-serif;
-            letter-spacing: 1px;
-            white-space: nowrap;
-        }
-
-        .stats {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.85rem;
-            color: #94a3b8;
-            margin-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 12px;
-            font-weight: 600;
-        }
-
-        /* Barra de progreso gamificada */
-        .progress-bar-wrap {
-            background: #05080f;
-            border-radius: 20px;
-            height: 12px;
-            overflow: hidden;
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #0077ff, var(--accent-color), var(--success-color));
-            background-size: 200% 100%;
-            animation: shimmer 2s linear infinite;
-            transition: width 0.6s cubic-bezier(0.34, 1.3, 0.64, 1);
-            border-radius: 20px;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
-        }
-
-        @keyframes shimmer {
-            0% { background-position: 0% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        .prompt-box {
-            background: linear-gradient(180deg, #090d16 0%, #111827 100%);
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(255,255,255,0.05);
-            box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .prompt-box::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; width: 4px; height: 100%;
-            background: var(--accent-color);
-            box-shadow: var(--neon-glow);
-        }
-
-        .prompt-box.success-flash { animation: successPulse 0.5s ease; }
-        .prompt-box.error-flash { animation: errorShake 0.45s ease; }
-
-        @keyframes successPulse {
-            0% { box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 0 0 rgba(0,255,136,0); }
-            40% { box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 0 30px rgba(0,255,136,0.5); }
-            100% { box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 0 0 rgba(0,255,136,0); }
-        }
-
-        @keyframes errorShake {
-            0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-8px); }
-            40% { transform: translateX(8px); }
-            60% { transform: translateX(-5px); }
-            80% { transform: translateX(5px); }
-        }
-
-        .label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: #94a3b8;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .target-sentence {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 12px;
-            line-height: 1.3;
-        }
-
-        .english-hint {
-            font-size: 0.9rem;
-            color: #64748b;
-            font-style: italic;
-        }
-
-        .input-group input[type="text"] {
-            width: 100%;
-            padding: 16px;
-            border-radius: 12px;
-            border: 2px solid var(--border-color);
-            background-color: #05080f;
-            color: white;
-            font-size: 1.1rem;
-            outline: none;
-            transition: all 0.3s;
-            margin-bottom: 15px;
-        }
-
-        .input-group input[type="text"]:focus {
-            border-color: var(--accent-color);
-            box-shadow: var(--neon-glow);
-        }
-
-        .input-group input[type="text"].input-error {
-            border-color: var(--error-color);
-            box-shadow: var(--neon-glow-error);
-        }
-
-        /* ===== FEEDBACK ===== */
-        .feedback {
-            padding: 18px;
-            border-radius: 12px;
-            margin-top: 15px;
-            font-weight: 500;
-            text-align: center;
-            display: none;
-            line-height: 1.5;
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .feedback.success {
-            background-color: rgba(0, 255, 136, 0.1);
-            color: var(--success-color);
-            border: 1px solid var(--success-color);
-            box-shadow: var(--neon-glow-success);
-            display: block;
-        }
-
-        .feedback.error {
-            background-color: rgba(255, 0, 85, 0.1);
-            color: var(--error-color);
-            border: 1px solid var(--error-color);
-            box-shadow: var(--neon-glow-error);
-            display: block;
-        }
-
-        .correct-answer-highlight {
-            display: block;
-            font-size: 1.2rem;
-            color: #fff;
-            margin: 8px 0;
-            font-weight: bold;
-            padding: 8px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 8px;
-            letter-spacing: 0.5px;
-        }
-
-        /* ===== PANTALLA FINAL ===== */
-        .stats-summary {
-            background: #0b1121;
-            border-radius: 16px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 1px solid var(--border-color);
-        }
-
-        .stat-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.1);
-            font-size: 1rem;
-        }
-
-        .stat-row:last-child { border: none; }
-        .stat-label { color: #94a3b8; }
-        .stat-value { font-weight: bold; font-size: 1.1rem; color: #fff; }
-
-        .stat-value.highlight-blue { color: var(--accent-color); text-shadow: 0 0 5px rgba(0,240,255,0.5); }
-        .stat-value.highlight-green { color: var(--success-color); text-shadow: 0 0 5px rgba(0,255,136,0.5); }
-
-        .list-title {
-            color: var(--accent-color);
-            font-size: 1rem;
-            margin: 15px 0 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .word-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            font-size: 0.85rem;
-        }
-
-        .word-list li {
-            background: rgba(255,255,255,0.03);
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .error-badge {
-            background: rgba(255, 0, 85, 0.2);
-            color: var(--error-color);
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 0.75rem;
-            white-space: nowrap;
-        }
-
-        .success-badge {
-            background: rgba(0, 255, 136, 0.2);
-            color: var(--success-color);
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 0.75rem;
-            white-space: nowrap;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes popIn {
-            0% { opacity: 0; transform: scale(0.95); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-    </style>
-<base target="_blank">
+@media (max-height: 720px) {
+    .container { padding: 18px; }
+    h1 { font-size: 1.4rem; }
+    .target-sentence { font-size: 1.2rem; }
+    .prompt-box { padding: 15px 20px; margin-bottom: 12px; }
+    .intro-input, .input-group input[type="text"] { padding: 12px; }
+    .main-btn { padding: 13px; }
+}
+</style>
 </head>
 <body>
 
-<!-- ========== PANTALLA 1: INICIO ========== -->
+<!-- PANTALLA 1: INTRO -->
 <div id="screen-intro" class="screen active">
     <div class="container">
         <h1 id="ui-title">Entrenador Idiomas VIP</h1>
-        <p id="ui-subtitle" style="text-align: center; color: #94a3b8; margin-bottom: 20px; font-size: 0.9rem;">
+        <p style="text-align: center; color: #94a3b8; margin: 0 0 18px 0; font-size: 0.9rem;">
             Sistema de repetición espaciada en bloques. Domina el cuento completo.
         </p>
-
         <input type="text" id="player-name" class="intro-input" placeholder="Ingresa tu nombre, Jugador" autocomplete="off" maxlength="30">
-
-        <div class="selector-title" id="ui-selector-title">¿Qué idioma quieres aprender?</div>
-        <div class="lang-options" id="lang-selector">
+        <div class="selector-title">¿Qué idioma quieres aprender?</div>
+        <div class="lang-options">
             <div class="lang-card" id="card-de" onclick="selectLanguage('de')">
                 <span class="flag">🇩🇪</span>
                 <span class="lang-name">Alemán</span>
-                <div class="lang-desc" id="desc-de">Verás oraciones en <b>español</b> y escribirás en <b>alemán</b></div>
+                <div class="lang-desc">Verás oraciones en <b>español</b> y escribirás en <b>alemán</b></div>
             </div>
             <div class="lang-card" id="card-es" onclick="selectLanguage('es')">
                 <span class="flag">🇪🇸</span>
                 <span class="lang-name">Español</span>
-                <div class="lang-desc" id="desc-es">Verás oraciones en <b>alemán</b> y escribirás en <b>español</b></div>
+                <div class="lang-desc">Verás oraciones en <b>alemán</b> y escribirás en <b>español</b></div>
             </div>
         </div>
-
         <div class="selector-warning" id="selector-warning">⚠️ Elige un idioma para comenzar</div>
-
         <button class="main-btn" id="start-btn" onclick="startGame()">Comenzar Desafío ➔</button>
     </div>
 </div>
 
-<!-- ========== PANTALLA 2: JUEGO ========== -->
+<!-- PANTALLA 2: JUEGO -->
 <div id="screen-game" class="screen">
     <div class="container">
         <div class="header-top">
             <h2 id="round-title">Vuelta 1</h2>
             <span class="mode-badge" id="mode-badge">ES ➔ DE</span>
         </div>
-
         <div class="stats">
             <span id="progress-text">Progreso: 0/25</span>
             <span id="streak-text">Racha: 0/3</span>
         </div>
-
         <div class="progress-bar-wrap">
             <div class="progress-bar-fill" id="progress-fill"></div>
         </div>
-
         <div class="prompt-box" id="prompt-box">
-            <div class="label" id="instruction-label">Traduce al Español:</div>
+            <div class="label" id="instruction-label">Traduce al Alemán:</div>
             <div class="target-sentence" id="target-el"></div>
             <div class="english-hint" id="english-el"></div>
         </div>
-
         <div class="input-group">
             <input type="text" id="user-input" placeholder="Escribe tu traducción..." autocomplete="off">
             <button class="main-btn" id="action-btn" onclick="handleAction()">Comprobar</button>
         </div>
-
         <div id="feedback-msg" class="feedback"></div>
     </div>
 </div>
 
-<!-- ========== PANTALLA 3: RESUMEN FINAL ========== -->
-<div id="screen-stats" class="screen">
+<!-- PANTALLA 3: FINAL -->
+<div id="screen-final" class="screen">
     <div class="container">
-        <h1 id="ui-final-title">¡Misión Cumplida!</h1>
-        <h2 id="final-name" style="text-align: center; color: #fff; font-size: 1.5rem; margin-bottom: 5px;"></h2>
-        <p id="ui-final-msg" style="text-align: center; color: var(--success-color); font-weight: bold; margin-bottom: 20px;">
+        <h1>¡Misión Cumplida!</h1>
+        <p style="text-align: center; color: #94a3b8; margin: 8px 0 0 0; font-size: 0.9rem;" id="final-greeting">
             ¡Has dominado el cuento completo!
         </p>
-
-        <div class="stats-summary" id="capture-area">
-            <div class="stat-row">
-                <span class="stat-label" id="ui-stat-time">Tiempo Total:</span>
-                <span class="stat-value highlight-blue" id="stat-time">00:00</span>
+        <div class="final-scroll">
+            <div class="stats-summary">
+                <div class="stat-row">
+                    <span class="stat-label">Tiempo Total:</span>
+                    <span class="stat-value highlight-blue" id="stat-time">00:00</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Eficiencia (Precisión):</span>
+                    <span class="stat-value highlight-green" id="stat-accuracy">0%</span>
+                </div>
             </div>
-            <div class="stat-row">
-                <span class="stat-label" id="ui-stat-acc">Eficiencia (Precisión):</span>
-                <span class="stat-value highlight-green" id="stat-accuracy">0%</span>
-            </div>
-
-            <div class="list-title" id="ui-hard-title">🔥 Retos más desafiantes:</div>
+            <div class="list-title">🔥 Retos más desafiantes:</div>
             <ul class="word-list" id="list-hard"></ul>
-
-            <div class="list-title" id="ui-easy-title">⚡ Dominio absoluto (Fáciles):</div>
+            <div class="list-title">⚡ Dominio absoluto (Fáciles):</div>
             <ul class="word-list" id="list-easy"></ul>
         </div>
-
         <button class="main-btn" onclick="location.reload()">Jugar de Nuevo ➔</button>
     </div>
 </div>
 
 <script>
-    const database = [
-        { es: "En una pequeña ciudad", de: "In einer kleinen Stadt", en: "In a small town" },
-        { es: "un hombre viejo vivía solo.", de: "ein alter Mann lebte allein.", en: "an old man lived alone." },
-        { es: "Todos los días miraba la puerta", de: "Jeden Tag sah er die Tür an", en: "Every day he looked at the door" },
-        { es: "y esperaba.", de: "und wartete.", en: "and waited." },
-        { es: "El tiempo pasa rápido", de: "Die Zeit vergeht schnell", en: "Time passes quickly" },
-        { es: "cuando el corazón busca algo.", de: "wenn das Herz etwas sucht.", en: "when the heart looks for something." },
-        { es: "Nadie sabía qué había detrás de esa puerta cerrada.", de: "Niemand wusste, was hinter dieser geschlossenen Tür war.", en: "Nobody 
+// ==================== DATOS (25 oraciones) ====================
+const database = [
+    { es: "En una pequeña ciudad", de: "In einer kleinen Stadt", en: "In a small town" },
+    { es: "un hombre viejo vivía solo.", de: "ein alter Mann lebte allein.", en: "an old man lived alone." },
+    { es: "Todos los días miraba la puerta", de: "Jeden Tag sah er die Tür an", en: "Every day he looked at the door" },
+    { es: "y esperaba.", de: "und wartete.", en: "and waited." },
+    { es: "El tiempo pasa rápido", de: "Die Zeit vergeht schnell", en: "Time passes quickly" },
+    { es: "cuando el corazón busca algo.", de: "wenn das Herz etwas sucht.", en: "when the heart looks for something." },
+    { es: "Nadie sabía qué había detrás de esa puerta cerrada.", de: "Niemand wusste, was hinter dieser geschlossenen Tür war.", en: "Nobody knew what was behind that closed door." },
+    { es: "Una mañana, alguien tocó suavemente.", de: "Eines Morgens klopfte jemand leise.", en: "One morning, someone knocked softly." },
+    { es: "El viejo abrió la puerta lentamente.", de: "Der alte Mann öffnete die Tür langsam.", en: "The old man opened the door slowly." },
+    { es: "Una niña pequeña estaba de pie allí.", de: "Ein kleines Mädchen stand davor.", en: "A little girl stood there." },
+    { es: "Ella sonrió y le dio una carta.", de: "Sie lächelte und gab ihm einen Brief.", en: "She smiled and gave him a letter." },
+    { es: "La carta era de su hermano perdido.", de: "Der Brief war von seinem verlorenen Bruder.", en: "The letter was from his lost brother." },
+    { es: "Los ojos del viejo se llenaron de lágrimas.", de: "Die Augen des alten Mannes füllten sich mit Tränen.", en: "The old man's eyes filled with tears." },
+    { es: "Él no había visto a su hermano en años.", de: "Er hatte seinen Bruder seit Jahren nicht gesehen.", en: "He had not seen his brother in years." },
+    { es: "La niña esperó en silencio.", de: "Das Mädchen wartete schweigend.", en: "The girl waited silently." },
+    { es: "Luego el viejo se puso su abrigo.", de: "Dann zog der alte Mann seinen Mantel an.", en: "Then the old man put on his coat." },
+    { es: "Juntos caminaron por la ciudad.", de: "Zusammen gingen sie durch die Stadt.", en: "Together they walked through the town." },
+    { es: "El sol brillaba sobre las calles frías.", de: "Die Sonne schien auf die kalten Straßen.", en: "The sun shone on the cold streets." },
+    { es: "En la estación, un tren llegó pronto.", de: "Am Bahnhof kam bald ein Zug an.", en: "At the station, a train arrived soon." },
+    { es: "Su hermano salió del tren y lo abrazó.", de: "Sein Bruder stieg aus dem Zug und umarmte ihn.", en: "His brother got off the train and hugged him." },
+    { es: "Los dos hombres lloraron de alegría.", de: "Die beiden Männer weinten vor Freude.", en: "The two men cried with joy." },
+    { es: "La pequeña ciudad ya no era fría.", de: "Die kleine Stadt war nicht mehr kalt.", en: "The small town was no longer cold." },
+    { es: "Esa noche cenaron juntos.", de: "An jenem Abend aßen sie zusammen.", en: "That evening they had dinner together." },
+    { es: "La puerta del viejo nunca más estuvo cerrada.", de: "Die Tür des alten Mannes war nie wieder geschlossen.", en: "The old man's door was never closed again." },
+    { es: "Y su corazón, finalmente, descansó.", de: "Und sein Herz ruhte endlich.", en: "And his heart finally rested." }
+];
+
+// ==================== ESTADO ====================
+const REQUIRED_STREAK = 3;
+const MAX_ROUNDS = 3;
+
+let state = {
+    lang: null,
+    round: 1,
+    items: [],          // { idx, streak, errors, mastered }
+    queue: [],          // índices pendientes de la vuelta actual
+    current: null,
+    checked: false,     // si ya se comprobó la respuesta actual
+    totalChecks: 0,
+    correctChecks: 0,
+    startTime: null,
+    timerInterval: null
+};
+
+// ==================== UTILIDADES ====================
+function normalize(str) {
+    return str.toLowerCase()
+        .replace(/[.,!?¿¡:;"«»]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function fireConfetti(opts) {
+    if (typeof confetti === 'function') confetti(opts);
+}
+
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+}
+
+// ==================== INTRO ====================
+function selectLanguage(lang) {
+    state.lang = lang;
+    document.getElementById('card-de').classList.toggle('selected', lang === 'de');
+    document.getElementById('card-es').classList
