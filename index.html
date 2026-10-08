@@ -11,7 +11,7 @@
 
         :root {
             --bg-base: #05070f;
-            --card-surface: rgba(16, 23, 38, 0.9);
+            --card-surface: rgba(16, 23, 38, 0.98);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --accent: #00f0ff;
@@ -33,36 +33,43 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            height: 100dvh;
-            padding: 12px;
-            overflow: hidden;
+            /* dvh se adapta automáticamente cuando aparece/desaparece la barra del navegador */
+            min-height: 100dvh;
+            width: 100vw;
+            padding: 8px;
+            overflow-y: auto;
         }
 
         .app-container {
             width: 100%;
-            max-width: 420px;
-            height: 100%;
-            max-height: 700px;
+            max-width: 410px;
+            /* Altura adaptativa inteligente que no rompe al salir el teclado */
+            height: 92dvh;
+            max-height: 620px;
             background: var(--card-surface);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 16px;
+            padding: 12px;
             position: relative;
+            overflow-y: auto; /* Permite scroll interno fluido si el teclado reduce demasiado el espacio */
         }
+
+        /* Ocultar barra de desplazamiento manteniendo funcionalidad */
+        .app-container::-webkit-scrollbar { width: 4px; }
+        .app-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
         .screen {
             display: none;
             flex-direction: column;
             height: 100%;
             justify-content: space-between;
-            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .screen.active {
@@ -81,31 +88,30 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            gap: 16px;
+            gap: 12px;
         }
 
         .intro-screen h1 {
             color: var(--accent);
-            font-size: 2rem;
+            font-size: 1.7rem;
             text-shadow: var(--glow);
-            margin-bottom: -4px;
         }
 
         .intro-screen p {
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             line-height: 1.4;
-            max-width: 300px;
+            max-width: 270px;
         }
 
         .name-input {
             width: 100%;
-            padding: 14px;
+            padding: 11px;
             background: #090d16;
             border: 2px solid var(--border);
             border-radius: 12px;
             color: #fff;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             text-align: center;
             font-family: 'Rajdhani', sans-serif;
             outline: none;
@@ -123,65 +129,65 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
+            padding-bottom: 5px;
+            flex-shrink: 0;
         }
 
         .mode-badge {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border);
             color: var(--accent);
-            padding: 5px 10px;
+            padding: 4px 8px;
             border-radius: 6px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
         }
-        .mode-badge:hover { background: rgba(255, 255, 255, 0.1); }
 
         .hud-stats {
             display: flex;
             justify-content: space-between;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            flex-shrink: 0;
         }
 
         .prompt-card {
             background: #090d16;
-            border-radius: 14px;
-            padding: 16px;
+            border-radius: 12px;
+            padding: 12px;
             border-left: 3px solid var(--accent);
             box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
             justify-content: center;
             flex-grow: 1;
-            margin: 6px 0;
-            position: relative;
+            margin: 4px 0;
             overflow: hidden;
+            flex-shrink: 1;
         }
 
         .prompt-tag {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             text-transform: uppercase;
             letter-spacing: 1.2px;
             color: var(--text-muted);
-            margin-bottom: 6px;
+            margin-bottom: 3px;
         }
 
         .target-sentence {
-            font-size: 1.25rem;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #fff;
-            line-height: 1.35;
-            margin-bottom: 6px;
+            line-height: 1.25;
+            margin-bottom: 3px;
         }
 
         .english-hint {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             font-style: italic;
             display: none;
@@ -190,18 +196,20 @@
         .action-panel {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 6px;
+            flex-shrink: 0;
         }
 
         .user-input {
             width: 100%;
-            padding: 13px;
+            padding: 10px;
             background: #090d16;
             border: 2px solid var(--border);
             border-radius: 12px;
             color: #fff;
-            font-size: 1rem;
+            font-size: 0.92rem;
             outline: none;
+            text-align: center; /* Centrado absoluto al escribir como solicitaste */
             transition: all 0.2s;
         }
 
@@ -215,29 +223,29 @@
             color: #000;
             border: none;
             border-radius: 12px;
-            padding: 13px;
-            font-size: 0.95rem;
+            padding: 11px;
+            font-size: 0.88rem;
             font-weight: 700;
             text-transform: uppercase;
             font-family: 'Rajdhani', sans-serif;
             letter-spacing: 1px;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(0, 240, 255, 0.2);
-            transition: transform 0.1s, filter 0.2s;
+            transition: transform 0.1s;
         }
 
         .btn-main:active { transform: scale(0.97); }
-        .btn-main:hover { filter: brightness(1.08); }
 
         /* Tarjeta de Feedback Interactiva */
         .feedback-box {
-            padding: 12px;
-            border-radius: 10px;
+            padding: 8px;
+            border-radius: 8px;
             text-align: center;
-            font-size: 0.82rem;
+            font-size: 0.75rem;
             display: none;
-            margin: 6px 0;
-            line-height: 1.4;
+            margin: 3px 0;
+            line-height: 1.25;
+            flex-shrink: 0;
         }
 
         .feedback-box.success {
@@ -256,16 +264,16 @@
 
         .correct-answer-text {
             display: block;
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: #fff;
             font-weight: bold;
-            margin-top: 4px;
+            margin-top: 2px;
             background: rgba(0,0,0,0.3);
-            padding: 5px;
-            border-radius: 6px;
+            padding: 3px;
+            border-radius: 4px;
         }
 
-        /* --- Pantalla de Estadísticas Finales (WhatsApp Ready) --- */
+        /* --- Pantalla de Estadísticas Finales --- */
         .stats-screen {
             justify-content: space-between;
             text-align: center;
@@ -273,19 +281,19 @@
 
         .stats-card {
             background: #090d16;
-            border-radius: 14px;
-            padding: 12px;
+            border-radius: 12px;
+            padding: 8px;
             border: 1px solid var(--border);
-            margin: 4px 0;
+            margin: 2px 0;
             text-align: left;
         }
 
         .stat-row {
             display: flex;
             justify-content: space-between;
-            padding: 6px 0;
+            padding: 3px 0;
             border-bottom: 1px dashed rgba(255,255,255,0.06);
-            font-size: 0.85rem;
+            font-size: 0.78rem;
         }
         .stat-row:last-child { border: none; }
 
@@ -294,17 +302,17 @@
 
         .mini-list {
             list-style: none;
-            max-height: 75px;
+            max-height: 50px;
             overflow-y: auto;
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         .mini-list li {
-            font-size: 0.72rem;
+            font-size: 0.65rem;
             background: rgba(255,255,255,0.03);
-            padding: 5px 8px;
-            border-radius: 6px;
-            margin-bottom: 3px;
+            padding: 3px 5px;
+            border-radius: 4px;
+            margin-bottom: 2px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -332,7 +340,7 @@
     <!-- PANTALLA 2: JUEGO -->
     <div id="screen-game" class="screen">
         <div class="game-header">
-            <h2 style="font-size: 1rem; color: var(--accent);">Cuento Interactivo</h2>
+            <h2 style="font-size: 0.9rem; color: var(--accent);">Cuento Interactivo</h2>
             <button class="mode-badge" onclick="toggleLanguageMode()" id="mode-toggle-btn">DE ➔ ES</button>
         </div>
 
@@ -358,13 +366,12 @@
     <!-- PANTALLA 3: ESTADÍSTICAS FINAL -->
     <div id="screen-stats" class="screen stats-screen">
         <div>
-            <h2 style="color: var(--success); font-size: 1.3rem; margin-bottom: 2px;">¡Misión Cumplida!</h2>
-            <p id="final-greeting" style="font-size: 0.8rem; color: var(--text-muted);"></p>
+            <h2 style="color: var(--success); font-size: 1.1rem; margin-bottom: 2px;">¡Misión Cumplida!</h2>
+            <p id="final-greeting" style="font-size: 0.72rem; color: var(--text-muted);"></p>
         </div>
 
-        <!-- Tarjeta compacta optimizada para captura de estado de WhatsApp -->
         <div class="stats-card" id="whatsapp-capture-area">
-            <div style="text-align:center; font-family:'Rajdhani'; font-weight:700; color:var(--accent); margin-bottom:6px; font-size:0.85rem;">⚡ RESUMEN DE RENDIMIENTO ⚡</div>
+            <div style="text-align:center; font-family:'Rajdhani'; font-weight:700; color:var(--accent); margin-bottom:3px; font-size:0.75rem;">⚡ RESUMEN DE RENDIMIENTO ⚡</div>
             <div class="stat-row">
                 <span>Tiempo total:</span>
                 <span class="stat-value" id="stat-time">00:00</span>
@@ -374,10 +381,10 @@
                 <span class="stat-value green" id="stat-accuracy">0%</span>
             </div>
 
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 6px;">🔥 Más retadoras:</div>
+            <div style="font-size: 0.62rem; color: var(--text-muted); margin-top: 3px;">🔥 Más retadoras:</div>
             <ul class="mini-list" id="list-hard"></ul>
 
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">✨ Impecables:</div>
+            <div style="font-size: 0.62rem; color: var(--text-muted); margin-top: 2px;">✨ Impecables:</div>
             <ul class="mini-list" id="list-easy"></ul>
         </div>
 
@@ -422,7 +429,7 @@
     let streaks = {};
     let completedCount = 0;
     let isGermanToSpanish = true;
-    let gameState = "QUESTION"; // "QUESTION", "ERROR_WAIT", "SUCCESS_WAIT"
+    let gameState = "QUESTION";
 
     let startTime = 0;
     let totalAttempts = 0;
@@ -566,7 +573,7 @@
                 <div style="font-weight:700; margin-bottom:2px;">INCORRECTO</div>
                 La respuesta exacta es:
                 <span class="correct-answer-text">${correctVal}</span>
-                <span style="font-size:0.75rem; color:var(--text-muted); display:block; margin-top:2px;">Analiza y repite enseguida.</span>
+                <span style="font-size:0.68rem; color:var(--text-muted); display:block; margin-top:2px;">Analiza y repite enseguida.</span>
             `;
             feedbackBox.className = "feedback-box error";
             feedbackBox.style.display = "block";
