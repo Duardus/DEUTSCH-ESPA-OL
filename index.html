@@ -152,16 +152,15 @@
         .prompt-card {
             background: #090d16;
             border-radius: 10px;
-            padding: 10px;
+            padding: 14px 12px;
             border-left: 3px solid var(--accent);
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            flex-grow: 1;
+            justify-content: center; /* Centrado vertical correcto sin espacios muertos */
+            align-items: flex-start;
             margin: 4px 0;
-            overflow: hidden;
-            flex-shrink: 1;
+            flex-shrink: 0; /* Evita que se estire de forma fea */
         }
 
         .prompt-tag {
@@ -169,21 +168,21 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--text-muted);
-            margin-bottom: 2px;
+            margin-bottom: 4px;
         }
 
         .target-sentence {
-            font-size: 1.05rem;
+            font-size: 1.15rem;
             font-weight: 700;
             color: #fff;
-            line-height: 1.2;
-            margin-bottom: 2px;
+            line-height: 1.25;
         }
 
         .english-hint {
             font-size: 0.7rem;
             color: var(--text-muted);
             font-style: italic;
+            margin-top: 4px;
             display: none;
         }
 
