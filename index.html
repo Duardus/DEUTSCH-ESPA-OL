@@ -18,7 +18,7 @@
             --success: #00ff88;
             --error: #ff0055;
             --border: rgba(255, 255, 255, 0.08);
-            --glow: 0 0 15px rgba(0, 240, 255, 0.25);
+            --glow: 0 0 12px rgba(0, 240, 255, 0.2);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -27,49 +27,42 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-base);
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.07), transparent 50%),
-                radial-gradient(circle at 50% 100%, rgba(255, 0, 85, 0.05), transparent 50%);
+                radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.06), transparent 50%),
+                radial-gradient(circle at 50% 100%, rgba(255, 0, 85, 0.04), transparent 50%);
             color: var(--text-main);
             display: flex;
             justify-content: center;
             align-items: center;
-            /* dvh se adapta automáticamente cuando aparece/desaparece la barra del navegador */
-            min-height: 100dvh;
+            height: 100dvh;
             width: 100vw;
-            padding: 8px;
-            overflow-y: auto;
+            padding: 4px;
+            overflow: hidden;
         }
 
         .app-container {
             width: 100%;
-            max-width: 410px;
-            /* Altura adaptativa inteligente que no rompe al salir el teclado */
-            height: 92dvh;
-            max-height: 620px;
+            max-width: 400px;
+            height: 98dvh;
+            max-height: 100%;
             background: var(--card-surface);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--border);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 12px;
+            padding: 10px;
             position: relative;
-            overflow-y: auto; /* Permite scroll interno fluido si el teclado reduce demasiado el espacio */
         }
-
-        /* Ocultar barra de desplazamiento manteniendo funcionalidad */
-        .app-container::-webkit-scrollbar { width: 4px; }
-        .app-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
         .screen {
             display: none;
             flex-direction: column;
             height: 100%;
             justify-content: space-between;
-            animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .screen.active {
@@ -88,30 +81,30 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .intro-screen h1 {
             color: var(--accent);
-            font-size: 1.7rem;
+            font-size: 1.6rem;
             text-shadow: var(--glow);
         }
 
         .intro-screen p {
             color: var(--text-muted);
-            font-size: 0.78rem;
-            line-height: 1.4;
-            max-width: 270px;
+            font-size: 0.75rem;
+            line-height: 1.3;
+            max-width: 260px;
         }
 
         .name-input {
             width: 100%;
-            padding: 11px;
+            padding: 10px;
             background: #090d16;
             border: 2px solid var(--border);
-            border-radius: 12px;
+            border-radius: 10px;
             color: #fff;
-            font-size: 1.05rem;
+            font-size: 1rem;
             text-align: center;
             font-family: 'Rajdhani', sans-serif;
             outline: none;
@@ -129,7 +122,7 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border);
-            padding-bottom: 5px;
+            padding-bottom: 4px;
             flex-shrink: 0;
         }
 
@@ -137,9 +130,9 @@
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border);
             color: var(--accent);
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 0.7rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-size: 0.65rem;
             font-weight: 600;
             cursor: pointer;
         }
@@ -147,20 +140,21 @@
         .hud-stats {
             display: flex;
             justify-content: space-between;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--text-muted);
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             flex-shrink: 0;
+            margin-top: 2px;
         }
 
         .prompt-card {
             background: #090d16;
-            border-radius: 12px;
-            padding: 12px;
+            border-radius: 10px;
+            padding: 10px;
             border-left: 3px solid var(--accent);
-            box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -171,23 +165,23 @@
         }
 
         .prompt-tag {
-            font-size: 0.6rem;
+            font-size: 0.58rem;
             text-transform: uppercase;
-            letter-spacing: 1.2px;
+            letter-spacing: 1px;
             color: var(--text-muted);
-            margin-bottom: 3px;
+            margin-bottom: 2px;
         }
 
         .target-sentence {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 700;
             color: #fff;
-            line-height: 1.25;
-            margin-bottom: 3px;
+            line-height: 1.2;
+            margin-bottom: 2px;
         }
 
         .english-hint {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             font-style: italic;
             display: none;
@@ -196,20 +190,20 @@
         .action-panel {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
             flex-shrink: 0;
         }
 
         .user-input {
             width: 100%;
-            padding: 10px;
+            padding: 9px;
             background: #090d16;
             border: 2px solid var(--border);
-            border-radius: 12px;
+            border-radius: 10px;
             color: #fff;
-            font-size: 0.92rem;
+            font-size: 0.9rem;
             outline: none;
-            text-align: center; /* Centrado absoluto al escribir como solicitaste */
+            text-align: center;
             transition: all 0.2s;
         }
 
@@ -222,15 +216,15 @@
             background: linear-gradient(135deg, var(--accent), #0077ff);
             color: #000;
             border: none;
-            border-radius: 12px;
-            padding: 11px;
-            font-size: 0.88rem;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 0.85rem;
             font-weight: 700;
             text-transform: uppercase;
             font-family: 'Rajdhani', sans-serif;
             letter-spacing: 1px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 240, 255, 0.2);
+            box-shadow: 0 3px 10px rgba(0, 240, 255, 0.2);
             transition: transform 0.1s;
         }
 
@@ -238,13 +232,13 @@
 
         /* Tarjeta de Feedback Interactiva */
         .feedback-box {
-            padding: 8px;
+            padding: 6px;
             border-radius: 8px;
             text-align: center;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             display: none;
-            margin: 3px 0;
-            line-height: 1.25;
+            margin: 2px 0;
+            line-height: 1.2;
             flex-shrink: 0;
         }
 
@@ -264,12 +258,12 @@
 
         .correct-answer-text {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #fff;
             font-weight: bold;
-            margin-top: 2px;
+            margin-top: 1px;
             background: rgba(0,0,0,0.3);
-            padding: 3px;
+            padding: 2px;
             border-radius: 4px;
         }
 
@@ -281,8 +275,8 @@
 
         .stats-card {
             background: #090d16;
-            border-radius: 12px;
-            padding: 8px;
+            border-radius: 10px;
+            padding: 6px;
             border: 1px solid var(--border);
             margin: 2px 0;
             text-align: left;
@@ -291,9 +285,9 @@
         .stat-row {
             display: flex;
             justify-content: space-between;
-            padding: 3px 0;
+            padding: 2px 0;
             border-bottom: 1px dashed rgba(255,255,255,0.06);
-            font-size: 0.78rem;
+            font-size: 0.72rem;
         }
         .stat-row:last-child { border: none; }
 
@@ -302,24 +296,24 @@
 
         .mini-list {
             list-style: none;
-            max-height: 50px;
+            max-height: 45px;
             overflow-y: auto;
             margin-top: 2px;
         }
 
         .mini-list li {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             background: rgba(255,255,255,0.03);
-            padding: 3px 5px;
+            padding: 2px 4px;
             border-radius: 4px;
-            margin-bottom: 2px;
+            margin-bottom: 1px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.97); }
+            from { opacity: 0; transform: scale(0.98); }
             to { opacity: 1; transform: scale(1); }
         }
     </style>
@@ -340,7 +334,7 @@
     <!-- PANTALLA 2: JUEGO -->
     <div id="screen-game" class="screen">
         <div class="game-header">
-            <h2 style="font-size: 0.9rem; color: var(--accent);">Cuento Interactivo</h2>
+            <h2 style="font-size: 0.85rem; color: var(--accent);">Cuento Interactivo</h2>
             <button class="mode-badge" onclick="toggleLanguageMode()" id="mode-toggle-btn">DE ➔ ES</button>
         </div>
 
@@ -366,12 +360,12 @@
     <!-- PANTALLA 3: ESTADÍSTICAS FINAL -->
     <div id="screen-stats" class="screen stats-screen">
         <div>
-            <h2 style="color: var(--success); font-size: 1.1rem; margin-bottom: 2px;">¡Misión Cumplida!</h2>
-            <p id="final-greeting" style="font-size: 0.72rem; color: var(--text-muted);"></p>
+            <h2 style="color: var(--success); font-size: 1rem; margin-bottom: 1px;">¡Misión Cumplida!</h2>
+            <p id="final-greeting" style="font-size: 0.68rem; color: var(--text-muted);"></p>
         </div>
 
         <div class="stats-card" id="whatsapp-capture-area">
-            <div style="text-align:center; font-family:'Rajdhani'; font-weight:700; color:var(--accent); margin-bottom:3px; font-size:0.75rem;">⚡ RESUMEN DE RENDIMIENTO ⚡</div>
+            <div style="text-align:center; font-family:'Rajdhani'; font-weight:700; color:var(--accent); margin-bottom:2px; font-size:0.7rem;">⚡ RESUMEN DE RENDIMIENTO ⚡</div>
             <div class="stat-row">
                 <span>Tiempo total:</span>
                 <span class="stat-value" id="stat-time">00:00</span>
@@ -381,10 +375,10 @@
                 <span class="stat-value green" id="stat-accuracy">0%</span>
             </div>
 
-            <div style="font-size: 0.62rem; color: var(--text-muted); margin-top: 3px;">🔥 Más retadoras:</div>
+            <div style="font-size: 0.58rem; color: var(--text-muted); margin-top: 2px;">🔥 Más retadoras:</div>
             <ul class="mini-list" id="list-hard"></ul>
 
-            <div style="font-size: 0.62rem; color: var(--text-muted); margin-top: 2px;">✨ Impecables:</div>
+            <div style="font-size: 0.58rem; color: var(--text-muted); margin-top: 1px;">✨ Impecables:</div>
             <ul class="mini-list" id="list-easy"></ul>
         </div>
 
@@ -570,10 +564,10 @@
             document.getElementById('display-hint').style.display = "block"; 
 
             feedbackBox.innerHTML = `
-                <div style="font-weight:700; margin-bottom:2px;">INCORRECTO</div>
+                <div style="font-weight:700; margin-bottom:1px;">INCORRECTO</div>
                 La respuesta exacta es:
                 <span class="correct-answer-text">${correctVal}</span>
-                <span style="font-size:0.68rem; color:var(--text-muted); display:block; margin-top:2px;">Analiza y repite enseguida.</span>
+                <span style="font-size:0.62rem; color:var(--text-muted); display:block; margin-top:1px;">Analiza y repite enseguida.</span>
             `;
             feedbackBox.className = "feedback-box error";
             feedbackBox.style.display = "block";
