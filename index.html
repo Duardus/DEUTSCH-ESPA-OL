@@ -23,10 +23,12 @@
             --neon-glow-success: 0 0 10px rgba(0, 255, 136, 0.5);
         }
 
+        * { box-sizing: border-box; }
+
         body {
             font-family: 'Inter', system-ui, sans-serif;
             background-color: var(--bg-color);
-            background-image: 
+            background-image:
                 radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.05), transparent 25%),
                 radial-gradient(circle at 85% 30%, rgba(255, 0, 85, 0.05), transparent 25%);
             color: var(--text-color);
@@ -42,13 +44,11 @@
         .screen {
             display: none;
             width: 100%;
-            max-width: 500px; /* Optimizado para móviles y capturas de WhatsApp */
+            max-width: 500px;
             animation: fadeIn 0.4s ease-out forwards;
         }
 
-        .screen.active {
-            display: block;
-        }
+        .screen.active { display: block; }
 
         .container {
             background-color: rgba(21, 31, 50, 0.85);
@@ -60,7 +60,6 @@
             position: relative;
         }
 
-        /* Tipografía Gamer */
         h1, h2, h3 {
             font-family: 'Rajdhani', sans-serif;
             text-transform: uppercase;
@@ -73,10 +72,96 @@
             color: var(--accent-color);
             text-shadow: var(--neon-glow);
             text-align: center;
+            margin-bottom: 10px;
+        }
+
+        /* ===== SELECTOR DE IDIOMA (Pantalla inicial) ===== */
+        .selector-title {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 15px 0 12px 0;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .lang-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
             margin-bottom: 20px;
         }
 
-        /* Pantalla de Inicio */
+        .lang-card {
+            background: rgba(9, 13, 22, 0.9);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            user-select: none;
+        }
+
+        .lang-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(0, 240, 255, 0.4);
+        }
+
+        .lang-card .flag {
+            font-size: 2.2rem;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .lang-card .lang-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .lang-card .lang-desc {
+            font-size: 0.72rem;
+            color: #64748b;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        .lang-card.selected {
+            border-color: var(--accent-color);
+            box-shadow: var(--neon-glow), inset 0 0 20px rgba(0, 240, 255, 0.08);
+            transform: scale(1.04);
+        }
+
+        .lang-card.selected::after {
+            content: '✔';
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            color: var(--success-color);
+            font-weight: bold;
+            font-size: 1rem;
+            text-shadow: var(--neon-glow-success);
+        }
+
+        .selector-warning {
+            display: none;
+            text-align: center;
+            color: var(--error-color);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: -10px 0 12px 0;
+            animation: popIn 0.3s ease;
+        }
+
+        .selector-warning.show { display: block; }
+
+        /* ===== INPUTS Y BOTONES ===== */
         .intro-input {
             width: 100%;
             padding: 18px;
@@ -86,7 +171,6 @@
             color: white;
             font-size: 1.2rem;
             text-align: center;
-            box-sizing: border-box;
             outline: none;
             margin-bottom: 20px;
             transition: all 0.3s;
@@ -99,7 +183,6 @@
             box-shadow: var(--neon-glow);
         }
 
-        /* Botones Globales */
         .main-btn {
             background: linear-gradient(135deg, var(--accent-color), #0077ff);
             color: #000;
@@ -115,7 +198,20 @@
             letter-spacing: 1px;
             box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
             font-family: 'Rajdhani', sans-serif;
+            position: relative;
+            overflow: hidden;
         }
+
+        .main-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 60%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+            transition: left 0.5s;
+        }
+
+        .main-btn:hover::before { left: 140%; }
 
         .main-btn:hover {
             transform: translateY(-2px);
@@ -123,39 +219,36 @@
             filter: brightness(1.1);
         }
 
-        .main-btn:active {
-            transform: scale(0.97);
+        .main-btn:active { transform: scale(0.97); }
+
+        .main-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        /* Header en Juego */
+        /* ===== HEADER EN JUEGO ===== */
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
+            gap: 8px;
         }
 
-        .header-top h2 {
-            font-size: 1.2rem;
-            color: #fff;
-        }
+        .header-top h2 { font-size: 1.1rem; color: #fff; }
 
-        .btn-icon {
-            background: rgba(30, 41, 59, 0.6);
-            border: 1px solid var(--border-color);
-            color: #cbd5e1;
-            padding: 8px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.2s;
-        }
-
-        .btn-icon:hover {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border-color: var(--accent-color);
+        .mode-badge {
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            color: var(--accent-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
+            white-space: nowrap;
         }
 
         .stats {
@@ -163,10 +256,36 @@
             justify-content: space-between;
             font-size: 0.85rem;
             color: #94a3b8;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 12px;
             font-weight: 600;
+        }
+
+        /* Barra de progreso gamificada */
+        .progress-bar-wrap {
+            background: #05080f;
+            border-radius: 20px;
+            height: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #0077ff, var(--accent-color), var(--success-color));
+            background-size: 200% 100%;
+            animation: shimmer 2s linear infinite;
+            transition: width 0.6s cubic-bezier(0.34, 1.3, 0.64, 1);
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 0% 0; }
+            100% { background-position: 200% 0; }
         }
 
         .prompt-box {
@@ -186,6 +305,23 @@
             top: 0; left: 0; width: 4px; height: 100%;
             background: var(--accent-color);
             box-shadow: var(--neon-glow);
+        }
+
+        .prompt-box.success-flash { animation: successPulse 0.5s ease; }
+        .prompt-box.error-flash { animation: errorShake 0.45s ease; }
+
+        @keyframes successPulse {
+            0% { box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 0 0 rgba(0,255,136,0); }
+            40% { box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 0 30px rgba(0,255,136,0.5); }
+            100% { box-shadow: inset 0 2px 10px rgba(0,0,0,0.5), 0 0 0 rgba(0,255,136,0); }
+        }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
         }
 
         .label {
@@ -219,7 +355,6 @@
             background-color: #05080f;
             color: white;
             font-size: 1.1rem;
-            box-sizing: border-box;
             outline: none;
             transition: all 0.3s;
             margin-bottom: 15px;
@@ -230,7 +365,12 @@
             box-shadow: var(--neon-glow);
         }
 
-        /* Feedback (Errores y Aciertos) */
+        .input-group input[type="text"].input-error {
+            border-color: var(--error-color);
+            box-shadow: var(--neon-glow-error);
+        }
+
+        /* ===== FEEDBACK ===== */
         .feedback {
             padding: 18px;
             border-radius: 12px;
@@ -270,7 +410,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* Pantalla Final de Estadísticas (WhatsApp Ready) */
+        /* ===== PANTALLA FINAL ===== */
         .stats-summary {
             background: #0b1121;
             border-radius: 16px;
@@ -290,7 +430,7 @@
         .stat-row:last-child { border: none; }
         .stat-label { color: #94a3b8; }
         .stat-value { font-weight: bold; font-size: 1.1rem; color: #fff; }
-        
+
         .stat-value.highlight-blue { color: var(--accent-color); text-shadow: 0 0 5px rgba(0,240,255,0.5); }
         .stat-value.highlight-green { color: var(--success-color); text-shadow: 0 0 5px rgba(0,255,136,0.5); }
 
@@ -318,6 +458,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 8px;
         }
 
         .error-badge {
@@ -327,6 +468,7 @@
             border-radius: 12px;
             font-weight: bold;
             font-size: 0.75rem;
+            white-space: nowrap;
         }
 
         .success-badge {
@@ -336,6 +478,7 @@
             border-radius: 12px;
             font-weight: bold;
             font-size: 0.75rem;
+            white-space: nowrap;
         }
 
         @keyframes fadeIn {
@@ -348,35 +491,58 @@
             100% { opacity: 1; transform: scale(1); }
         }
     </style>
+<base target="_blank">
 </head>
 <body>
 
-<!-- Pantalla 1: Inicio -->
+<!-- ========== PANTALLA 1: INICIO ========== -->
 <div id="screen-intro" class="screen active">
     <div class="container">
-        <h1>Entrenador Idiomas VIP</h1>
-        <p style="text-align: center; color: #94a3b8; margin-bottom: 25px; font-size: 0.9rem;">
-            Alemán ➔ Español. Sistema de repetición espaciada en bloques.
+        <h1 id="ui-title">Entrenador Idiomas VIP</h1>
+        <p id="ui-subtitle" style="text-align: center; color: #94a3b8; margin-bottom: 20px; font-size: 0.9rem;">
+            Sistema de repetición espaciada en bloques. Domina el cuento completo.
         </p>
-        <input type="text" id="player-name" class="intro-input" placeholder="Ingresa tu nombre, Jugador" autocomplete="off">
-        <button class="main-btn" onclick="startGame()">Comenzar Desafío ➔</button>
+
+        <input type="text" id="player-name" class="intro-input" placeholder="Ingresa tu nombre, Jugador" autocomplete="off" maxlength="30">
+
+        <div class="selector-title" id="ui-selector-title">¿Qué idioma quieres aprender?</div>
+        <div class="lang-options" id="lang-selector">
+            <div class="lang-card" id="card-de" onclick="selectLanguage('de')">
+                <span class="flag">🇩🇪</span>
+                <span class="lang-name">Alemán</span>
+                <div class="lang-desc" id="desc-de">Verás oraciones en <b>español</b> y escribirás en <b>alemán</b></div>
+            </div>
+            <div class="lang-card" id="card-es" onclick="selectLanguage('es')">
+                <span class="flag">🇪🇸</span>
+                <span class="lang-name">Español</span>
+                <div class="lang-desc" id="desc-es">Verás oraciones en <b>alemán</b> y escribirás en <b>español</b></div>
+            </div>
+        </div>
+
+        <div class="selector-warning" id="selector-warning">⚠️ Elige un idioma para comenzar</div>
+
+        <button class="main-btn" id="start-btn" onclick="startGame()">Comenzar Desafío ➔</button>
     </div>
 </div>
 
-<!-- Pantalla 2: Juego -->
+<!-- ========== PANTALLA 2: JUEGO ========== -->
 <div id="screen-game" class="screen">
     <div class="container">
         <div class="header-top">
             <h2 id="round-title">Vuelta 1</h2>
-            <button class="btn-icon" onclick="toggleMode()" id="mode-btn">Modo: DE ➔ ES</button>
+            <span class="mode-badge" id="mode-badge">ES ➔ DE</span>
         </div>
-        
+
         <div class="stats">
             <span id="progress-text">Progreso: 0/25</span>
             <span id="streak-text">Racha: 0/3</span>
         </div>
 
-        <div class="prompt-box">
+        <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+
+        <div class="prompt-box" id="prompt-box">
             <div class="label" id="instruction-label">Traduce al Español:</div>
             <div class="target-sentence" id="target-el"></div>
             <div class="english-hint" id="english-el"></div>
@@ -391,30 +557,29 @@
     </div>
 </div>
 
-<!-- Pantalla 3: Resumen Final -->
+<!-- ========== PANTALLA 3: RESUMEN FINAL ========== -->
 <div id="screen-stats" class="screen">
     <div class="container">
-        <h1>¡Misión Cumplida!</h1>
+        <h1 id="ui-final-title">¡Misión Cumplida!</h1>
         <h2 id="final-name" style="text-align: center; color: #fff; font-size: 1.5rem; margin-bottom: 5px;"></h2>
-        <p style="text-align: center; color: var(--success-color); font-weight: bold; margin-bottom: 20px;">
+        <p id="ui-final-msg" style="text-align: center; color: var(--success-color); font-weight: bold; margin-bottom: 20px;">
             ¡Has dominado el cuento completo!
         </p>
 
-        <!-- Tarjeta lista para captura de estado de WhatsApp -->
         <div class="stats-summary" id="capture-area">
             <div class="stat-row">
-                <span class="stat-label">Tiempo Total:</span>
+                <span class="stat-label" id="ui-stat-time">Tiempo Total:</span>
                 <span class="stat-value highlight-blue" id="stat-time">00:00</span>
             </div>
             <div class="stat-row">
-                <span class="stat-label">Eficiencia (Precisión):</span>
+                <span class="stat-label" id="ui-stat-acc">Eficiencia (Precisión):</span>
                 <span class="stat-value highlight-green" id="stat-accuracy">0%</span>
             </div>
 
-            <div class="list-title">🔥 Retos más desafiantes:</div>
+            <div class="list-title" id="ui-hard-title">🔥 Retos más desafiantes:</div>
             <ul class="word-list" id="list-hard"></ul>
 
-            <div class="list-title">⚡ Dominio absoluto (Fáciles):</div>
+            <div class="list-title" id="ui-easy-title">⚡ Dominio absoluto (Fáciles):</div>
             <ul class="word-list" id="list-easy"></ul>
         </div>
 
@@ -430,88 +595,4 @@
         { es: "y esperaba.", de: "und wartete.", en: "and waited." },
         { es: "El tiempo pasa rápido", de: "Die Zeit vergeht schnell", en: "Time passes quickly" },
         { es: "cuando el corazón busca algo.", de: "wenn das Herz etwas sucht.", en: "when the heart looks for something." },
-        { es: "Nadie sabía qué había detrás de esa puerta cerrada.", de: "Niemand wusste, was hinter dieser geschlossenen Tür war.", en: "Nobody knew what was behind that closed door." },
-        { es: "Nunca se abría,", de: "Sie öffnete sich nie,", en: "It never opened," },
-        { es: "pero a veces se escuchaba", de: "aber manchmal hörte man", en: "but sometimes was heard" },
-        { es: "una voz suave.", de: "eine sanfte Stimme.", en: "a soft voice." },
-        { es: "Una noche oscura", de: "Eines dunklen Nachts", en: "One dark night" },
-        { es: "la llave cayó al suelo.", de: "fiel der Schlüssel auf den Boden.", en: "the key fell to the floor." },
-        { es: "El hombre tomó la llave fría", de: "Der Mann nahm den kalten Schlüssel", en: "The man took the cold key" },
-        { es: "con su mano.", de: "mit seiner Hand.", en: "with his hand." },
-        { es: "Tenía miedo de abrir,", de: "Er hatte Angst sie zu öffnen,", en: "He was afraid to open," },
-        { es: "porque el amor cambia la vida.", de: "denn die Liebe verändert das Leben.", en: "because love changes life." },
-        { es: "Abrió lentamente.", de: "Er öffnete sie langsam.", en: "He opened it slowly." },
-        { es: "La habitación estaba vacía.", de: "Das Zimmer war leer.", en: "The room was empty." },
-        { es: "Sobre la mesa había un espejo.", de: "Auf dem Tisch war ein Spiegel.", en: "On the table was a mirror." },
-        { es: "Al mirar, vio su rostro", de: "Beim Hineinsehen sah er sein Gesicht", en: "Looking, he saw his face" },
-        { es: "y comprendió la verdad:", de: "und verstand die Wahrheit:", en: "and understood the truth:" },
-        { es: "la persona que buscaba", de: "die Person, die er suchte", en: "the person he was looking for" },
-        { es: "estaba dentro de él.", de: "war in ihm.", en: "was inside him." },
-        { es: "Para amar a otro", de: "Um einen anderen zu lieben", en: "To love another" },
-        { es: "debes encontrar la paz en tu propio corazón.", de: "musst du Frieden in deinem eigenen Herzen finden.", en: "you must find peace in your own heart." }
-    ];
-
-    // Variables globales
-    let playerName = "";
-    let round = 1; 
-    let pool = [];
-    let activeGroup = [];
-    let currentItem = null;
-    let forcedRepeatItem = null; 
-    let streaks = {};
-    let completedCount = 0;
-    let isGermanToSpanish = true;
-    
-    // Control de flujo manual
-    let state = "PLAYING"; // PLAYING, WAITING_ERROR, WAITING_SUCCESS
-
-    // Variables Estadísticas
-    let timeStart = 0;
-    let timeEnd = 0;
-    let globalTries = 0;
-    let globalErrors = 0;
-    let itemStats = []; // { index, errors, tries }
-
-    function switchScreen(screenId) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-        document.getElementById(screenId).classList.add('active');
-    }
-
-    function startGame() {
-        const inputName = document.getElementById('player-name').value.trim();
-        playerName = inputName === "" ? "Jugador" : inputName;
-        
-        // Inicializar Estadísticas
-        timeStart = Date.now();
-        globalTries = 0;
-        globalErrors = 0;
-        itemStats = database.map((_, i) => ({ index: i, errors: 0, tries: 0 }));
-
-        initGameData();
-        switchScreen('screen-game');
-        nextQuestion();
-    }
-
-    function initGameData() {
-        pool = [...database];
-        activeGroup = [];
-        completedCount = 0;
-        forcedRepeatItem = null;
-        streaks = {};
-        database.forEach((_, index) => { streaks[index] = 0; });
-    }
-
-    function getOriginalIndex(item) { 
-        return database.indexOf(item); 
-    }
-
-    function refillActiveGroup() {
-        while (activeGroup.length < 3 && pool.length > 0) {
-            activeGroup.push(pool.shift());
-        }
-    }
-
-    function nextQuestion() {
-        state = "PLAYING";
-        document.getElementById('action-btn').textContent = "Comprobar";
-        document.getElementById('
+        { es: "Nadie sabía qué había detrás de esa puerta cerrada.", de: "Niemand wusste, was hinter dieser geschlossenen Tür war.", en: "Nobody 
