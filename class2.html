@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Entrenador Alemán</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+    --bg-base:#05070f;
+    --card-surface:rgba(16,23,38,.98);
+    --text-main:#f8fafc;
+    --text-muted:#94a3b8;
+    --accent:#00f0ff;
+    --success:#00ff88;
+    --error:#ff0055;
+    --border:rgba(255,255,255,.08);
+    --glow:0 0 12px rgba(0,240,255,.2);
+}
+
+* {
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body {
+    font-family:'Inter',sans-serif;
+    background:
+        radial-gradient(circle at 50% 0%,rgba(0,240,255,.06),transparent 50%),
+        radial-gradient(circle at 50% 100%,rgba(255,0,85,.04),transparent 50%),
+        var(--bg-base);
+    color:var(--text-main);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100dvh;
+    width:100vw;
+    padding:4px;
+    overflow:hidden;
+}
+
+.app-container {
+    width:100%;
+    max-width:400px;
+    height:96dvh;
+    background:var(--card-surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.8);
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start; /* Ajustado para respetar la barra superior */
+    gap:10px;
+    padding:12px;
+}
+
+/* --- BARRA DE PROGRESO GLOBAL --- */
+.global-progress {
+    width:100%;
+    height:8px;
+    background:rgba(255,255,255,.05);
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+    margin-bottom:5px;
+    display:none; /* Oculto en la pantalla de inicio */
+    flex-shrink: 0;
+}
+.global-progress.active {
+    display:block;
+}
+.global-progress-fill {
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, var(--accent), #0077ff);
+    box-shadow:var(--glow);
+    border-radius:10px;
+    transition:width 0.4s ease-out;
+}
+/* --------------------------------- */
+
+.screen {
+    display:none;
+    flex-direction:column;
+    width:100%;
+    height: 100%;
+    justify-content:center;
+    gap:10px;
+    animation:fadeIn .2s ease;
+}
+
+.screen.active {
+    display:flex;
+}
+
+h1,h2 {
+    font-family:'Rajdhani',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    text-align:center;
+}
+
+.intro-screen {
+    align-items:center;
+    text-align:center;
+    gap:12px;
+}
+
+.intro-screen h1 {
+    color:var(--accent);
+    font-size:1.6rem;
+    text-shadow:var(--glow);
+}
+
+.intro-screen p {
+    color:var(--text-muted);
+    font-size:.75rem;
+    line-height:1.4;
+    max-width:290px;
+    margin:auto;
+}
+
+.name-input,
+.user-input {
+    width:100%;
+    padding:10px;
+    background:#090d16;
+    border:2px solid var(--border);
+    border-radius:10px;
+    color:#fff;
+    font-size:.9rem;
+    outline:none;
+    text-align:center;
+}
+
+.name-input:focus,
+.user-input:focus {
+    border-color:var(--accent);
+    box-shadow:var(--glow);
+}
+
+.btn-main {
+    background:linear-gradient(135deg,var(--accent),#0077ff);
+    color:#000;
+    border:none;
+    border-radius:10px;
+    padding:10px;
+    font-size:.85rem;
+    font-weight:700;
+    text-transform:uppercase;
+    font-family:'Rajdhani',sans-serif;
+    letter-spacing:1px;
+    cursor:pointer;
+    width:100%;
+}
+
+.game-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid var(--border);
+    padding-bottom:6px;
+}
+
+.mode-badge {
+    background:rgba(255,255,255,.05);
+    border:1px solid var(--border);
+    color:var(--accent);
+    padding:3px 6px;
+    border-radius:4px;
+    font-size:.65rem;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.hud-stats {
+    display:flex;
+    justify-content:space-between;
+    font-size:.65rem;
+    color:var(--text-muted);
+    font-weight:600;
+    text-transform:uppercase;
+    width:100%;
+}
+
+.prompt-card {
+    background:#090d16;
+    border-radius:12px;
+    padding:16px 14px;
+    border-left:3px solid var(--accent);
+    box-shadow:inset 0 2px 4px rgba(0,0,0,.4);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:flex-start;
+    width:100%;
+}
+
+.prompt-tag {
+    font-size:.58rem;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--text-muted);
+    margin-bottom:5px;
+}
+
+.target-sentence {
+    font-size:1.15rem;
+    font-weight:700;
+    color:#fff;
+    line-height:1.3;
+}
+
+.hint {
+    font-size:.68rem;
+    color:var(--text-muted);
+    font-style:italic;
+    margin-top:5px;
+    display:none;
+}
+
+.feedback-box {
+    padding:8px;
+    border-radius:8px;
+    text-align:center;
+    font-size:.72rem;
+    display:none;
+    line-height:1.3;
+    width:100%;
+}
+
+.feedback-box.success {
+    background:rgba(0,255,136,.08);
+    color:var(--success);
+    border:1px solid rgba(0,255,136,.3);
+    display:block;
+}
+
+.feedback-box.error {
+    background:rgba(255,0,85,.08);
+    color:var(--error);
+    border:1px solid rgba(255,0,85,.3);
+    display:block;
+}
+
+.correct-answer-text {
+    display:block;
+    font-size:.85rem;
+    color:#fff;
+    font-weight:bold;
+    margin-top:3px;
+    background:rgba(0,0,0,.3);
+    padding:4px;
+    border-radius:4px;
+}
+
+.vocab-word {
+    width:100%;
+    padding:12px;
+    background:#090d16;
+    border-radius:10px;
+    border:1px solid var(--border);
+    text-align:center;
+}
+
+.vocab-word .german {
+    font-size:1.2rem;
+    font-weight:700;
+    color:#fff;
+}
+
+.vocab-word .spanish {
+    font-size:.8rem;
+    color:var(--text-muted);
+    margin-top:4px;
+}
+
+.stats-screen {
+    text-align:center;
+}
+
+.stats-card {
+    background:#090d16;
+    border-radius:10px;
+    padding:8px;
+    border:1px solid var(--border);
+    width:100%;
+}
+
+.stat-row {
+    display:flex;
+    justify-content:space-between;
+    padding:4px 0;
+    border-bottom:1px dashed rgba(255,255,255,.06);
+    font-size:.72rem;
+}
+
+.stat-row:last-child {
+    border:none;
+}
+
+.stat-value {
+    font-weight:bold;
+    color:var(--accent);
+}
+
+.stat-value.green {
+    color:var(--success);
+}
+
+@keyframes fadeIn {
+    from { opacity:0; transform:scale(.98); }
+    to { opacity:1; transform:scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- =========================
+         BARRA DE PROGRESO GLOBAL
+    ========================= -->
+    <div id="global-progress" class="global-progress">
+        <div id="global-progress-fill" class="global-progress-fill"></div>
+    </div>
+
+    <!-- =========================
+         INICIO
+    ========================= -->
+    <div id="screen-intro" class="screen intro-screen active">
+        <div>
+            <h1>Entrenador Alemán</h1>
+            <p>
+                Primero domina el vocabulario.
+                Después domina las oraciones mediante bloques inteligentes de 3.
+            </p>
+        </div>
+
+        <input
+            type="text"
+            id="input-name"
+            class="name-input"
+            placeholder="Ingresa tu nombre..."
+            autocomplete="off"
+        >
+
+        <button class="btn-main" onclick="startApp()">
+            Comenzar Desafío ➔
+        </button>
+    </div>
+
+    <!-- =========================
+         VOCABULARIO
+    ========================= -->
+    <div id="screen-vocab" class="screen">
+        <div class="game-header">
+            <h2 style="font-size:.85rem;color:var(--accent)">
+                Fase 1 · Vocabulario
+            </h2>
+            <span
+                id="vocab-progress"
+                style="font-size:.65rem;color:var(--text-muted)"
+            >
+                0/0
+            </span>
+        </div>
+
+        <div class="prompt-card">
+            <div class="prompt-tag">
+                Aprende esta palabra / expresión
+            </div>
+            <div class="vocab-word">
+                <div class="german" id="vocab-german"></div>
+                <div class="spanish" id="vocab-spanish"></div>
+            </div>
+        </div>
+
+        <button
+            class="btn-main"
+            onclick="nextVocabulary()"
+            id="vocab-btn"
+        >
+            Ya la aprendí ➔
+        </button>
+    </div>
+
+    <!-- =========================
+         ORACIONES
+    ========================= -->
+    <div id="screen-game" class="screen">
+        <div class="game-header">
+            <h2 style="font-size:.85rem;color:var(--accent)">
+                Fase 2 · Oraciones
+            </h2>
+            <button
+                class="mode-badge"
+                onclick="toggleLanguageMode()"
+                id="mode-toggle-btn"
+            >
+                DE ➔ ES
+            </button>
+        </div>
+
+        <div class="hud-stats">
+            <span id="hud-progress">Progreso: 0/10</span>
+            <span id="hud-streak">Racha: 0/3</span>
+        </div>
+
+        <div class="prompt-card">
+            <div class="prompt-tag" id="label-instruction">
+                Traduce al Español:
+            </div>
+            <div class="target-sentence" id="display-target"></div>
+            <div class="hint" id="display-hint"></div>
+        </div>
+
+        <div id="feedback-box" class="feedback-box"></div>
+
+        <div class="action-panel">
+            <input
+                type="text"
+                id="user-input"
+                class="user-input"
+                placeholder="Escribe tu traducción..."
+                autocomplete="off"
+            >
+            <button
+                class="btn-main"
+                id="action-btn"
+                onclick="handleAction()"
+            >
+                Comprobar
+            </button>
+        </div>
+    </div>
+
+    <!-- =========================
+         ESTADÍSTICAS
+    ========================= -->
+    <div id="screen-stats" class="screen stats-screen">
+        <div>
+            <h2 style="color:var(--success);font-size:1rem">
+                ¡Misión Cumplida!
+            </h2>
+            <p
+                id="final-greeting"
+                style="font-size:.68rem;color:var(--text-muted)"
+            ></p>
+        </div>
+
+        <div class="stats-card">
+            <div style="
+                text-align:center;
+                font-family:'Rajdhani';
+                font-weight:700;
+                color:var(--accent);
+                margin-bottom:3px;
+                font-size:.7rem;
+            ">
+                ⚡ RESUMEN DE RENDIMIENTO ⚡
+            </div>
+
+            <div class="stat-row">
+                <span>Tiempo total:</span>
+                <span class="stat-value" id="stat-time">00:00</span>
+            </div>
+
+            <div class="stat-row">
+                <span>Precisión global:</span>
+                <span class="stat-value green" id="stat-accuracy">0%</span>
+            </div>
+
+            <div class="stat-row">
+                <span>Errores:</span>
+                <span class="stat-value" id="stat-errors">0</span>
+            </div>
+        </div>
+
+        <button
+            class="btn-main"
+            onclick="location.reload()"
+        >
+            Jugar de Nuevo ➔
+        </button>
+    </div>
+
+</div>
+
+<script>
+
+/* =========================================================
+   BASE DE DATOS (NUEVAS ORACIONES)
+========================================================= */
+
+const database = [
+    {
+        es:"Oye, he viajado por muchos lugares.",
+        de:"Hey, ich bin an viele Orte gereist.",
+        en:"Hey, I have traveled to many places."
+    },
+    {
+        es:"Tengo muchas historias de este mundo.",
+        de:"Ich habe viele Geschichten von dieser Welt.",
+        en:"I have many stories from this world."
+    },
+    {
+        es:"Pero te lo digo en serio, tú eres mejor.",
+        de:"Aber ich sage dir ehrlich, du bist besser.",
+        en:"But I am telling you honestly, you are better."
+    },
+    {
+        es:"Si tú hablas, me siento muy bien.",
+        de:"Wenn du sprichst, fühle ich mich sehr gut.",
+        en:"If you speak, I feel very good."
+    },
+    {
+        es:"Ya no necesito ir a ningún otro sitio.",
+        de:"Ich brauche an keinen anderen Ort mehr zu gehen.",
+        en:"I don't need to go anywhere else anymore."
+    },
+    {
+        es:"Porque me gusta muchísimo estar contigo.",
+        de:"Weil ich extrem gerne mit dir zusammen bin.",
+        en:"Because I really like being with you."
+    },
+    {
+        es:"Eres la mujer más inteligente que conozco.",
+        de:"Du bist die klügste Frau, die ich kenne.",
+        en:"You are the smartest woman I know."
+    },
+    {
+        es:"Y me haces sonreír siempre.",
+        de:"Und du bringst mich immer zum Lächeln.",
+        en:"And you always make me smile."
+    },
+    {
+        es:"Quiero quedarme a tu lado hoy y mañana.",
+        de:"Ich will heute und morgen an deiner Seite bleiben.",
+        en:"I want to stay by your side today and tomorrow."
+    },
+    {
+        es:"Me gustas mucho, así de fácil.",
+        de:"Du gefällst mir sehr, ganz einfach.",
+        en:"I like you a lot, it's that simple."
+    }
+];
+
+
+/* =========================================================
+   VOCABULARIO INTELIGENTE (NUEVO EXTRACTO)
+========================================================= */
+
+const vocabulary = [
+    ["reisen", "viajar"],
+    ["der Ort", "el lugar / el sitio"],
+    ["die Geschichte", "la historia"],
+    ["die Welt", "el mundo"],
+    ["ehrlich", "en serio / honestamente"],
+    ["besser", "mejor"],
+    ["sprechen", "hablar"],
+    ["fühlen", "sentir"],
+    ["brauchen", "necesitar"],
+    ["zusammen", "junto / contigo"],
+    ["klug", "inteligente"],
+    ["die Frau", "la mujer"],
+    ["lächeln", "sonreír"],
+    ["bleiben", "quedarse"],
+    ["die Seite", "el lado"],
+    ["heute", "hoy"],
+    ["morgen", "mañana"],
+    ["gefallen", "gustar"],
+    ["einfach", "fácil / simple"]
+];
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+let playerName = "";
+let vocabIndex = 0;
+let pool = [];
+let activeGroup = [];
+let currentItem = null;
+let forcedItem = null;
+let lastItem = null;
+let streaks = {};
+let completedCount = 0;
+let isGermanToSpanish = true;
+let gameState = "QUESTION";
+let startTime = 0;
+let totalAttempts = 0;
+let totalErrors = 0;
+let itemAnalytics = [];
+
+/* =========================================================
+   BARRA DE PROGRESO GLOBAL
+========================================================= */
+
+function updateGlobalProgress() {
+    const totalSteps = vocabulary.length + database.length;
+    let currentStep = 0;
+
+    // Calcular en qué fase estamos
+    if (document.getElementById("screen-vocab").classList.contains("active")) {
+        currentStep = vocabIndex;
+    } else if (document.getElementById("screen-game").classList.contains("active")) {
+        currentStep = vocabulary.length + completedCount;
+    } else if (document.getElementById("screen-stats").classList.contains("active")) {
+        currentStep = totalSteps;
+    }
+
+    const percentage = (currentStep / totalSteps) * 100;
+    document.getElementById("global-progress-fill").style.width = percentage + "%";
+}
+
+
+/* =========================================================
+   CAMBIO DE PANTALLA
+========================================================= */
+
+function switchScreen(id) {
+    document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    updateGlobalProgress(); // Actualizar barra al cambiar de pantalla
+}
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+function startApp() {
+    const input = document.getElementById("input-name").value.trim();
+    playerName = input === "" ? "Estudiante" : input;
+    startTime = Date.now();
+    totalAttempts = 0;
+    totalErrors = 0;
+
+    itemAnalytics = database.map((_, index) => ({
+        index,
+        errors:0,
+        successes:0
+    }));
+
+    pool = [...database];
+    activeGroup = [];
+    completedCount = 0;
+    forcedItem = null;
+    lastItem = null;
+    streaks = {};
+
+    database.forEach((_, index) => { streaks[index] = 0; });
+    vocabIndex = 0;
+
+    // Mostrar la barra de progreso
+    document.getElementById("global-progress").classList.add("active");
+    
+    switchScreen("screen-vocab");
+    showVocabulary();
+}
+
+
+/* =========================================================
+   FASE 1 — VOCABULARIO
+========================================================= */
+
+function showVocabulary() {
+    updateGlobalProgress();
+
+    if (vocabIndex >= vocabulary.length) {
+        startSentencePhase();
+        return;
+    }
+
+    const item = vocabulary[vocabIndex];
+    document.getElementById("vocab-german").textContent = item[0];
+    document.getElementById("vocab-spanish").textContent = item[1];
+    document.getElementById("vocab-progress").textContent = `${vocabIndex + 1}/${vocabulary.length}`;
+}
+
+function nextVocabulary() {
+    vocabIndex++;
+    if (vocabIndex >= vocabulary.length) {
+        startSentencePhase();
+        return;
+    }
+    showVocabulary();
+}
+
+
+/* =========================================================
+   FASE 2 — ORACIONES
+========================================================= */
+
+function startSentencePhase() {
+    switchScreen("screen-game");
+    loadNextQuestion();
+}
+
+
+/* =========================================================
+   MANTENER GRUPO DE 3
+========================================================= */
+
+function refillActiveGroup() {
+    while (activeGroup.length < 3 && pool.length > 0) {
+        activeGroup.push(pool.shift());
+    }
+}
+
+
+/* =========================================================
+   ELEGIR SIGUIENTE ORACIÓN
+========================================================= */
+
+function chooseNextItem() {
+    if (forcedItem !== null && activeGroup.includes(forcedItem)) {
+        const item = forcedItem;
+        forcedItem = null;
+        return item;
+    }
+
+    let candidates = activeGroup.filter(item => item !== lastItem);
+    if (candidates.length === 0) {
+        candidates = [...activeGroup];
+    }
+
+    const randomIndex = Math.floor(Math.random() * candidates.length);
+    return candidates[randomIndex];
+}
+
+
+/* =========================================================
+   CARGAR PREGUNTA
+========================================================= */
+
+function loadNextQuestion() {
+    gameState = "QUESTION";
+
+    const btn = document.getElementById("action-btn");
+    btn.textContent = "Comprobar";
+    btn.style.background = "";
+
+    const feedback = document.getElementById("feedback-box");
+    feedback.className = "feedback-box";
+    feedback.style.display = "none";
+
+    const hint = document.getElementById("display-hint");
+    hint.style.display = "none";
+
+    refillActiveGroup();
+
+    if (activeGroup.length === 0) {
+        finishGame();
+        return;
+    }
+
+    currentItem = chooseNextItem();
+    const origIdx = database.indexOf(currentItem);
+
+    if (isGermanToSpanish) {
+        document.getElementById("label-instruction").textContent = "Traduce al Español:";
+        document.getElementById("display-target").textContent = currentItem.de;
+    } else {
+        document.getElementById("label-instruction").textContent = "Traduce al Alemán:";
+        document.getElementById("display-target").textContent = currentItem.es;
+    }
+
+    document.getElementById("display-hint").textContent = `Pista en Inglés: ${currentItem.en}`;
+    document.getElementById("hud-streak").textContent = `Racha: ${streaks[origIdx]}/3`;
+    document.getElementById("hud-progress").textContent = `Progreso: ${completedCount}/${database.length}`;
+
+    const input = document.getElementById("user-input");
+    input.value = "";
+    input.disabled = false;
+    setTimeout(() => input.focus(), 50);
+}
+
+
+/* =========================================================
+   NORMALIZACIÓN
+========================================================= */
+
+function normalize(text) {
+    return text.trim().toLowerCase().normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+        .replace(/\s+/g, " ");
+}
+
+
+/* =========================================================
+   BOTÓN
+========================================================= */
+
+function handleAction() {
+    if (gameState === "ERROR_WAIT") {
+        loadNextQuestion();
+        return;
+    }
+    if (gameState === "SUCCESS_WAIT") {
+        loadNextQuestion();
+        return;
+    }
+    evaluateAnswer();
+}
+
+
+/* =========================================================
+   EVALUAR RESPUESTA
+========================================================= */
+
+function evaluateAnswer() {
+    if (!currentItem) return;
+
+    const userVal = document.getElementById("user-input").value;
+    const correctVal = isGermanToSpanish ? currentItem.es : currentItem.de;
+    const origIdx = database.indexOf(currentItem);
+    const feedback = document.getElementById("feedback-box");
+    const btn = document.getElementById("action-btn");
+    const input = document.getElementById("user-input");
+
+    totalAttempts++;
+    input.disabled = true;
+
+    if (normalize(userVal) === normalize(correctVal)) {
+        streaks[origIdx]++;
+        itemAnalytics[origIdx].successes++;
+        forcedItem = null;
+        lastItem = currentItem;
+
+        if (streaks[origIdx] >= 3) {
+            feedback.innerHTML = `<strong>¡Excelente!</strong><br>Frase dominada y retirada del grupo.`;
+            activeGroup = activeGroup.filter(item => item !== currentItem);
+            completedCount++;
+            updateGlobalProgress(); // Avanzar barra porque dominamos la frase
+        } else {
+            feedback.innerHTML = `<strong>¡Correcto!</strong><br>Llevas ${streaks[origIdx]}/3 aciertos consecutivos.`;
+        }
+
+        feedback.className = "feedback-box success";
+        feedback.style.display = "block";
+        gameState = "SUCCESS_WAIT";
+        btn.textContent = "Siguiente ➔";
+        btn.style.background = "linear-gradient(135deg,#00ff88,#00b35f)";
+
+        setTimeout(() => {
+            if (gameState === "SUCCESS_WAIT") loadNextQuestion();
+        }, 1200);
+
+    } else {
+        streaks[origIdx] = 0;
+        itemAnalytics[origIdx].errors++;
+        totalErrors++;
+        forcedItem = currentItem;
+
+        document.getElementById("hud-streak").textContent = "Racha: 0/3";
+        document.getElementById("display-hint").style.display = "block";
+
+        feedback.innerHTML = `
+            <div style="font-weight:700;margin-bottom:2px;">INCORRECTO</div>
+            La respuesta exacta es:
+            <span class="correct-answer-text">${correctVal}</span>
+            <span style="font-size:.62rem;color:var(--text-muted);display:block;margin-top:2px;">
+                Repite esta misma oración ahora.
+            </span>
+        `;
+        feedback.className = "feedback-box error";
+        feedback.style.display = "block";
+        gameState = "ERROR_WAIT";
+        btn.textContent = "Repetir la misma ➔";
+        btn.style.background = "linear-gradient(135deg,#ff0055,#cc0044)";
+    }
+}
+
+
+/* =========================================================
+   CAMBIAR DIRECCIÓN
+========================================================= */
+
+function toggleLanguageMode() {
+    isGermanToSpanish = !isGermanToSpanish;
+    document.getElementById("mode-toggle-btn").textContent = isGermanToSpanish ? "DE ➔ ES" : "ES ➔ DE";
+    if (gameState === "QUESTION") {
+        loadNextQuestion();
+    }
+}
+
+
+/* =========================================================
+   ENTER
+========================================================= */
+
+document.getElementById("user-input").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        handleAction();
+    }
+});
+
+
+/* =========================================================
+   CONFETI
+========================================================= */
+
+function fireConfetti() {
+    const duration = 3.5 * 1000;
+    const end = Date.now() + duration;
+
+    (function frame() {
+        confetti({ particleCount:3, angle:60, spread:55, origin:{x:0} });
+        confetti({ particleCount:3, angle:120, spread:55, origin:{x:1} });
+        if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+}
+
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+function finishGame() {
+    switchScreen("screen-stats");
+    fireConfetti();
+    document.getElementById("final-greeting").textContent = `¡Excelente ritmo, ${playerName}!`;
+    
+    const totalSecs = Math.floor((Date.now() - startTime) / 1000);
+    const minutes = Math.floor(totalSecs / 60);
+    const seconds = totalSecs % 60;
+    
+    document.getElementById("stat-time").textContent = 
+        `${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        
+    const accuracy = totalAttempts === 0 ? 100 : ((totalAttempts - totalErrors) / totalAttempts) * 100;
+    document.getElementById("stat-accuracy").textContent = accuracy.toFixed(1) + "%";
+    document.getElementById("stat-errors").textContent = totalErrors;
+}
+
+</script>
+
+</body>
+</html>
