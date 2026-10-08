@@ -3,60 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Entrenador Cuento: Alemán - Español</title>
+    <title>Entrenador Literario: Alemán-Español</title>
     <!-- Librería de fuegos artificiales -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap');
 
         :root {
-            --bg-color: #070913;
-            --card-bg: #101726;
-            --text-color: #f1f5f9;
+            --bg-base: #05070f;
+            --card-surface: rgba(16, 23, 38, 0.9);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
             --accent: #00f0ff;
             --success: #00ff88;
             --error: #ff0055;
-            --border: #1e293b;
-            --glow: 0 0 15px rgba(0, 240, 255, 0.3);
+            --border: rgba(255, 255, 255, 0.08);
+            --glow: 0 0 15px rgba(0, 240, 255, 0.25);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            background-image: radial-gradient(circle at 50% 10%, rgba(0, 240, 255, 0.08), transparent 40%);
-            color: var(--text-color);
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.07), transparent 50%),
+                radial-gradient(circle at 50% 100%, rgba(255, 0, 85, 0.05), transparent 50%);
+            color: var(--text-main);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            padding: 10px;
+            height: 100vh;
+            height: 100dvh;
+            padding: 12px;
             overflow: hidden;
         }
 
-        .app-wrapper {
+        .app-container {
             width: 100%;
-            max-width: 440px;
-            height: 94vh;
-            max-height: 750px;
-            background: var(--card-bg);
+            max-width: 420px;
+            height: 100%;
+            max-height: 700px;
+            background: var(--card-surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 18px;
+            padding: 16px;
             position: relative;
-            backdrop-filter: blur(10px);
         }
 
         .screen {
             display: none;
             flex-direction: column;
             height: 100%;
-            animation: fadeIn 0.3s ease-out;
+            justify-content: space-between;
+            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .screen.active {
@@ -70,28 +76,36 @@
             text-align: center;
         }
 
-        /* Pantalla Inicio */
-        .intro-container {
+        /* --- Pantalla de Inicio --- */
+        .intro-screen {
             justify-content: center;
             align-items: center;
             text-align: center;
-            gap: 15px;
+            gap: 16px;
         }
 
-        .intro-container h1 {
+        .intro-screen h1 {
             color: var(--accent);
             font-size: 2rem;
             text-shadow: var(--glow);
+            margin-bottom: -4px;
+        }
+
+        .intro-screen p {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.4;
+            max-width: 300px;
         }
 
         .name-input {
             width: 100%;
-            padding: 15px;
-            background: #05070d;
+            padding: 14px;
+            background: #090d16;
             border: 2px solid var(--border);
-            border-radius: 14px;
+            border-radius: 12px;
             color: #fff;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             text-align: center;
             font-family: 'Rajdhani', sans-serif;
             outline: none;
@@ -103,93 +117,97 @@
             box-shadow: var(--glow);
         }
 
-        /* Estructura Juego */
-        .top-bar {
+        /* --- Pantalla de Juego --- */
+        .game-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-            margin-bottom: 10px;
+            padding-bottom: 8px;
         }
 
-        .mode-btn {
-            background: #1e293b;
+        .mode-badge {
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border);
             color: var(--accent);
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
             font-weight: 600;
             cursor: pointer;
+            transition: background 0.2s;
         }
+        .mode-badge:hover { background: rgba(255, 255, 255, 0.1); }
 
-        .stats-hud {
+        .hud-stats {
             display: flex;
             justify-content: space-between;
-            font-size: 0.8rem;
-            color: #94a3b8;
-            margin-bottom: 12px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .prompt-box {
-            background: #070913;
-            border-radius: 16px;
-            padding: 20px;
-            border-left: 4px solid var(--accent);
-            margin-bottom: 15px;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
-            flex-grow: 1;
+        .prompt-card {
+            background: #090d16;
+            border-radius: 14px;
+            padding: 16px;
+            border-left: 3px solid var(--accent);
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
             justify-content: center;
+            flex-grow: 1;
+            margin: 6px 0;
+            position: relative;
+            overflow: hidden;
         }
 
-        .prompt-label {
-            font-size: 0.7rem;
+        .prompt-tag {
+            font-size: 0.65rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            color: #64748b;
-            margin-bottom: 8px;
+            letter-spacing: 1.2px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
         }
 
-        .target-text {
-            font-size: 1.4rem;
+        .target-sentence {
+            font-size: 1.25rem;
             font-weight: 700;
             color: #fff;
-            margin-bottom: 10px;
-            line-height: 1.3;
+            line-height: 1.35;
+            margin-bottom: 6px;
         }
 
         .english-hint {
-            font-size: 0.85rem;
-            color: #64748b;
+            font-size: 0.8rem;
+            color: var(--text-muted);
             font-style: italic;
-            display: none; /* Se muestra solo al fallar */
+            display: none;
         }
 
-        .input-area {
+        .action-panel {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 10px;
         }
 
-        .user-answer {
+        .user-input {
             width: 100%;
-            padding: 14px;
-            background: #05070d;
+            padding: 13px;
+            background: #090d16;
             border: 2px solid var(--border);
             border-radius: 12px;
             color: #fff;
-            font-size: 1.1rem;
+            font-size: 1rem;
             outline: none;
             transition: all 0.2s;
         }
 
-        .user-answer:focus {
+        .user-input:focus {
             border-color: var(--accent);
+            box-shadow: var(--glow);
         }
 
         .btn-main {
@@ -197,135 +215,142 @@
             color: #000;
             border: none;
             border-radius: 12px;
-            padding: 14px;
-            font-size: 1rem;
+            padding: 13px;
+            font-size: 0.95rem;
             font-weight: 700;
             text-transform: uppercase;
             font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 1px;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.2);
-            transition: transform 0.1s;
+            box-shadow: 0 4px 12px rgba(0, 240, 255, 0.2);
+            transition: transform 0.1s, filter 0.2s;
         }
 
         .btn-main:active { transform: scale(0.97); }
+        .btn-main:hover { filter: brightness(1.08); }
 
-        /* Feedback y Errores */
-        .feedback-card {
-            padding: 14px;
-            border-radius: 12px;
+        /* Tarjeta de Feedback Interactiva */
+        .feedback-box {
+            padding: 12px;
+            border-radius: 10px;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.82rem;
             display: none;
-            margin-bottom: 10px;
+            margin: 6px 0;
+            line-height: 1.4;
         }
 
-        .feedback-card.success {
-            background: rgba(0, 255, 136, 0.1);
+        .feedback-box.success {
+            background: rgba(0, 255, 136, 0.08);
             color: var(--success);
-            border: 1px solid var(--success);
+            border: 1px solid rgba(0, 255, 136, 0.3);
             display: block;
         }
 
-        .feedback-card.error {
-            background: rgba(255, 0, 85, 0.1);
+        .feedback-box.error {
+            background: rgba(255, 0, 85, 0.08);
             color: var(--error);
-            border: 1px solid var(--error);
+            border: 1px solid rgba(255, 0, 85, 0.3);
             display: block;
         }
 
-        .correct-reveal {
+        .correct-answer-text {
             display: block;
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: #fff;
             font-weight: bold;
-            margin: 6px 0;
+            margin-top: 4px;
             background: rgba(0,0,0,0.3);
-            padding: 6px;
+            padding: 5px;
             border-radius: 6px;
         }
 
-        /* Pantalla Estadísticas (Captura WhatsApp) */
+        /* --- Pantalla de Estadísticas Finales (WhatsApp Ready) --- */
         .stats-screen {
             justify-content: space-between;
-            overflow-y: auto;
+            text-align: center;
         }
 
         .stats-card {
-            background: #070913;
-            border-radius: 16px;
-            padding: 15px;
+            background: #090d16;
+            border-radius: 14px;
+            padding: 12px;
             border: 1px solid var(--border);
-            margin: 10px 0;
+            margin: 4px 0;
+            text-align: left;
         }
 
         .stat-row {
             display: flex;
             justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px dashed rgba(255,255,255,0.08);
-            font-size: 0.9rem;
+            padding: 6px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.06);
+            font-size: 0.85rem;
         }
         .stat-row:last-child { border: none; }
 
-        .stat-val { font-weight: bold; color: var(--accent); }
-        .stat-val.green { color: var(--success); }
+        .stat-value { font-weight: bold; color: var(--accent); }
+        .stat-value.green { color: var(--success); }
 
         .mini-list {
             list-style: none;
-            max-height: 90px;
+            max-height: 75px;
             overflow-y: auto;
-            margin-top: 5px;
+            margin-top: 4px;
         }
 
         .mini-list li {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             background: rgba(255,255,255,0.03);
-            padding: 6px;
+            padding: 5px 8px;
             border-radius: 6px;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.98); }
+            from { opacity: 0; transform: scale(0.97); }
             to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
 <body>
 
-<div class="app-wrapper">
+<div class="app-container">
     <!-- PANTALLA 1: INICIO -->
-    <div id="screen-intro" class="screen intro-container active">
-        <h1>Entrenador Literario</h1>
-        <p style="color: #94a3b8; font-size: 0.85rem;">Sistema dinámico con bloques de 3 oraciones.</p>
-        <input type="text" id="input-name" class="name-input" placeholder="Tu Nombre aquí..." autocomplete="off">
-        <button class="btn-main" style="width: 100%;" onclick="startApp()">Iniciar Desafío ➔</button>
+    <div id="screen-intro" class="screen intro-screen active">
+        <div>
+            <h1>Entrenador Alemán</h1>
+            <p>Sistema inteligente de bloques de 3 oraciones con refuerzo inmediato de errores.</p>
+        </div>
+        <input type="text" id="input-name" class="name-input" placeholder="Ingresa tu nombre..." autocomplete="off">
+        <button class="btn-main" style="width: 100%;" onclick="startApp()">Comenzar Desafío ➔</button>
     </div>
 
     <!-- PANTALLA 2: JUEGO -->
     <div id="screen-game" class="screen">
-        <div class="top-bar">
-            <h2 id="app-title" style="font-size: 1.1rem; color: var(--accent);">Cuento Alemán-Español</h2>
-            <button class="mode-btn" onclick="toggleLanguageMode()" id="mode-toggle-btn">DE ➔ ES</button>
+        <div class="game-header">
+            <h2 style="font-size: 1rem; color: var(--accent);">Cuento Interactivo</h2>
+            <button class="mode-badge" onclick="toggleLanguageMode()" id="mode-toggle-btn">DE ➔ ES</button>
         </div>
 
-        <div class="stats-hud">
-            <span id="hud-progress">Progreso: 0 / 25</span>
+        <div class="hud-stats">
+            <span id="hud-progress">Progreso: 0/25</span>
             <span id="hud-streak">Racha: 0/3</span>
         </div>
 
-        <div class="prompt-box">
-            <div class="prompt-label" id="label-instruction">Traduce al Español:</div>
-            <div class="target-text" id="display-target"></div>
+        <div class="prompt-card">
+            <div class="prompt-tag" id="label-instruction">Traduce al Español:</div>
+            <div class="target-sentence" id="display-target"></div>
             <div class="english-hint" id="display-hint"></div>
         </div>
 
-        <div id="feedback-box" class="feedback-card"></div>
+        <div id="feedback-box" class="feedback-box"></div>
 
-        <div class="input-area">
-            <input type="text" id="user-input" class="user-answer" placeholder="Escribe tu respuesta..." autocomplete="off">
+        <div class="action-panel">
+            <input type="text" id="user-input" class="user-input" placeholder="Escribe tu traducción..." autocomplete="off">
             <button class="btn-main" id="action-btn" onclick="handleAction()">Comprobar</button>
         </div>
     </div>
@@ -333,30 +358,30 @@
     <!-- PANTALLA 3: ESTADÍSTICAS FINAL -->
     <div id="screen-stats" class="screen stats-screen">
         <div>
-            <h2 style="color: var(--success); font-size: 1.5rem; margin-bottom: 2px;">¡Felicidades!</h2>
-            <p id="final-greeting" style="text-align: center; font-size: 0.9rem; color: #cbd5e1; margin-bottom: 10px;"></p>
+            <h2 style="color: var(--success); font-size: 1.3rem; margin-bottom: 2px;">¡Misión Cumplida!</h2>
+            <p id="final-greeting" style="font-size: 0.8rem; color: var(--text-muted);"></p>
         </div>
 
-        <!-- Tarjeta lista para captura de pantalla de WhatsApp -->
+        <!-- Tarjeta compacta optimizada para captura de estado de WhatsApp -->
         <div class="stats-card" id="whatsapp-capture-area">
-            <div style="text-align:center; font-family:'Rajdhani'; font-weight:700; color:var(--accent); margin-bottom:8px; font-size:1rem;">⚡ RESUMEN DE RENDIMIENTO ⚡</div>
+            <div style="text-align:center; font-family:'Rajdhani'; font-weight:700; color:var(--accent); margin-bottom:6px; font-size:0.85rem;">⚡ RESUMEN DE RENDIMIENTO ⚡</div>
             <div class="stat-row">
                 <span>Tiempo total:</span>
-                <span class="stat-val" id="stat-time">00:00</span>
+                <span class="stat-value" id="stat-time">00:00</span>
             </div>
             <div class="stat-row">
                 <span>Precisión global:</span>
-                <span class="stat-val green" id="stat-accuracy">0%</span>
+                <span class="stat-value green" id="stat-accuracy">0%</span>
             </div>
 
-            <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 8px;">🔥 Oraciones más retadoras:</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 6px;">🔥 Más retadoras:</div>
             <ul class="mini-list" id="list-hard"></ul>
 
-            <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 6px;">✨ Dominadas sin fallo:</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 4px;">✨ Impecables:</div>
             <ul class="mini-list" id="list-easy"></ul>
         </div>
 
-        <button class="btn-main" onclick="location.reload()" style="margin-top: 5px;">Jugar de Nuevo ➔</button>
+        <button class="btn-main" onclick="location.reload()">Jugar de Nuevo ➔</button>
     </div>
 </div>
 
@@ -393,13 +418,12 @@
     let pool = [];
     let activeGroup = [];
     let currentItem = null;
-    let forcedItem = null; // Fuerza la repetición inmediata tras un error
+    let forcedItem = null; 
     let streaks = {};
     let completedCount = 0;
     let isGermanToSpanish = true;
     let gameState = "QUESTION"; // "QUESTION", "ERROR_WAIT", "SUCCESS_WAIT"
 
-    // Analíticas
     let startTime = 0;
     let totalAttempts = 0;
     let totalErrors = 0;
@@ -442,7 +466,7 @@
         btn.textContent = "Comprobar";
         btn.style.background = "";
         
-        document.getElementById('feedback-box').className = "feedback-card";
+        document.getElementById('feedback-box').className = "feedback-box";
         document.getElementById('feedback-box').style.display = "none";
         document.getElementById('display-hint').style.display = "none";
 
@@ -453,10 +477,9 @@
             return;
         }
 
-        // Lógica de repetición inmediata por error o aleatoria dentro del bloque de 3
         if (forcedItem && activeGroup.includes(forcedItem)) {
             currentItem = forcedItem;
-            forcedItem = null; // Consumido
+            forcedItem = null; 
         } else {
             const randomIndex = Math.floor(Math.random() * activeGroup.length);
             currentItem = activeGroup[randomIndex];
@@ -464,7 +487,6 @@
 
         const origIdx = database.indexOf(currentItem);
 
-        // Renderizado dinámico según el conmutador de idioma
         if (isGermanToSpanish) {
             document.getElementById('label-instruction').textContent = "Traduce al Español:";
             document.getElementById('display-target').textContent = currentItem.de;
@@ -475,7 +497,7 @@
 
         document.getElementById('display-hint').textContent = `Pista en Inglés: ${currentItem.en}`;
         document.getElementById('hud-streak').textContent = `Racha: ${streaks[origIdx]}/3`;
-        document.getElementById('hud-progress').textContent = `Progreso: ${completedCount} /${database.length}`;
+        document.getElementById('hud-progress').textContent = `Progreso: ${completedCount}/${database.length}`;
 
         const inputEl = document.getElementById('user-input');
         inputEl.value = "";
@@ -511,45 +533,42 @@
         inputEl.disabled = true;
 
         if (normalize(userVal) === normalize(correctVal)) {
-            // Acierto correcto
             streaks[origIdx]++;
             itemAnalytics[origIdx].successes++;
 
             if (streaks[origIdx] >= 3) {
-                feedbackBox.innerHTML = `<strong>¡Excelente!</strong> 3 aciertos seguidos. Frase dominada y retirada del grupo.`;
+                feedbackBox.innerHTML = `<strong>¡Excelente!</strong> Frase dominada y retirada del grupo.`;
                 activeGroup = activeGroup.filter(item => item !== currentItem);
                 completedCount++;
             } else {
                 feedbackBox.innerHTML = `<strong>¡Correcto!</strong> Llevas ${streaks[origIdx]}/3 aciertos consecutivos.`;
             }
 
-            feedbackBox.className = "feedback-card success";
+            feedbackBox.className = "feedback-box success";
             feedbackBox.style.display = "block";
 
             gameState = "SUCCESS_WAIT";
             btn.textContent = "Siguiente ➔";
             btn.style.background = "linear-gradient(135deg, #00ff88, #00b35f)";
 
-            // Auto-avance rápido en aciertos (1.2 segundos) pero permitiendo clic manual inmediato
             setTimeout(() => { if (gameState === "SUCCESS_WAIT") loadNextQuestion(); }, 1200);
 
         } else {
-            // Error detectado
             streaks[origIdx] = 0;
-            forcedItem = currentItem; // Se obliga a preguntar de nuevo inmediatamente
+            forcedItem = currentItem; 
             totalErrors++;
             itemAnalytics[origIdx].errors++;
 
             document.getElementById('hud-streak').textContent = `Racha: 0/3`;
-            document.getElementById('display-hint').style.display = "block"; // Revela pista en inglés
+            document.getElementById('display-hint').style.display = "block"; 
 
             feedbackBox.innerHTML = `
-                <div style="font-weight:700; margin-bottom:4px;">INCORRECTO</div>
-                La respuesta exacta era:
-                <span class="correct-reveal">${correctVal}</span>
-                <span style="font-size:0.8rem; color:#94a3b8; display:block; margin-top:4px;">Analiza bien, la repetiremos enseguida.</span>
+                <div style="font-weight:700; margin-bottom:2px;">INCORRECTO</div>
+                La respuesta exacta es:
+                <span class="correct-answer-text">${correctVal}</span>
+                <span style="font-size:0.75rem; color:var(--text-muted); display:block; margin-top:2px;">Analiza y repite enseguida.</span>
             `;
-            feedbackBox.className = "feedback-card error";
+            feedbackBox.className = "feedback-box error";
             feedbackBox.style.display = "block";
 
             gameState = "ERROR_WAIT";
@@ -569,23 +588,11 @@
     });
 
     function fireConfetti() {
-        let duration = 4 * 1000;
+        let duration = 3.5 * 1000;
         let end = Date.now() + duration;
         (function frame() {
-            confetti({
-                particleCount: 4,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0 },
-                colors: ['#00f0ff', '#ff0055', '#00ff88']
-            });
-            confetti({
-                particleCount: 4,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1 },
-                colors: ['#00f0ff', '#ff0055', '#00ff88']
-            });
+            confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#00f0ff', '#ff0055', '#00ff88'] });
+            confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#00f0ff', '#ff0055', '#00ff88'] });
             if (Date.now() < end) requestAnimationFrame(frame);
         }());
     }
@@ -594,27 +601,23 @@
         switchScreen('screen-stats');
         fireConfetti();
 
-        document.getElementById('final-greeting').textContent = `¡Impresionante trabajo, ${playerName}! Completaste todo el cuento en ambos idiomas.`;
+        document.getElementById('final-greeting').textContent = `¡Excelente ritmo, ${playerName}!`;
 
-        // Calcular Tiempo
         let totalSecs = Math.floor((Date.now() - startTime) / 1000);
         let m = Math.floor(totalSecs / 60);
         let s = totalSecs % 60;
         document.getElementById('stat-time').textContent = `${m < 10 ? '0':''}${m}:${s < 10 ? '0':''}${s}`;
 
-        // Precisión
         let accuracy = totalAttempts === 0 ? 100 : ((totalAttempts - totalErrors) / totalAttempts) * 100;
         document.getElementById('stat-accuracy').textContent = accuracy.toFixed(1) + "%";
 
-        // Ordenar analíticas por errores
         let sorted = [...itemAnalytics].sort((a,b) => b.errors - a.errors);
 
-        // Más difíciles
         let hardList = document.getElementById('list-hard');
         hardList.innerHTML = '';
-        let hardItems = sorted.filter(x => x.errors > 0).slice(0, 3);
+        let hardItems = sorted.filter(x => x.errors > 0).slice(0, 2);
         if(hardItems.length === 0) {
-            hardList.innerHTML = `<li><span>¡Perfecto! Sin errores registrados.</span><span>0 fallos</span></li>`;
+            hardList.innerHTML = `<li><span>¡Cero errores registrados!</span><span style="color:var(--success)">Perfecto</span></li>`;
         } else {
             hardItems.forEach(item => {
                 let txt = database[item.index].de;
@@ -622,12 +625,11 @@
             });
         }
 
-        // Más fáciles
         let easyList = document.getElementById('list-easy');
         easyList.innerHTML = '';
-        let easyItems = sorted.filter(x => x.errors === 0).slice(0, 3);
+        let easyItems = sorted.filter(x => x.errors === 0).slice(0, 2);
         if(easyItems.length === 0) {
-            easyList.innerHTML = `<li><span>Todas requirieron práctica. ¡Buen esfuerzo!</span></li>`;
+            easyList.innerHTML = `<li><span>¡Gran esfuerzo general!</span></li>`;
         } else {
             easyItems.forEach(item => {
                 let txt = database[item.index].de;
