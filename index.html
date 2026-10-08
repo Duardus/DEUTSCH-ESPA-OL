@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrenador de Alemán - Cuento de Amor</title>
+    <title>Entrenador Interactivo: Cuento Alemán-Español</title>
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-color: #f8fafc;
-            --accent-color: #3b82f6;
-            --accent-hover: #2563eb;
-            --success-color: #22c55e;
-            --error-color: #ef4444;
-            --border-color: #334155;
+            --bg-color: #090d16;
+            --card-bg: #131c2e;
+            --text-color: #f1f5f9;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --success-color: #10b981;
+            --error-color: #f43f5e;
+            --border-color: #1e293b;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
@@ -30,123 +30,199 @@
 
         .container {
             background-color: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             padding: 30px;
             box-sizing: border-box;
             border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
         h1 {
-            font-size: 1.5rem;
-            margin-top: 0;
-            text-align: center;
-            color: #60a5fa;
-            margin-bottom: 20px;
+            font-size: 1.4rem;
+            margin: 0;
+            color: #818cf8;
+        }
+
+        .btn-icon {
+            background: #1e293b;
+            border: 1px solid var(--border-color);
+            color: #cbd5e1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: #334155;
+            color: white;
         }
 
         .stats {
             display: flex;
             justify-content: space-between;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #94a3b8;
             margin-bottom: 20px;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
+            padding-bottom: 12px;
         }
 
         .prompt-box {
-            background-color: #0f172a;
-            border-radius: 10px;
-            padding: 20px;
+            background-color: #090d16;
+            border-radius: 12px;
+            padding: 22px;
             margin-bottom: 20px;
-            border-left: 4px solid var(--accent-color);
+            border-left: 5px solid var(--accent-color);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             color: #94a3b8;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
-        .german-sentence {
-            font-size: 1.3rem;
-            font-weight: bold;
-            color: #f1f5f9;
+        .target-sentence {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #ffffff;
             margin-bottom: 10px;
+            line-height: 1.4;
         }
 
         .english-hint {
-            font-size: 0.95rem;
-            color: #cbd5e1;
+            font-size: 0.9rem;
+            color: #94a3b8;
             font-style: italic;
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 15px;
         }
 
         input[type="text"] {
             width: 100%;
-            padding: 14px;
-            border-radius: 8px;
+            padding: 15px;
+            border-radius: 10px;
             border: 1px solid var(--border-color);
-            background-color: #0f172a;
+            background-color: #090d16;
             color: white;
-            font-size: 1rem;
+            font-size: 1.05rem;
             box-sizing: border-box;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         input[type="text"]:focus {
             border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
         }
 
-        button {
+        .main-btn {
             background-color: var(--accent-color);
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 14px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, transform 0.1s;
         }
 
-        button:hover {
+        .main-btn:hover {
             background-color: var(--accent-hover);
         }
 
+        .main-btn:active {
+            transform: scale(0.98);
+        }
+
         .feedback {
-            padding: 12px;
-            border-radius: 8px;
+            padding: 15px;
+            border-radius: 10px;
             margin-bottom: 15px;
             font-weight: 500;
             text-align: center;
             display: none;
+            line-height: 1.5;
         }
 
         .feedback.success {
-            background-color: rgba(34, 197, 94, 0.2);
+            background-color: rgba(16, 185, 129, 0.15);
             color: var(--success-color);
             border: 1px solid var(--success-color);
             display: block;
         }
 
         .feedback.error {
-            background-color: rgba(239, 68, 68, 0.2);
+            background-color: rgba(244, 63, 94, 0.15);
             color: var(--error-color);
             border: 1px solid var(--error-color);
             display: block;
+        }
+
+        /* Modal / Solucionario */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 25px;
+            box-sizing: border-box;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .story-line {
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(255,255,255,0.05);
+            font-size: 0.9rem;
+        }
+
+        .story-line span {
+            display: block;
+            color: #94a3b8;
+            font-size: 0.8rem;
         }
 
         .completion-screen {
@@ -156,6 +232,7 @@
 
         .completion-screen h2 {
             color: var(--success-color);
+            font-size: 2rem;
         }
     </style>
 </head>
@@ -163,36 +240,52 @@
 
 <div class="container">
     <div id="game-container">
-        <h1>Entrenador Alemán-Español (Cuento)</h1>
+        <div class="header-top">
+            <h1>Cuento Interactivo</h1>
+            <div>
+                <button class="btn-icon" onclick="toggleMode()" id="mode-btn">Modo: DE ➔ ES</button>
+                <button class="btn-icon" onclick="openModal()">📖 Solucionario</button>
+            </div>
+        </div>
         
         <div class="stats">
-            <span id="progress-text">Progreso: 0 / 23</span>
-            <span id="streak-text">Aciertos consecutivos de la frase: 0/3</span>
+            <span id="progress-text">Completados: 0 / 25</span>
+            <span id="streak-text">Aciertos consecutivos: 0/2</span>
         </div>
 
         <div class="prompt-box">
-            <div class="label">Traduce al Español:</div>
-            <div class="german-sentence" id="german-el"></div>
+            <div class="label" id="instruction-label">Traduce al Español:</div>
+            <div class="target-sentence" id="target-el"></div>
             <div class="english-hint" id="english-el"></div>
         </div>
 
         <div class="input-group">
-            <input type="text" id="user-input" placeholder="Escribe la oración en español..." autocomplete="off">
-            <button id="submit-btn" onclick="checkAnswer()">Comprobar</button>
+            <input type="text" id="user-input" placeholder="Escribe tu traducción..." autocomplete="off">
+            <button class="main-btn" id="action-btn" onclick="handleAction()">Comprobar Respuesta</button>
         </div>
 
         <div id="feedback-msg" class="feedback"></div>
     </div>
 
     <div id="completion-screen" class="completion-screen">
-        <h2>🎉 ¡Felicitaciones!</h2>
-        <p>Has completado todo el cuento dominando cada oración con 3 aciertos seguidos.</p>
-        <button onclick="restartGame()">Reiniciar Práctica</button>
+        <h2>🎉 ¡Excelente Trabajo!</h2>
+        <p>Has dominado todo el cuento completo aplicando el sistema de repetición espaciada en bloques.</p>
+        <button class="main-btn" onclick="restartGame()">Volver a Jugar</button>
+    </div>
+</div>
+
+<!-- Modal Solucionario -->
+<div class="modal" id="solution-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 style="margin:0; color:#818cf8;">Guía Completa del Cuento</h3>
+            <button class="btn-icon" onclick="closeModal()">✕ Cerrar</button>
+        </div>
+        <div id="solution-list"></div>
     </div>
 </div>
 
 <script>
-    // Base de datos completa procesada en bloques de 3
     const database = [
         { es: "En una pequeña ciudad", de: "In einer kleinen Stadt", en: "In a small town" },
         { es: "un hombre viejo vivía solo.", de: "ein alter Mann lebte allein.", en: "an old man lived alone." },
@@ -221,31 +314,27 @@
         { es: "debes encontrar la paz en tu propio corazón.", de: "musst du Frieden in deinem eigenen Herzen finden.", en: "you must find peace in your own heart." }
     ];
 
-    // Estado del juego
     let pool = [...database];
     let activeGroup = [];
     let currentItem = null;
-    let streaks = {}; // Guarda los aciertos consecutivos de cada item por su índice original o referencia
+    let streaks = {};
     let completedCount = 0;
+    let isGermanToSpanish = true; // true: pregunta DE, escribe ES. false: pregunta ES, escribe DE.
+    let waitingForNext = false; // Controla si estamos pausados tras un error
 
-    // Inicializar contadores de racha
-    database.forEach((item, index) => {
-        streaks[index] = 0;
-    });
+    database.forEach((item, index) => { streaks[index] = 0; });
 
-    function getOriginalIndex(item) {
-        return database.indexOf(item);
-    }
+    function getOriginalIndex(item) { return database.indexOf(item); }
 
     function refillActiveGroup() {
-        // Mantiene siempre un grupo activo de hasta 3 elementos cogidos del pool general
         while (activeGroup.length < 3 && pool.length > 0) {
-            let nextItem = pool.shift();
-            activeGroup.push(nextItem);
+            activeGroup.push(pool.shift());
         }
     }
 
     function nextQuestion() {
+        waitingForNext = false;
+        document.getElementById('action-btn').textContent = "Comprobar Respuesta";
         refillActiveGroup();
 
         if (activeGroup.length === 0) {
@@ -254,17 +343,23 @@
             return;
         }
 
-        // Selecciona aleatoriamente una de las 3 oraciones del grupo actual
         const randomIndex = Math.floor(Math.random() * activeGroup.length);
         currentItem = activeGroup[randomIndex];
 
-        // Mostrar en pantalla
-        document.getElementById('german-el').textContent = currentItem.de;
-        document.getElementById('english-el').textContent = `Pista (EN): ${currentItem.en}`;
-        
         let origIdx = getOriginalIndex(currentItem);
-        document.getElementById('streak-text').textContent = `Aciertos consecutivos de la frase: ${streaks[origIdx]}/3`;
-        document.getElementById('progress-text').textContent = `Progreso completados: ${completedCount} /${database.length}`;
+
+        if (isGermanToSpanish) {
+            document.getElementById('instruction-label').textContent = "Traduce al Español:";
+            document.getElementById('target-el').textContent = currentItem.de;
+            document.getElementById('english-el').textContent = `Pista (EN): ${currentItem.en}`;
+        } else {
+            document.getElementById('instruction-label').textContent = "Traduce al Alemán:";
+            document.getElementById('target-el').textContent = currentItem.es;
+            document.getElementById('english-el').textContent = `Pista (EN): ${currentItem.en}`;
+        }
+
+        document.getElementById('streak-text').textContent = `Aciertos consecutivos: ${streaks[origIdx]}/2`;
+        document.getElementById('progress-text').textContent = `Completados: ${completedCount} /${database.length}`;
         
         document.getElementById('user-input').value = '';
         document.getElementById('feedback-msg').className = 'feedback';
@@ -274,8 +369,16 @@
 
     function normalizeText(text) {
         return text.trim().toLowerCase()
-            .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // quita tildes para flexibilidad
-            .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""); // quita signos de puntuación
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+    }
+
+    function handleAction() {
+        if (waitingForNext) {
+            nextQuestion();
+            return;
+        }
+        checkAnswer();
     }
 
     function checkAnswer() {
@@ -285,54 +388,76 @@
         const feedbackEl = document.getElementById('feedback-msg');
         let origIdx = getOriginalIndex(currentItem);
 
-        if (normalizeText(userVal) === normalizeText(currentItem.es)) {
-            // Acierto
+        let targetValue = isGermanToSpanish ? currentItem.es : currentItem.de;
+
+        if (normalizeText(userVal) === normalizeText(targetValue)) {
             streaks[origIdx]++;
             
-            if (streaks[origIdx] >= 3) {
-                // Saca del grupo de 3 activo porque ya cumplió 3 veces seguidas
-                feedbackEl.textContent = "¡Correcto! Frase dominada y retirada del grupo activo.";
+            if (streaks[origIdx] >= 2) {
+                feedbackEl.textContent = "¡Excelente! Frase dominada y retirada del grupo activo.";
                 feedbackEl.className = "feedback success";
-                
                 activeGroup = activeGroup.filter(item => item !== currentItem);
                 completedCount++;
             } else {
-                feedbackEl.textContent = `¡Correcto! (Llevas ${streaks[origIdx]}/3 aciertos seguidos para esta frase)`;
+                feedbackEl.textContent = `¡Correcto! (Llevas ${streaks[origIdx]}/2 aciertos consecutivos). ¡Una más para retirarla!`;
                 feedbackEl.className = "feedback success";
             }
 
-            setTimeout(nextQuestion, 1200);
+            setTimeout(nextQuestion, 1300);
         } else {
-            // Error: reinicia el contador de esta frase a 0 y se queda en el grupo
+            // Error: resetea racha, pausa y exige click para leer con calma
             streaks[origIdx] = 0;
-            feedbackEl.textContent = `Incorrecto. La respuesta era: "${currentItem.es}". ¡Inténtalo de nuevo con otra o en un momento!`;
+            document.getElementById('streak-text').textContent = `Aciertos consecutivos: ${streaks[origIdx]}/2`;
+            
+            feedbackEl.innerHTML = `<strong>Incorrecto.</strong> La respuesta correcta era:<br><span style="font-size:1.1rem; color:#fff;">"${targetValue}"</span><br><small style="color:#94a3b8;">Tómate tu tiempo para repasar y pulsa el botón para continuar.</small>`;
             feedbackEl.className = "feedback error";
             
-            document.getElementById('streak-text').textContent = `Aciertos consecutivos de la frase: ${streaks[origIdx]}/3`;
-            setTimeout(nextQuestion, 2500);
+            waitingForNext = true;
+            document.getElementById('action-btn').textContent = "Siguiente ➔";
         }
     }
 
-    // Permitir enviar con la tecla Enter
+    function toggleMode() {
+        isGermanToSpanish = !isGermanToSpanish;
+        document.getElementById('mode-btn').textContent = isGermanToSpanish ? "Modo: DE ➔ ES" : "Modo: ES ➔ DE";
+        nextQuestion();
+    }
+
     document.getElementById('user-input').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
-            checkAnswer();
+            handleAction();
         }
     });
+
+    function openModal() {
+        const listContainer = document.getElementById('solution-list');
+        listContainer.innerHTML = '';
+        database.forEach((item, index) => {
+            listContainer.innerHTML += `
+                <div class="story-line">
+                    <strong>${index + 1}. DE:</strong> ${item.de}<br>
+                    <strong>ES:</strong> ${item.es}<br>
+                    <span>EN: ${item.en}</span>
+                </div>
+            `;
+        });
+        document.getElementById('solution-modal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('solution-modal').style.display = 'none';
+    }
 
     function restartGame() {
         pool = [...database];
         activeGroup = [];
         completedCount = 0;
-        database.forEach((item, index) => {
-            streaks[index] = 0;
-        });
+        database.forEach((item, index) => { streaks[index] = 0; });
         document.getElementById('completion-screen').style.display = 'none';
         document.getElementById('game-container').style.display = 'block';
         nextQuestion();
     }
 
-    // Arrancar el juego por primera vez
     nextQuestion();
 </script>
 
