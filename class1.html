@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Entrenador Alemán</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+    --bg-base:#05070f;
+    --card-surface:rgba(16,23,38,.98);
+    --text-main:#f8fafc;
+    --text-muted:#94a3b8;
+    --accent:#00f0ff;
+    --success:#00ff88;
+    --error:#ff0055;
+    --border:rgba(255,255,255,.08);
+    --glow:0 0 12px rgba(0,240,255,.2);
+}
+
+* {
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body {
+    font-family:'Inter',sans-serif;
+    background:
+        radial-gradient(circle at 50% 0%,rgba(0,240,255,.06),transparent 50%),
+        radial-gradient(circle at 50% 100%,rgba(255,0,85,.04),transparent 50%),
+        var(--bg-base);
+    color:var(--text-main);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100dvh;
+    width:100vw;
+    padding:4px;
+    overflow:hidden;
+}
+
+.app-container {
+    width:100%;
+    max-width:400px;
+    height:96dvh;
+    background:var(--card-surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.8);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    gap:10px;
+    padding:12px;
+}
+
+.screen {
+    display:none;
+    flex-direction:column;
+    width:100%;
+    justify-content:center;
+    gap:10px;
+    animation:fadeIn .2s ease;
+}
+
+.screen.active {
+    display:flex;
+}
+
+h1,h2 {
+    font-family:'Rajdhani',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    text-align:center;
+}
+
+.intro-screen {
+    align-items:center;
+    text-align:center;
+    gap:12px;
+}
+
+.intro-screen h1 {
+    color:var(--accent);
+    font-size:1.6rem;
+    text-shadow:var(--glow);
+}
+
+.intro-screen p {
+    color:var(--text-muted);
+    font-size:.75rem;
+    line-height:1.4;
+    max-width:290px;
+    margin:auto;
+}
+
+.name-input,
+.user-input {
+    width:100%;
+    padding:10px;
+    background:#090d16;
+    border:2px solid var(--border);
+    border-radius:10px;
+    color:#fff;
+    font-size:.9rem;
+    outline:none;
+    text-align:center;
+}
+
+.name-input:focus,
+.user-input:focus {
+    border-color:var(--accent);
+    box-shadow:var(--glow);
+}
+
+.btn-main {
+    background:linear-gradient(135deg,var(--accent),#0077ff);
+    color:#000;
+    border:none;
+    border-radius:10px;
+    padding:10px;
+    font-size:.85rem;
+    font-weight:700;
+    text-transform:uppercase;
+    font-family:'Rajdhani',sans-serif;
+    letter-spacing:1px;
+    cursor:pointer;
+    width:100%;
+}
+
+.game-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid var(--border);
+    padding-bottom:6px;
+}
+
+.mode-badge {
+    background:rgba(255,255,255,.05);
+    border:1px solid var(--border);
+    color:var(--accent);
+    padding:3px 6px;
+    border-radius:4px;
+    font-size:.65rem;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.hud-stats {
+    display:flex;
+    justify-content:space-between;
+    font-size:.65rem;
+    color:var(--text-muted);
+    font-weight:600;
+    text-transform:uppercase;
+    width:100%;
+}
+
+.prompt-card {
+    background:#090d16;
+    border-radius:12px;
+    padding:16px 14px;
+    border-left:3px solid var(--accent);
+    box-shadow:inset 0 2px 4px rgba(0,0,0,.4);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:flex-start;
+    width:100%;
+}
+
+.prompt-tag {
+    font-size:.58rem;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--text-muted);
+    margin-bottom:5px;
+}
+
+.target-sentence {
+    font-size:1.15rem;
+    font-weight:700;
+    color:#fff;
+    line-height:1.3;
+}
+
+.hint {
+    font-size:.68rem;
+    color:var(--text-muted);
+    font-style:italic;
+    margin-top:5px;
+    display:none;
+}
+
+.feedback-box {
+    padding:8px;
+    border-radius:8px;
+    text-align:center;
+    font-size:.72rem;
+    display:none;
+    line-height:1.3;
+    width:100%;
+}
+
+.feedback-box.success {
+    background:rgba(0,255,136,.08);
+    color:var(--success);
+    border:1px solid rgba(0,255,136,.3);
+    display:block;
+}
+
+.feedback-box.error {
+    background:rgba(255,0,85,.08);
+    color:var(--error);
+    border:1px solid rgba(255,0,85,.3);
+    display:block;
+}
+
+.correct-answer-text {
+    display:block;
+    font-size:.85rem;
+    color:#fff;
+    font-weight:bold;
+    margin-top:3px;
+    background:rgba(0,0,0,.3);
+    padding:4px;
+    border-radius:4px;
+}
+
+.vocab-word {
+    width:100%;
+    padding:12px;
+    background:#090d16;
+    border-radius:10px;
+    border:1px solid var(--border);
+    text-align:center;
+}
+
+.vocab-word .german {
+    font-size:1.2rem;
+    font-weight:700;
+    color:#fff;
+}
+
+.vocab-word .spanish {
+    font-size:.8rem;
+    color:var(--text-muted);
+    margin-top:4px;
+}
+
+.stats-screen {
+    text-align:center;
+}
+
+.stats-card {
+    background:#090d16;
+    border-radius:10px;
+    padding:8px;
+    border:1px solid var(--border);
+    width:100%;
+}
+
+.stat-row {
+    display:flex;
+    justify-content:space-between;
+    padding:4px 0;
+    border-bottom:1px dashed rgba(255,255,255,.06);
+    font-size:.72rem;
+}
+
+.stat-row:last-child {
+    border:none;
+}
+
+.stat-value {
+    font-weight:bold;
+    color:var(--accent);
+}
+
+.stat-value.green {
+    color:var(--success);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity:0;
+        transform:scale(.98);
+    }
+    to {
+        opacity:1;
+        transform:scale(1);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app-container">
+
+<!-- =========================
+     INICIO
+========================= -->
+
+<div id="screen-intro" class="screen intro-screen active">
+
+    <div>
+        <h1>Entrenador Alemán</h1>
+
+        <p>
+            Primero domina el vocabulario.
+            Después domina las oraciones mediante bloques inteligentes de 3.
+        </p>
+    </div>
+
+    <input
+        type="text"
+        id="input-name"
+        class="name-input"
+        placeholder="Ingresa tu nombre..."
+        autocomplete="off"
+    >
+
+    <button class="btn-main" onclick="startApp()">
+        Comenzar Desafío ➔
+    </button>
+
+</div>
+
+
+<!-- =========================
+     VOCABULARIO
+========================= -->
+
+<div id="screen-vocab" class="screen">
+
+    <div class="game-header">
+        <h2 style="font-size:.85rem;color:var(--accent)">
+            Fase 1 · Vocabulario
+        </h2>
+
+        <span
+            id="vocab-progress"
+            style="font-size:.65rem;color:var(--text-muted)"
+        >
+            0/0
+        </span>
+    </div>
+
+    <div class="prompt-card">
+
+        <div class="prompt-tag">
+            Aprende esta palabra / expresión
+        </div>
+
+        <div class="vocab-word">
+
+            <div
+                class="german"
+                id="vocab-german"
+            ></div>
+
+            <div
+                class="spanish"
+                id="vocab-spanish"
+            ></div>
+
+        </div>
+
+    </div>
+
+    <button
+        class="btn-main"
+        onclick="nextVocabulary()"
+        id="vocab-btn"
+    >
+        Ya la aprendí ➔
+    </button>
+
+</div>
+
+
+<!-- =========================
+     ORACIONES
+========================= -->
+
+<div id="screen-game" class="screen">
+
+    <div class="game-header">
+
+        <h2 style="font-size:.85rem;color:var(--accent)">
+            Fase 2 · Oraciones
+        </h2>
+
+        <button
+            class="mode-badge"
+            onclick="toggleLanguageMode()"
+            id="mode-toggle-btn"
+        >
+            DE ➔ ES
+        </button>
+
+    </div>
+
+    <div class="hud-stats">
+
+        <span id="hud-progress">
+            Progreso: 0/25
+        </span>
+
+        <span id="hud-streak">
+            Racha: 0/3
+        </span>
+
+    </div>
+
+    <div class="prompt-card">
+
+        <div
+            class="prompt-tag"
+            id="label-instruction"
+        >
+            Traduce al Español:
+        </div>
+
+        <div
+            class="target-sentence"
+            id="display-target"
+        ></div>
+
+        <div
+            class="hint"
+            id="display-hint"
+        ></div>
+
+    </div>
+
+    <div
+        id="feedback-box"
+        class="feedback-box"
+    ></div>
+
+    <div class="action-panel">
+
+        <input
+            type="text"
+            id="user-input"
+            class="user-input"
+            placeholder="Escribe tu traducción..."
+            autocomplete="off"
+        >
+
+        <button
+            class="btn-main"
+            id="action-btn"
+            onclick="handleAction()"
+        >
+            Comprobar
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     ESTADÍSTICAS
+========================= -->
+
+<div id="screen-stats" class="screen stats-screen">
+
+    <div>
+
+        <h2 style="color:var(--success);font-size:1rem">
+            ¡Misión Cumplida!
+        </h2>
+
+        <p
+            id="final-greeting"
+            style="font-size:.68rem;color:var(--text-muted)"
+        ></p>
+
+    </div>
+
+    <div class="stats-card">
+
+        <div style="
+            text-align:center;
+            font-family:'Rajdhani';
+            font-weight:700;
+            color:var(--accent);
+            margin-bottom:3px;
+            font-size:.7rem;
+        ">
+            ⚡ RESUMEN DE RENDIMIENTO ⚡
+        </div>
+
+        <div class="stat-row">
+            <span>Tiempo total:</span>
+            <span
+                class="stat-value"
+                id="stat-time"
+            >
+                00:00
+            </span>
+        </div>
+
+        <div class="stat-row">
+            <span>Precisión global:</span>
+            <span
+                class="stat-value green"
+                id="stat-accuracy"
+            >
+                0%
+            </span>
+        </div>
+
+        <div class="stat-row">
+            <span>Errores:</span>
+            <span
+                class="stat-value"
+                id="stat-errors"
+            >
+                0
+            </span>
+        </div>
+
+    </div>
+
+    <button
+        class="btn-main"
+        onclick="location.reload()"
+    >
+        Jugar de Nuevo ➔
+    </button>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   BASE DE DATOS
+========================================================= */
+
+const database = [
+
+    {
+        es:"En una pequeña ciudad",
+        de:"In einer kleinen Stadt",
+        en:"In a small town"
+    },
+
+    {
+        es:"un hombre viejo vivía solo.",
+        de:"ein alter Mann lebte allein.",
+        en:"an old man lived alone."
+    },
+
+    {
+        es:"Todos los días miraba la puerta",
+        de:"Jeden Tag sah er die Tür an",
+        en:"Every day he looked at the door"
+    },
+
+    {
+        es:"y esperaba.",
+        de:"und wartete.",
+        en:"and waited."
+    },
+
+    {
+        es:"El tiempo pasa rápido",
+        de:"Die Zeit vergeht schnell",
+        en:"Time passes quickly"
+    },
+
+    {
+        es:"cuando el corazón busca algo.",
+        de:"wenn das Herz etwas sucht.",
+        en:"when the heart looks for something."
+    },
+
+    {
+        es:"Nadie sabía qué había detrás de esa puerta cerrada.",
+        de:"Niemand wusste, was hinter dieser geschlossenen Tür war.",
+        en:"Nobody knew what was behind that closed door."
+    },
+
+    {
+        es:"Nunca se abría.",
+        de:"Sie öffnete sich nie.",
+        en:"It never opened."
+    },
+
+    {
+        es:"pero a veces se escuchaba",
+        de:"aber manchmal hörte man",
+        en:"but sometimes one could hear"
+    },
+
+    {
+        es:"una voz suave.",
+        de:"eine sanfte Stimme.",
+        en:"a soft voice."
+    },
+
+    {
+        es:"Una noche oscura",
+        de:"Eines dunklen Nachts",
+        en:"One dark night"
+    },
+
+    {
+        es:"la llave cayó al suelo.",
+        de:"fiel der Schlüssel auf den Boden.",
+        en:"the key fell to the floor."
+    },
+
+    {
+        es:"El hombre tomó la llave fría",
+        de:"Der Mann nahm den kalten Schlüssel",
+        en:"The man took the cold key"
+    },
+
+    {
+        es:"con su mano.",
+        de:"mit seiner Hand.",
+        en:"with his hand."
+    },
+
+    {
+        es:"Tenía miedo de abrirla,",
+        de:"Er hatte Angst, sie zu öffnen,",
+        en:"He was afraid to open it,"
+    },
+
+    {
+        es:"porque el amor cambia la vida.",
+        de:"denn die Liebe verändert das Leben.",
+        en:"because love changes life."
+    },
+
+    {
+        es:"Abrió lentamente.",
+        de:"Er öffnete sie langsam.",
+        en:"He opened it slowly."
+    },
+
+    {
+        es:"La habitación estaba vacía.",
+        de:"Das Zimmer war leer.",
+        en:"The room was empty."
+    },
+
+    {
+        es:"Sobre la mesa había un espejo.",
+        de:"Auf dem Tisch war ein Spiegel.",
+        en:"There was a mirror on the table."
+    },
+
+    {
+        es:"Al mirar, vio su rostro",
+        de:"Beim Hineinsehen sah er sein Gesicht",
+        en:"Looking, he saw his face"
+    },
+
+    {
+        es:"y comprendió la verdad:",
+        de:"und verstand die Wahrheit:",
+        en:"and understood the truth:"
+    },
+
+    {
+        es:"la persona que buscaba",
+        de:"die Person, die er suchte",
+        en:"the person he was looking for"
+    },
+
+    {
+        es:"estaba dentro de él.",
+        de:"war in ihm.",
+        en:"was inside him."
+    },
+
+    {
+        es:"Para amar a otro",
+        de:"Um einen anderen zu lieben",
+        en:"To love another"
+    },
+
+    {
+        es:"debes encontrar la paz en tu propio corazón.",
+        de:"musst du Frieden in deinem eigenen Herzen finden.",
+        en:"you must find peace in your own heart."
+    }
+
+];
+
+
+/* =========================================================
+   VOCABULARIO INTELIGENTE
+========================================================= */
+
+const vocabulary = [
+
+    ["Sie","ella"],
+    ["öffnen","abrir"],
+    ["sich öffnen","abrirse"],
+    ["nie","nunca"],
+    ["Niemand","nadie"],
+    ["wissen","saber"],
+    ["wusste","sabía"],
+    ["was","qué / lo que"],
+    ["hinter","detrás de"],
+    ["dieser","esta / este"],
+    ["geschlossen","cerrado"],
+    ["geschlossenen Tür","puerta cerrada"],
+    ["Tür","puerta"],
+    ["sein","ser / estar"],
+    ["war","era / estaba / había"],
+    ["klein","pequeño"],
+    ["Stadt","ciudad"],
+    ["Mann","hombre"],
+    ["alt","viejo"],
+    ["allein","solo"],
+    ["jeden Tag","todos los días"],
+    ["sehen","ver / mirar"],
+    ["sah","vio / miró"],
+    ["warten","esperar"],
+    ["und","y"],
+    ["Zeit","tiempo"],
+    ["schnell","rápido"],
+    ["wenn","cuando / si"],
+    ["Herz","corazón"],
+    ["etwas","algo"],
+    ["suchen","buscar"],
+    ["manchmal","a veces"],
+    ["hören","escuchar"],
+    ["Stimme","voz"],
+    ["sanft","suave"],
+    ["Nacht","noche"],
+    ["dunkel","oscuro"],
+    ["Schlüssel","llave"],
+    ["fallen","caer"],
+    ["Boden","suelo"],
+    ["nehmen","tomar"],
+    ["kalt","frío"],
+    ["Hand","mano"],
+    ["Angst haben","tener miedo"],
+    ["Liebe","amor"],
+    ["Leben","vida"],
+    ["Zimmer","habitación"],
+    ["leer","vacío"],
+    ["Tisch","mesa"],
+    ["Spiegel","espejo"],
+    ["Gesicht","rostro / cara"],
+    ["Wahrheit","verdad"],
+    ["Person","persona"],
+    ["innen / in","dentro de"],
+    ["Frieden","paz"],
+    ["eigen","propio"],
+    ["Herz","corazón"]
+];
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+let playerName = "";
+
+let vocabIndex = 0;
+
+let pool = [];
+
+let activeGroup = [];
+
+let currentItem = null;
+
+/*
+    IMPORTANTE:
+
+    forcedItem SOLO existe después de un ERROR.
+
+    Su única función es obligar a repetir inmediatamente
+    la oración que se falló.
+
+    Después de un acierto se elimina automáticamente.
+*/
+let forcedItem = null;
+
+let lastItem = null;
+
+let streaks = {};
+
+let completedCount = 0;
+
+let isGermanToSpanish = true;
+
+let gameState = "QUESTION";
+
+let startTime = 0;
+
+let totalAttempts = 0;
+
+let totalErrors = 0;
+
+let itemAnalytics = [];
+
+
+/* =========================================================
+   CAMBIO DE PANTALLA
+========================================================= */
+
+function switchScreen(id) {
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(screen => screen.classList.remove("active"));
+
+    document
+        .getElementById(id)
+        .classList.add("active");
+}
+
+
+/* =========================================================
+   INICIO
+========================================================= */
+
+function startApp() {
+
+    const input =
+        document
+            .getElementById("input-name")
+            .value
+            .trim();
+
+    playerName =
+        input === ""
+            ? "Estudiante"
+            : input;
+
+    startTime = Date.now();
+
+    totalAttempts = 0;
+    totalErrors = 0;
+
+    itemAnalytics =
+        database.map((_, index) => ({
+            index,
+            errors:0,
+            successes:0
+        }));
+
+    pool = [...database];
+
+    activeGroup = [];
+
+    completedCount = 0;
+
+    forcedItem = null;
+
+    lastItem = null;
+
+    streaks = {};
+
+    database.forEach((_, index) => {
+        streaks[index] = 0;
+    });
+
+    vocabIndex = 0;
+
+    switchScreen("screen-vocab");
+
+    showVocabulary();
+}
+
+
+/* =========================================================
+   FASE 1 — VOCABULARIO
+========================================================= */
+
+function showVocabulary() {
+
+    if (vocabIndex >= vocabulary.length) {
+
+        startSentencePhase();
+
+        return;
+    }
+
+    const item = vocabulary[vocabIndex];
+
+    document.getElementById("vocab-german").textContent =
+        item[0];
+
+    document.getElementById("vocab-spanish").textContent =
+        item[1];
+
+    document.getElementById("vocab-progress").textContent =
+        `${vocabIndex + 1}/${vocabulary.length}`;
+
+}
+
+
+function nextVocabulary() {
+
+    vocabIndex++;
+
+    if (vocabIndex >= vocabulary.length) {
+
+        startSentencePhase();
+
+        return;
+    }
+
+    showVocabulary();
+}
+
+
+/* =========================================================
+   FASE 2 — ORACIONES
+========================================================= */
+
+function startSentencePhase() {
+
+    switchScreen("screen-game");
+
+    loadNextQuestion();
+}
+
+
+/* =========================================================
+   MANTENER GRUPO DE 3
+========================================================= */
+
+function refillActiveGroup() {
+
+    while (
+        activeGroup.length < 3 &&
+        pool.length > 0
+    ) {
+
+        activeGroup.push(pool.shift());
+    }
+}
+
+
+/* =========================================================
+   ELEGIR SIGUIENTE ORACIÓN
+========================================================= */
+
+function chooseNextItem() {
+
+    /*
+        REGLA 1:
+        Si hubo error, repetir exactamente
+        la misma oración.
+    */
+
+    if (
+        forcedItem !== null &&
+        activeGroup.includes(forcedItem)
+    ) {
+
+        const item = forcedItem;
+
+        forcedItem = null;
+
+        return item;
+    }
+
+
+    /*
+        REGLA 2:
+        Si la anterior fue correcta,
+        NO se permite repetirla inmediatamente.
+
+        Por eso filtramos lastItem.
+    */
+
+    let candidates =
+        activeGroup.filter(
+            item => item !== lastItem
+        );
+
+
+    /*
+        Si por alguna razón solo queda una,
+        esa única opción sí puede aparecer.
+    */
+
+    if (candidates.length === 0) {
+        candidates = [...activeGroup];
+    }
+
+
+    const randomIndex =
+        Math.floor(
+            Math.random() * candidates.length
+        );
+
+    return candidates[randomIndex];
+}
+
+
+/* =========================================================
+   CARGAR PREGUNTA
+========================================================= */
+
+function loadNextQuestion() {
+
+    gameState = "QUESTION";
+
+    const btn =
+        document.getElementById("action-btn");
+
+    btn.textContent = "Comprobar";
+
+    btn.style.background = "";
+
+
+    const feedback =
+        document.getElementById("feedback-box");
+
+    feedback.className = "feedback-box";
+
+    feedback.style.display = "none";
+
+
+    const hint =
+        document.getElementById("display-hint");
+
+    hint.style.display = "none";
+
+
+    refillActiveGroup();
+
+
+    /*
+        Si ya no quedan oraciones,
+        termina el juego.
+    */
+
+    if (activeGroup.length === 0) {
+
+        finishGame();
+
+        return;
+    }
+
+
+    currentItem = chooseNextItem();
+
+    const origIdx =
+        database.indexOf(currentItem);
+
+
+    if (isGermanToSpanish) {
+
+        document.getElementById(
+            "label-instruction"
+        ).textContent =
+            "Traduce al Español:";
+
+        document.getElementById(
+            "display-target"
+        ).textContent =
+            currentItem.de;
+
+    } else {
+
+        document.getElementById(
+            "label-instruction"
+        ).textContent =
+            "Traduce al Alemán:";
+
+        document.getElementById(
+            "display-target"
+        ).textContent =
+            currentItem.es;
+    }
+
+
+    document.getElementById(
+        "display-hint"
+    ).textContent =
+        `Pista en Inglés: ${currentItem.en}`;
+
+
+    document.getElementById(
+        "hud-streak"
+    ).textContent =
+        `Racha: ${streaks[origIdx]}/3`;
+
+
+    document.getElementById(
+        "hud-progress"
+    ).textContent =
+        `Progreso: ${completedCount}/${database.length}`;
+
+
+    const input =
+        document.getElementById("user-input");
+
+    input.value = "";
+
+    input.disabled = false;
+
+    setTimeout(
+        () => input.focus(),
+        50
+    );
+}
+
+
+/* =========================================================
+   NORMALIZACIÓN
+========================================================= */
+
+function normalize(text) {
+
+    return text
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+        .replace(/\s+/g, " ");
+}
+
+
+/* =========================================================
+   BOTÓN
+========================================================= */
+
+function handleAction() {
+
+    /*
+        Si acaba de haber un ERROR:
+        al pulsar el botón se carga inmediatamente
+        la MISMA oración.
+
+        Después de cargarla, forcedItem desaparece.
+    */
+
+    if (gameState === "ERROR_WAIT") {
+
+        loadNextQuestion();
+
+        return;
+    }
+
+
+    /*
+        Si respondió correctamente:
+        al pulsar siguiente se carga otra oración,
+        excluyendo la anterior.
+    */
+
+    if (gameState === "SUCCESS_WAIT") {
+
+        loadNextQuestion();
+
+        return;
+    }
+
+
+    evaluateAnswer();
+}
+
+
+/* =========================================================
+   EVALUAR RESPUESTA
+========================================================= */
+
+function evaluateAnswer() {
+
+    if (!currentItem) return;
+
+
+    const userVal =
+        document
+            .getElementById("user-input")
+            .value;
+
+
+    const correctVal =
+        isGermanToSpanish
+            ? currentItem.es
+            : currentItem.de;
+
+
+    const origIdx =
+        database.indexOf(currentItem);
+
+
+    const feedback =
+        document.getElementById("feedback-box");
+
+
+    const btn =
+        document.getElementById("action-btn");
+
+
+    const input =
+        document.getElementById("user-input");
+
+
+    totalAttempts++;
+
+    input.disabled = true;
+
+
+    /* =============================================
+       RESPUESTA CORRECTA
+    ============================================= */
+
+    if (
+        normalize(userVal) ===
+        normalize(correctVal)
+    ) {
+
+        streaks[origIdx]++;
+
+        itemAnalytics[origIdx].successes++;
+
+
+        /*
+            MUY IMPORTANTE:
+
+            Al responder correctamente,
+            NO dejamos forcedItem.
+
+            Además guardamos currentItem como lastItem
+            para impedir que salga inmediatamente otra vez.
+        */
+
+        forcedItem = null;
+
+        lastItem = currentItem;
+
+
+        /*
+            3 aciertos consecutivos:
+            la oración queda DOMINADA
+            y sale definitivamente del grupo.
+        */
+
+        if (streaks[origIdx] >= 3) {
+
+            feedback.innerHTML =
+                `<strong>¡Excelente!</strong>
+                 Frase dominada y retirada del grupo.`;
+
+            activeGroup =
+                activeGroup.filter(
+                    item => item !== currentItem
+                );
+
+            completedCount++;
+
+
+            /*
+                Si se retiró la última oración
+                disponible del grupo, refillActiveGroup()
+                incorporará nuevas.
+            */
+
+        } else {
+
+            feedback.innerHTML =
+                `<strong>¡Correcto!</strong>
+                 Llevas ${streaks[origIdx]}/3
+                 aciertos consecutivos.`;
+        }
+
+
+        feedback.className =
+            "feedback-box success";
+
+        feedback.style.display =
+            "block";
+
+
+        gameState =
+            "SUCCESS_WAIT";
+
+
+        btn.textContent =
+            "Siguiente ➔";
+
+        btn.style.background =
+            "linear-gradient(135deg,#00ff88,#00b35f)";
+
+
+        /*
+            Avance automático.
+
+            Como lastItem = currentItem,
+            loadNextQuestion() NO podrá escoger
+            inmediatamente la misma oración.
+        */
+
+        setTimeout(() => {
+
+            if (
+                gameState ===
+                "SUCCESS_WAIT"
+            ) {
+
+                loadNextQuestion();
+            }
+
+        }, 1200);
+
+    }
+
+
+    /* =============================================
+       RESPUESTA INCORRECTA
+    ============================================= */
+
+    else {
+
+        /*
+            Error = reiniciar racha.
+        */
+
+        streaks[origIdx] = 0;
+
+        itemAnalytics[origIdx].errors++;
+
+        totalErrors++;
+
+
+        /*
+            ESTA ES LA PARTE CLAVE:
+
+            forcedItem = currentItem
+
+            La próxima pregunta será obligatoriamente
+            esta misma oración.
+        */
+
+        forcedItem = currentItem;
+
+
+        /*
+            No cambiamos lastItem aquí.
+
+            El sistema sabe que hubo error y forcedItem
+            tiene prioridad absoluta.
+        */
+
+
+        document.getElementById(
+            "hud-streak"
+        ).textContent =
+            "Racha: 0/3";
+
+
+        document.getElementById(
+            "display-hint"
+        ).style.display =
+            "block";
+
+
+        feedback.innerHTML = `
+            <div style="font-weight:700;margin-bottom:2px;">
+                INCORRECTO
+            </div>
+
+            La respuesta exacta es:
+
+            <span class="correct-answer-text">
+                ${correctVal}
+            </span>
+
+            <span style="
+                font-size:.62rem;
+                color:var(--text-muted);
+                display:block;
+                margin-top:2px;
+            ">
+                Repite esta misma oración ahora.
+            </span>
+        `;
+
+
+        feedback.className =
+            "feedback-box error";
+
+        feedback.style.display =
+            "block";
+
+
+        gameState =
+            "ERROR_WAIT";
+
+
+        btn.textContent =
+            "Repetir la misma ➔";
+
+        btn.style.background =
+            "linear-gradient(135deg,#ff0055,#cc0044)";
+    }
+}
+
+
+/* =========================================================
+   CAMBIAR DIRECCIÓN
+========================================================= */
+
+function toggleLanguageMode() {
+
+    isGermanToSpanish =
+        !isGermanToSpanish;
+
+
+    document.getElementById(
+        "mode-toggle-btn"
+    ).textContent =
+        isGermanToSpanish
+            ? "DE ➔ ES"
+            : "ES ➔ DE";
+
+
+    /*
+        Solo cambia la pregunta si estamos
+        realmente esperando una nueva.
+
+        No interrumpe una respuesta fallida.
+    */
+
+    if (
+        gameState ===
+        "QUESTION"
+    ) {
+
+        loadNextQuestion();
+    }
+}
+
+
+/* =========================================================
+   ENTER
+========================================================= */
+
+document
+    .getElementById("user-input")
+    .addEventListener(
+        "keypress",
+        function(event) {
+
+            if (event.key === "Enter") {
+
+                handleAction();
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   CONFETI
+========================================================= */
+
+function fireConfetti() {
+
+    const duration =
+        3.5 * 1000;
+
+    const end =
+        Date.now() + duration;
+
+
+    (function frame() {
+
+        confetti({
+            particleCount:3,
+            angle:60,
+            spread:55,
+            origin:{x:0}
+        });
+
+        confetti({
+            particleCount:3,
+            angle:120,
+            spread:55,
+            origin:{x:1}
+        });
+
+
+        if (Date.now() < end) {
+
+            requestAnimationFrame(frame);
+        }
+
+    })();
+}
+
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+function finishGame() {
+
+    switchScreen("screen-stats");
+
+    fireConfetti();
+
+
+    document.getElementById(
+        "final-greeting"
+    ).textContent =
+        `¡Excelente ritmo, ${playerName}!`;
+
+
+    const totalSecs =
+        Math.floor(
+            (Date.now() - startTime) / 1000
+        );
+
+
+    const minutes =
+        Math.floor(totalSecs / 60);
+
+    const seconds =
+        totalSecs % 60;
+
+
+    document.getElementById(
+        "stat-time"
+    ).textContent =
+        `${minutes < 10 ? "0" : ""}${minutes}:` +
+        `${seconds < 10 ? "0" : ""}${seconds}`;
+
+
+    const accuracy =
+        totalAttempts === 0
+            ? 100
+            : (
+                (totalAttempts - totalErrors) /
+                totalAttempts
+            ) * 100;
+
+
+    document.getElementById(
+        "stat-accuracy"
+    ).textContent =
+        accuracy.toFixed(1) + "%";
+
+
+    document.getElementById(
+        "stat-errors"
+    ).textContent =
+        totalErrors;
+}
+
+</script>
+
+</body>
+</html>
