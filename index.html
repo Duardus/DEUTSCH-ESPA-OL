@@ -42,7 +42,7 @@
         .app-container {
             width: 100%;
             max-width: 400px;
-            height: 98dvh;
+            height: 96dvh;
             max-height: 100%;
             background: var(--card-surface);
             backdrop-filter: blur(12px);
@@ -52,16 +52,18 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            padding: 10px;
+            justify-content: center; /* Centrado total y armónico */
+            gap: 10px;
+            padding: 12px;
             position: relative;
         }
 
         .screen {
             display: none;
             flex-direction: column;
-            height: 100%;
-            justify-content: space-between;
+            width: 100%;
+            justify-content: center;
+            gap: 10px;
             animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -78,10 +80,9 @@
 
         /* --- Pantalla de Inicio --- */
         .intro-screen {
-            justify-content: center;
             align-items: center;
             text-align: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .intro-screen h1 {
@@ -122,8 +123,8 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border);
-            padding-bottom: 4px;
-            flex-shrink: 0;
+            padding-bottom: 6px;
+            width: 100%;
         }
 
         .mode-badge {
@@ -145,22 +146,21 @@
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            flex-shrink: 0;
-            margin-top: 2px;
+            width: 100%;
         }
 
+        /* TARJETA COMPACTA Y SIN HUECOS */
         .prompt-card {
             background: #090d16;
-            border-radius: 10px;
-            padding: 14px 12px;
+            border-radius: 12px;
+            padding: 16px 14px;
             border-left: 3px solid var(--accent);
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Centrado vertical correcto sin espacios muertos */
+            justify-content: center;
             align-items: flex-start;
-            margin: 4px 0;
-            flex-shrink: 0; /* Evita que se estire de forma fea */
+            width: 100%;
         }
 
         .prompt-tag {
@@ -189,13 +189,13 @@
         .action-panel {
             display: flex;
             flex-direction: column;
-            gap: 5px;
-            flex-shrink: 0;
+            gap: 8px;
+            width: 100%;
         }
 
         .user-input {
             width: 100%;
-            padding: 9px;
+            padding: 10px;
             background: #090d16;
             border: 2px solid var(--border);
             border-radius: 10px;
@@ -225,20 +225,20 @@
             cursor: pointer;
             box-shadow: 0 3px 10px rgba(0, 240, 255, 0.2);
             transition: transform 0.1s;
+            width: 100%;
         }
 
         .btn-main:active { transform: scale(0.97); }
 
         /* Tarjeta de Feedback Interactiva */
         .feedback-box {
-            padding: 6px;
+            padding: 8px;
             border-radius: 8px;
             text-align: center;
             font-size: 0.72rem;
             display: none;
-            margin: 2px 0;
             line-height: 1.2;
-            flex-shrink: 0;
+            width: 100%;
         }
 
         .feedback-box.success {
@@ -260,31 +260,31 @@
             font-size: 0.85rem;
             color: #fff;
             font-weight: bold;
-            margin-top: 1px;
+            margin-top: 2px;
             background: rgba(0,0,0,0.3);
-            padding: 2px;
+            padding: 3px;
             border-radius: 4px;
         }
 
         /* --- Pantalla de Estadísticas Finales --- */
         .stats-screen {
-            justify-content: space-between;
             text-align: center;
+            gap: 10px;
         }
 
         .stats-card {
             background: #090d16;
             border-radius: 10px;
-            padding: 6px;
+            padding: 8px;
             border: 1px solid var(--border);
-            margin: 2px 0;
             text-align: left;
+            width: 100%;
         }
 
         .stat-row {
             display: flex;
             justify-content: space-between;
-            padding: 2px 0;
+            padding: 3px 0;
             border-bottom: 1px dashed rgba(255,255,255,0.06);
             font-size: 0.72rem;
         }
@@ -295,17 +295,17 @@
 
         .mini-list {
             list-style: none;
-            max-height: 45px;
+            max-height: 50px;
             overflow-y: auto;
-            margin-top: 2px;
+            margin-top: 3px;
         }
 
         .mini-list li {
             font-size: 0.6rem;
             background: rgba(255,255,255,0.03);
-            padding: 2px 4px;
+            padding: 3px 5px;
             border-radius: 4px;
-            margin-bottom: 1px;
+            margin-bottom: 2px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -327,7 +327,7 @@
             <p>Sistema inteligente de bloques de 3 oraciones con refuerzo inmediato de errores.</p>
         </div>
         <input type="text" id="input-name" class="name-input" placeholder="Ingresa tu nombre..." autocomplete="off">
-        <button class="btn-main" style="width: 100%;" onclick="startApp()">Comenzar Desafío ➔</button>
+        <button class="btn-main" onclick="startApp()">Comenzar Desafío ➔</button>
     </div>
 
     <!-- PANTALLA 2: JUEGO -->
@@ -359,12 +359,12 @@
     <!-- PANTALLA 3: ESTADÍSTICAS FINAL -->
     <div id="screen-stats" class="screen stats-screen">
         <div>
-            <h2 style="color: var(--success); font-size: 1rem; margin-bottom: 1px;">¡Misión Cumplida!</h2>
+            <h2 style="color: var(--success); font-size: 1rem; margin-bottom: 2px;">¡Misión Cumplida!</h2>
             <p id="final-greeting" style="font-size: 0.68rem; color: var(--text-muted);"></p>
         </div>
 
         <div class="stats-card" id="whatsapp-capture-area">
-            <div style="text-align:center; font-family:'Rajdhani'; font-weight:700; color:var(--accent); margin-bottom:2px; font-size:0.7rem;">⚡ RESUMEN DE RENDIMIENTO ⚡</div>
+            <div style="text-align:center; font-family:'Rajdhani'; font-weight:700; color:var(--accent); margin-bottom:3px; font-size:0.7rem;">⚡ RESUMEN DE RENDIMIENTO ⚡</div>
             <div class="stat-row">
                 <span>Tiempo total:</span>
                 <span class="stat-value" id="stat-time">00:00</span>
@@ -374,10 +374,10 @@
                 <span class="stat-value green" id="stat-accuracy">0%</span>
             </div>
 
-            <div style="font-size: 0.58rem; color: var(--text-muted); margin-top: 2px;">🔥 Más retadoras:</div>
+            <div style="font-size: 0.58rem; color: var(--text-muted); margin-top: 3px;">🔥 Más retadoras:</div>
             <ul class="mini-list" id="list-hard"></ul>
 
-            <div style="font-size: 0.58rem; color: var(--text-muted); margin-top: 1px;">✨ Impecables:</div>
+            <div style="font-size: 0.58rem; color: var(--text-muted); margin-top: 2px;">✨ Impecables:</div>
             <ul class="mini-list" id="list-easy"></ul>
         </div>
 
@@ -563,10 +563,10 @@
             document.getElementById('display-hint').style.display = "block"; 
 
             feedbackBox.innerHTML = `
-                <div style="font-weight:700; margin-bottom:1px;">INCORRECTO</div>
+                <div style="font-weight:700; margin-bottom:2px;">INCORRECTO</div>
                 La respuesta exacta es:
                 <span class="correct-answer-text">${correctVal}</span>
-                <span style="font-size:0.62rem; color:var(--text-muted); display:block; margin-top:1px;">Analiza y repite enseguida.</span>
+                <span style="font-size:0.62rem; color:var(--text-muted); display:block; margin-top:2px;">Analiza y repite enseguida.</span>
             `;
             feedbackBox.className = "feedback-box error";
             feedbackBox.style.display = "block";
