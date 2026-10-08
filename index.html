@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrenador de Alemán - Cuento de Amor</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            box-sizing: border-box;
+            border: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-top: 0;
+            text-align: center;
+            color: #60a5fa;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .prompt-box {
+            background-color: #0f172a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            margin-bottom: 5px;
+        }
+
+        .german-sentence {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #f1f5f9;
+            margin-bottom: 10px;
+        }
+
+        .english-hint {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            font-style: italic;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: #0f172a;
+            color: white;
+            font-size: 1rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+        }
+
+        button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .feedback {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+        }
+
+        .feedback.success {
+            background-color: rgba(34, 197, 94, 0.2);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+            display: block;
+        }
+
+        .feedback.error {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+            display: block;
+        }
+
+        .completion-screen {
+            text-align: center;
+            display: none;
+        }
+
+        .completion-screen h2 {
+            color: var(--success-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="game-container">
+        <h1>Entrenador Alemán-Español (Cuento)</h1>
+        
+        <div class="stats">
+            <span id="progress-text">Progreso: 0 / 23</span>
+            <span id="streak-text">Aciertos consecutivos de la frase: 0/3</span>
+        </div>
+
+        <div class="prompt-box">
+            <div class="label">Traduce al Español:</div>
+            <div class="german-sentence" id="german-el"></div>
+            <div class="english-hint" id="english-el"></div>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="user-input" placeholder="Escribe la oración en español..." autocomplete="off">
+            <button id="submit-btn" onclick="checkAnswer()">Comprobar</button>
+        </div>
+
+        <div id="feedback-msg" class="feedback"></div>
+    </div>
+
+    <div id="completion-screen" class="completion-screen">
+        <h2>🎉 ¡Felicitaciones!</h2>
+        <p>Has completado todo el cuento dominando cada oración con 3 aciertos seguidos.</p>
+        <button onclick="restartGame()">Reiniciar Práctica</button>
+    </div>
+</div>
+
+<script>
+    // Base de datos completa procesada en bloques de 3
+    const database = [
+        { es: "En una pequeña ciudad", de: "In einer kleinen Stadt", en: "In a small town" },
+        { es: "un hombre viejo vivía solo.", de: "ein alter Mann lebte allein.", en: "an old man lived alone." },
+        { es: "Todos los días miraba la puerta", de: "Jeden Tag sah er die Tür an", en: "Every day he looked at the door" },
+        { es: "y esperaba.", de: "und wartete.", en: "and waited." },
+        { es: "El tiempo pasa rápido", de: "Die Zeit vergeht schnell", en: "Time passes quickly" },
+        { es: "cuando el corazón busca algo.", de: "wenn das Herz etwas sucht.", en: "when the heart looks for something." },
+        { es: "Nadie sabía qué había detrás de esa puerta cerrada.", de: "Niemand wusste, was hinter dieser geschlossenen Tür war.", en: "Nobody knew what was behind that closed door." },
+        { es: "Nunca se abría,", de: "Sie öffnete sich nie,", en: "It never opened," },
+        { es: "pero a veces se escuchaba", de: "aber manchmal hörte man", en: "but sometimes was heard" },
+        { es: "una voz suave.", de: "eine sanfte Stimme.", en: "a soft voice." },
+        { es: "Una noche oscura", de: "Eines dunklen Nachts", en: "One dark night" },
+        { es: "la llave cayó al suelo.", de: "fiel der Schlüssel auf den Boden.", en: "the key fell to the floor." },
+        { es: "El hombre tomó la llave fría", de: "Der Mann nahm den kalten Schlüssel", en: "The man took the cold key" },
+        { es: "con su mano.", de: "mit seiner Hand.", en: "with his hand." },
+        { es: "Tenía miedo de abrir,", de: "Er hatte Angst sie zu öffnen,", en: "He was afraid to open," },
+        { es: "porque el amor cambia la vida.", de: "denn die Liebe verändert das Leben.", en: "because love changes life." },
+        { es: "Abrió lentamente.", de: "Er öffnete sie langsam.", en: "He opened it slowly." },
+        { es: "La habitación estaba vacía.", de: "Das Zimmer war leer.", en: "The room was empty." },
+        { es: "Sobre la mesa había un espejo.", de: "Auf dem Tisch war ein Spiegel.", en: "On the table was a mirror." },
+        { es: "Al mirar, vio su rostro", de: "Beim Hineinsehen sah er sein Gesicht", en: "Looking, he saw his face" },
+        { es: "y comprendió la verdad:", de: "und verstand die Wahrheit:", en: "and understood the truth:" },
+        { es: "la persona que buscaba", de: "die Person, die er suchte", en: "the person he was looking for" },
+        { es: "estaba dentro de él.", de: "war in ihm.", en: "was inside him." },
+        { es: "Para amar a otro", de: "Um einen anderen zu lieben", en: "To love another" },
+        { es: "debes encontrar la paz en tu propio corazón.", de: "musst du Frieden in deinem eigenen Herzen finden.", en: "you must find peace in your own heart." }
+    ];
+
+    // Estado del juego
+    let pool = [...database];
+    let activeGroup = [];
+    let currentItem = null;
+    let streaks = {}; // Guarda los aciertos consecutivos de cada item por su índice original o referencia
+    let completedCount = 0;
+
+    // Inicializar contadores de racha
+    database.forEach((item, index) => {
+        streaks[index] = 0;
+    });
+
+    function getOriginalIndex(item) {
+        return database.indexOf(item);
+    }
+
+    function refillActiveGroup() {
+        // Mantiene siempre un grupo activo de hasta 3 elementos cogidos del pool general
+        while (activeGroup.length < 3 && pool.length > 0) {
+            let nextItem = pool.shift();
+            activeGroup.push(nextItem);
+        }
+    }
+
+    function nextQuestion() {
+        refillActiveGroup();
+
+        if (activeGroup.length === 0) {
+            document.getElementById('game-container').style.display = 'none';
+            document.getElementById('completion-screen').style.display = 'block';
+            return;
+        }
+
+        // Selecciona aleatoriamente una de las 3 oraciones del grupo actual
+        const randomIndex = Math.floor(Math.random() * activeGroup.length);
+        currentItem = activeGroup[randomIndex];
+
+        // Mostrar en pantalla
+        document.getElementById('german-el').textContent = currentItem.de;
+        document.getElementById('english-el').textContent = `Pista (EN): ${currentItem.en}`;
+        
+        let origIdx = getOriginalIndex(currentItem);
+        document.getElementById('streak-text').textContent = `Aciertos consecutivos de la frase: ${streaks[origIdx]}/3`;
+        document.getElementById('progress-text').textContent = `Progreso completados: ${completedCount} /${database.length}`;
+        
+        document.getElementById('user-input').value = '';
+        document.getElementById('feedback-msg').className = 'feedback';
+        document.getElementById('feedback-msg').textContent = '';
+        document.getElementById('user-input').focus();
+    }
+
+    function normalizeText(text) {
+        return text.trim().toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // quita tildes para flexibilidad
+            .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,""); // quita signos de puntuación
+    }
+
+    function checkAnswer() {
+        if (!currentItem) return;
+
+        const userVal = document.getElementById('user-input').value;
+        const feedbackEl = document.getElementById('feedback-msg');
+        let origIdx = getOriginalIndex(currentItem);
+
+        if (normalizeText(userVal) === normalizeText(currentItem.es)) {
+            // Acierto
+            streaks[origIdx]++;
+            
+            if (streaks[origIdx] >= 3) {
+                // Saca del grupo de 3 activo porque ya cumplió 3 veces seguidas
+                feedbackEl.textContent = "¡Correcto! Frase dominada y retirada del grupo activo.";
+                feedbackEl.className = "feedback success";
+                
+                activeGroup = activeGroup.filter(item => item !== currentItem);
+                completedCount++;
+            } else {
+                feedbackEl.textContent = `¡Correcto! (Llevas ${streaks[origIdx]}/3 aciertos seguidos para esta frase)`;
+                feedbackEl.className = "feedback success";
+            }
+
+            setTimeout(nextQuestion, 1200);
+        } else {
+            // Error: reinicia el contador de esta frase a 0 y se queda en el grupo
+            streaks[origIdx] = 0;
+            feedbackEl.textContent = `Incorrecto. La respuesta era: "${currentItem.es}". ¡Inténtalo de nuevo con otra o en un momento!`;
+            feedbackEl.className = "feedback error";
+            
+            document.getElementById('streak-text').textContent = `Aciertos consecutivos de la frase: ${streaks[origIdx]}/3`;
+            setTimeout(nextQuestion, 2500);
+        }
+    }
+
+    // Permitir enviar con la tecla Enter
+    document.getElementById('user-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            checkAnswer();
+        }
+    });
+
+    function restartGame() {
+        pool = [...database];
+        activeGroup = [];
+        completedCount = 0;
+        database.forEach((item, index) => {
+            streaks[index] = 0;
+        });
+        document.getElementById('completion-screen').style.display = 'none';
+        document.getElementById('game-container').style.display = 'block';
+        nextQuestion();
+    }
+
+    // Arrancar el juego por primera vez
+    nextQuestion();
+</script>
+
+</body>
+</html>
