@@ -20,7 +20,9 @@
             color: white;
             font-family: 'Orbitron', sans-serif;
             overflow: hidden;
+            /* Solución definitiva para las barras superior e inferior de los navegadores móviles */
             height: 100vh;
+            height: 100dvh;
             width: 100vw;
             display: flex;
             flex-direction: column;
@@ -47,12 +49,13 @@
             justify-content: center;
             width: 100%;
             height: 100%;
+            padding: 20px;
         }
 
         /* Selector de Idioma Dinámico */
         .system-status {
             position: absolute;
-            top: 6vh;
+            top: 4vh;
             display: flex;
             gap: 15px;
             background: rgba(0, 255, 255, 0.05);
@@ -63,7 +66,7 @@
         }
 
         .lang-tab {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             letter-spacing: 2px;
             color: #557777;
             cursor: pointer;
@@ -77,28 +80,29 @@
             font-weight: 900;
         }
 
-        /* Esfera Electrónica Estilo Planeta Burbuja con Textura de Puntos */
+        /* Esfera Electrónica: Burbuja moderna con patrón exclusivo de PUNTOS (sin cuadrados feos) */
         .electronic-planet {
             position: relative;
-            width: 65vmin;
-            height: 65vmin;
-            max-width: 380px;
-            max-height: 380px;
+            width: 60vmin;
+            height: 60vmin;
+            max-width: 340px;
+            max-height: 340px;
             border-radius: 50%;
             cursor: grab;
             display: flex;
             justify-content: center;
             align-items: center;
             
-            background: radial-gradient(circle at 30% 30%, rgba(0, 255, 255, 0.2), rgba(2, 2, 10, 0.95)),
-                        radial-gradient(rgba(0, 255, 255, 0.15) 2px, transparent 2px);
-            background-size: 100% 100%, 20px 20px;
+            /* Degradado de burbuja cristalina + Patrón de puntos limpios radiales */
+            background: radial-gradient(circle at 35% 35%, rgba(0, 255, 255, 0.25), rgba(2, 2, 12, 0.95)),
+                        radial-gradient(rgba(0, 255, 255, 0.35) 1.5px, transparent 1.5px);
+            background-size: 100% 100%, 24px 24px;
             
             box-shadow: 
-                0 0 60px rgba(0, 255, 255, 0.3), 
-                inset 0 0 50px rgba(0, 255, 255, 0.6),
-                inset 0 0 90px rgba(0, 0, 255, 0.4);
-            border: 2px solid rgba(0, 255, 255, 0.4);
+                0 0 50px rgba(0, 255, 255, 0.25), 
+                inset 0 0 40px rgba(0, 255, 255, 0.5),
+                inset 0 0 80px rgba(0, 0, 255, 0.3);
+            border: 2px solid rgba(0, 255, 255, 0.35);
             will-change: background-position;
         }
 
@@ -106,15 +110,15 @@
             cursor: grabbing;
         }
 
-        /* Anillo orbital holográfico */
+        /* Anillo orbital holográfico exterior */
         .electronic-planet::before {
             content: '';
             position: absolute;
-            width: 115%;
-            height: 115%;
+            width: 112%;
+            height: 112%;
             border-radius: 50%;
-            border: 1px dashed rgba(0, 255, 255, 0.2);
-            animation: spinRing 20s linear infinite;
+            border: 1px dashed rgba(0, 255, 255, 0.15);
+            animation: spinRing 25s linear infinite;
             pointer-events: none;
         }
 
@@ -124,7 +128,7 @@
 
         /* Número Central Grueso y Fusionado */
         .class-number {
-            font-size: 28vmin;
+            font-size: 26vmin;
             font-weight: 900;
             color: #e0ffff;
             text-shadow: 
@@ -137,16 +141,16 @@
             z-index: 10;
         }
 
-        /* Botón de Acceso */
+        /* Botón de Acceso Adaptado para no chocar con bordes móviles */
         .access-btn {
             position: absolute;
-            bottom: 12vh;
-            padding: 14px 35px;
+            bottom: 10vh;
+            padding: 12px 30px;
             background: rgba(0, 255, 255, 0.1);
             border: 1px solid #0ff;
             color: #0ff;
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1rem;
             letter-spacing: 2px;
             border-radius: 8px;
             cursor: pointer;
@@ -164,9 +168,9 @@
 
         #statusText {
             position: absolute;
-            bottom: 5vh;
-            font-size: 0.75rem;
-            color: #666;
+            bottom: 3vh;
+            font-size: 0.7rem;
+            color: #557;
             font-family: monospace;
             letter-spacing: 1px;
         }
@@ -177,7 +181,7 @@
     <canvas id="spaceCanvas"></canvas>
 
     <div class="hologram-container">
-        <!-- Selector interactivo Español / Alemán -->
+        <!-- Selector de Idioma -->
         <div class="system-status">
             <span class="lang-tab active" id="tabEs" onclick="setLanguage('ES')">ESPAÑOL</span>
             <span class="lang-tab" id="tabDe" onclick="setLanguage('DE')">DEUTSCH</span>
@@ -255,7 +259,7 @@
             osc.stop(audioCtx.currentTime + 0.04);
         }
 
-        // --- MECÁNICA DE FÍSICA INERCIAL Y ARRASTRE FLUIDO ---
+        // --- MECÁNICA HUMANA DE MOVIMIENTO Y NÚMEROS ---
         const planet = document.getElementById('planet');
         const numberDisplay = document.getElementById('displayNumber');
 
@@ -270,7 +274,7 @@
         let texturePosX = 0;
         let texturePosY = 0;
         
-        const threshold = 35; // Sensibilidad de distancia para cambiar de número
+        const threshold = 30; // Distancia en píxeles para cambiar de número de forma fluida
 
         function changeClassBy(amount) {
             let next = currentClass + amount;
@@ -284,7 +288,6 @@
             }
         }
 
-        // Eventos de inicio de interacción
         function onPointerStart(x, y) {
             isDragging = true;
             startX = lastX = x;
@@ -294,28 +297,28 @@
             if (audioCtx.state === 'suspended') audioCtx.resume();
         }
 
-        // Movimiento en tiempo real (Sosteniendo el dedo / Clic)
         function onPointerMove(x, y) {
             if (!isDragging) return;
 
             const deltaX = x - lastX;
             const deltaY = y - lastY;
             
-            // Velocidad instantánea para inercia al soltar
             velocityX = deltaX;
             velocityY = deltaY;
 
-            // Movimiento controlado según el tamaño del desplazamiento del dedo
-            accumulatedDelta += deltaX;
+            // Combinación omnidireccional: Movimientos hacia arriba/derecha suman, abajo/izquierda restan
+            const primaryMovement = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY;
+            accumulatedDelta += primaryMovement;
 
-            // Desplazamiento dinámico del fondo de puntitos de la esfera y del fondo espacial en conjunto
+            // Movimiento fluido del patrón de puntos dentro de la esfera
             texturePosX += deltaX * 0.4;
             texturePosY += deltaY * 0.4;
             planet.style.backgroundPosition = `${texturePosX}px ${texturePosY}px`;
 
             if (Math.abs(accumulatedDelta) >= threshold) {
                 const steps = Math.trunc(accumulatedDelta / threshold);
-                changeClassBy(-steps); // Invertido natural para que arrastrar a la derecha baje o suba intuitivamente
+                // Si sube o va a la derecha -> asciende (+), si baja o va a la izquierda -> desciende (-)
+                changeClassBy(steps); 
                 accumulatedDelta %= threshold;
             }
 
@@ -323,16 +326,15 @@
             lastY = y;
         }
 
-        // Al soltar: Efecto Inercial en el vacío con frenado proporcional
         function onPointerEnd() {
             if (!isDragging) return;
             isDragging = false;
 
             let currentVelocity = Math.abs(velocityX) > Math.abs(velocityY) ? velocityX : velocityY;
-            let momentum = currentVelocity * 0.8; // Factor de impulso proporcional al tirón
+            let momentum = currentVelocity * 0.75; // Impulso inercial proporcional al tirón
 
             function applyInertia() {
-                if (Math.abs(momentum) > 0.5) {
+                if (Math.abs(momentum) > 0.4) {
                     texturePosX += momentum * 0.3;
                     texturePosY += momentum * 0.3;
                     planet.style.backgroundPosition = `${texturePosX}px ${texturePosY}px`;
@@ -340,30 +342,30 @@
                     accumulatedDelta += momentum;
                     if (Math.abs(accumulatedDelta) >= threshold) {
                         const steps = Math.trunc(accumulatedDelta / threshold);
-                        changeClassBy(-steps);
+                        changeClassBy(steps);
                         accumulatedDelta %= threshold;
                     }
 
-                    momentum *= 0.92; // Fricción espacial simulada para que se detenga suavemente
+                    momentum *= 0.92; // Fricción espacial
                     inertiaId = requestAnimationFrame(applyInertia);
                 }
             }
-            if (Math.abs(currentVelocity) > 2) {
+            if (Math.abs(currentVelocity) > 1.5) {
                 inertiaId = requestAnimationFrame(applyInertia);
             }
         }
 
-        // Listeners táctiles
+        // Eventos táctiles
         planet.addEventListener('touchstart', e => onPointerStart(e.touches[0].clientX, e.touches[0].clientY));
         window.addEventListener('touchmove', e => { if(isDragging) onPointerMove(e.touches[0].clientX, e.touches[0].clientY); });
         window.addEventListener('touchend', onPointerEnd);
 
-        // Listeners de mouse
+        // Eventos de ratón
         planet.addEventListener('mousedown', e => onPointerStart(e.clientX, e.clientY));
         window.addEventListener('mousemove', e => { if(isDragging) onPointerMove(e.clientX, e.clientY); });
         window.addEventListener('mouseup', onPointerEnd);
 
-        // Click de acceso
+        // Enlaces de acceso
         document.getElementById('enterBtn').addEventListener('click', () => {
             window.location.href = `class${currentClass}.html`;
         });
@@ -374,7 +376,7 @@
         });
 
 
-        // --- FONDO DE ESTRELLAS Y GALAXIAS MEJORADO ---
+        // --- FONDO DE ESTRELLAS Y GALAXIAS ---
         const canvas = document.getElementById('spaceCanvas');
         const ctx = canvas.getContext('2d');
         let width, height;
@@ -384,13 +386,13 @@
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
             stars = [];
-            for (let i = 0; i < 350; i++) {
+            for (let i = 0; i < 300; i++) {
                 stars.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
-                    radius: Math.random() * 1.6,
+                    radius: Math.random() * 1.5,
                     alpha: Math.random(),
-                    speed: Math.random() * 0.3 + 0.05
+                    speed: Math.random() * 0.25 + 0.05
                 });
             }
         }
@@ -398,7 +400,7 @@
         function animateSpace() {
             ctx.clearRect(0, 0, width, height);
             
-            let bgGrad = ctx.createRadialGradient(width/2, height/2, 50, width/2, height/2, Math.max(width, height));
+            let bgGrad = ctx.createRadialGradient(width/2, height/2, 40, width/2, height/2, Math.max(width, height));
             bgGrad.addColorStop(0, '#060614');
             bgGrad.addColorStop(1, '#020205');
             ctx.fillStyle = bgGrad;
