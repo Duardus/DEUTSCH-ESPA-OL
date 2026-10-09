@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Nexus Learning | Index</title>
+    <title>Nexus Learning | Orbital Core</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@900&display=swap');
 
@@ -16,7 +16,7 @@
         }
 
         body {
-            background-color: #05050a;
+            background-color: #030307;
             color: white;
             font-family: 'Orbitron', sans-serif;
             overflow: hidden;
@@ -26,10 +26,9 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            touch-action: none; /* Evita recargas y scrolls del navegador en móviles */
+            touch-action: none;
         }
 
-        /* Fondo del Espacio */
         #spaceCanvas {
             position: absolute;
             top: 0;
@@ -39,7 +38,6 @@
             z-index: 1;
         }
 
-        /* Contenedor Principal Cero Vacíos */
         .hologram-container {
             position: relative;
             z-index: 2;
@@ -51,75 +49,90 @@
             height: 100%;
         }
 
-        /* Título Flotante */
+        /* Selector de Idioma Dinámico */
         .system-status {
             position: absolute;
-            top: 5vh;
-            color: #0ff;
-            font-size: 1rem;
-            letter-spacing: 3px;
-            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
-            opacity: 0.8;
+            top: 6vh;
+            display: flex;
+            gap: 15px;
+            background: rgba(0, 255, 255, 0.05);
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .lang-tab {
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            color: #557777;
+            cursor: pointer;
+            transition: all 0.3s;
             text-transform: uppercase;
         }
 
-        /* Esfera Electrónica */
+        .lang-tab.active {
+            color: #0ff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+            font-weight: 900;
+        }
+
+        /* Esfera Electrónica Estilo Planeta Burbuja con Textura de Puntos */
         .electronic-planet {
             position: relative;
-            width: 70vmin;
-            height: 70vmin;
-            max-width: 400px;
-            max-height: 400px;
+            width: 65vmin;
+            height: 65vmin;
+            max-width: 380px;
+            max-height: 380px;
             border-radius: 50%;
             cursor: grab;
             display: flex;
             justify-content: center;
             align-items: center;
             
-            /* Efecto Cyberpunk/Cristal */
-            background: radial-gradient(circle at 30% 30%, rgba(0, 255, 255, 0.15), rgba(0, 0, 20, 0.9)),
-                        url('data:image/svg+xml;utf8,<svg width="40" height="40" xmlns="http://www.w3.org/2000/svg"><path d="M 0 40 L 40 0" stroke="rgba(0,255,255,0.2)" stroke-width="1" fill="none"/><path d="M 0 0 L 40 40" stroke="rgba(0,255,255,0.2)" stroke-width="1" fill="none"/></svg>');
-            background-size: cover, 40px 40px;
-            box-shadow: 
-                0 0 50px rgba(0, 255, 255, 0.4), 
-                inset 0 0 40px rgba(0, 255, 255, 0.8),
-                inset 0 0 80px rgba(0, 0, 255, 0.5);
-            border: 2px solid rgba(0, 255, 255, 0.3);
+            background: radial-gradient(circle at 30% 30%, rgba(0, 255, 255, 0.2), rgba(2, 2, 10, 0.95)),
+                        radial-gradient(rgba(0, 255, 255, 0.15) 2px, transparent 2px);
+            background-size: 100% 100%, 20px 20px;
             
-            transition: box-shadow 0.3s ease;
+            box-shadow: 
+                0 0 60px rgba(0, 255, 255, 0.3), 
+                inset 0 0 50px rgba(0, 255, 255, 0.6),
+                inset 0 0 90px rgba(0, 0, 255, 0.4);
+            border: 2px solid rgba(0, 255, 255, 0.4);
+            will-change: background-position;
         }
 
         .electronic-planet:active {
             cursor: grabbing;
-            box-shadow: 
-                0 0 70px rgba(0, 255, 255, 0.7), 
-                inset 0 0 60px rgba(0, 255, 255, 1);
         }
 
-        /* Eje de rotación holográfico */
+        /* Anillo orbital holográfico */
         .electronic-planet::before {
             content: '';
             position: absolute;
-            top: -5%;
-            left: 50%;
-            width: 2px;
-            height: 110%;
-            background: linear-gradient(to bottom, transparent, rgba(0,255,255,0.8), transparent);
-            transform: translateX(-50%);
+            width: 115%;
+            height: 115%;
+            border-radius: 50%;
+            border: 1px dashed rgba(0, 255, 255, 0.2);
+            animation: spinRing 20s linear infinite;
             pointer-events: none;
         }
 
-        /* Número Central Fusionado */
+        @keyframes spinRing {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Número Central Grueso y Fusionado */
         .class-number {
-            font-size: 30vmin;
+            font-size: 28vmin;
             font-weight: 900;
             color: #e0ffff;
             text-shadow: 
                 0 0 10px #0ff, 
                 0 0 20px #0ff, 
                 0 0 40px #00f, 
-                0 0 80px #00f;
-            mix-blend-mode: screen; /* Fusión perfecta con la esfera */
+                0 0 70px #00f;
+            mix-blend-mode: screen;
             pointer-events: none;
             z-index: 10;
         }
@@ -127,15 +140,15 @@
         /* Botón de Acceso */
         .access-btn {
             position: absolute;
-            bottom: 10vh;
-            padding: 15px 40px;
+            bottom: 12vh;
+            padding: 14px 35px;
             background: rgba(0, 255, 255, 0.1);
             border: 1px solid #0ff;
             color: #0ff;
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             letter-spacing: 2px;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             backdrop-filter: blur(5px);
             text-shadow: 0 0 5px #0ff;
@@ -149,221 +162,219 @@
             transform: scale(1.05);
         }
 
-        /* Loader mientras busca las clases disponibles */
         #statusText {
             position: absolute;
             bottom: 5vh;
-            font-size: 0.8rem;
-            color: #888;
+            font-size: 0.75rem;
+            color: #666;
             font-family: monospace;
+            letter-spacing: 1px;
         }
-
     </style>
 </head>
 <body>
 
-    <!-- Fondo de estrellas y galaxias -->
     <canvas id="spaceCanvas"></canvas>
 
     <div class="hologram-container">
-        <div class="system-status">SELECTOR DE NÚCLEO</div>
+        <!-- Selector interactivo Español / Alemán -->
+        <div class="system-status">
+            <span class="lang-tab active" id="tabEs" onclick="setLanguage('ES')">ESPAÑOL</span>
+            <span class="lang-tab" id="tabDe" onclick="setLanguage('DE')">DEUTSCH</span>
+        </div>
         
-        <!-- Esfera central interactiva -->
         <div class="electronic-planet" id="planet">
             <div class="class-number" id="displayNumber">1</div>
         </div>
 
         <button class="access-btn" id="enterBtn">INICIAR CLASE 1</button>
-        <div id="statusText">Escaneando sistema de archivos...</div>
+        <div id="statusText">Escaneando archivos locales...</div>
     </div>
 
     <script>
-        // --- LÓGICA DE Detección de Clases Existentes (Background Fetch) ---
-        let maxAvailableClass = 1; // Mínimo siempre existirá la 1
+        let currentLang = 'ES';
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById('tabEs').classList.toggle('active', lang === 'ES');
+            document.getElementById('tabDe').classList.toggle('active', lang === 'DE');
+            updateButtonText();
+        }
+
+        function updateButtonText() {
+            const btn = document.getElementById('enterBtn');
+            if (currentLang === 'ES') {
+                btn.innerText = `INICIAR CLASE ${currentClass}`;
+            } else {
+                btn.innerText = `KURS ${currentClass} STARTEN`;
+            }
+        }
+
+        // --- DETECCIÓN AUTOMÁTICA DE CLASES ---
+        let maxAvailableClass = 1;
         const maxLimit = 365;
         const statusText = document.getElementById('statusText');
 
         async function checkAvailableClasses() {
             let checking = true;
-            let currentCheck = 2; // Empezamos a buscar desde la 2
-
+            let currentCheck = 2;
             while (checking && currentCheck <= maxLimit) {
                 try {
-                    // Petición HEAD para ver si existe sin descargar la página entera
                     const response = await fetch(`class${currentCheck}.html`, { method: 'HEAD' });
                     if (response.ok) {
                         maxAvailableClass = currentCheck;
                         currentCheck++;
                     } else {
-                        checking = false; // Se rompió la cadena, hasta aquí llegamos
+                        checking = false;
                     }
-                } catch (error) {
-                    checking = false; // Error de red (trabajando en local file:// puede fallar)
+                } catch {
+                    checking = false;
                 }
             }
-            statusText.innerText = `NÚCLEOS DETECTADOS: ${maxAvailableClass}`;
-            statusText.style.color = '#0ff';
-            setTimeout(() => { statusText.style.opacity = '0'; }, 3000);
+            statusText.innerText = `CLASES ACTIVAS DISPONIBLES: ${maxAvailableClass}`;
+            statusText.style.color = '#0aa';
+            setTimeout(() => { statusText.style.opacity = '0'; }, 4000);
         }
-
-        // Iniciar escaneo de inmediato
         checkAvailableClasses();
 
-
-        // --- LÓGICA DEL SINTETIZADOR DE AUDIO (Web Audio API) ---
+        // --- AUDIO DIGITAL ELEGANTE ---
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         const audioCtx = new AudioContext();
 
         function playDigitalTick() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
-            
             const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            
-            osc.type = 'sine'; // Onda limpia digital
-            // Frecuencia que baja rápidamente para simular un "Blip" de scroll
-            osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
-            
-            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); // Volumen bajo y elegante
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-            
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(1100, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(350, audioCtx.currentTime + 0.04);
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
             osc.start();
-            osc.stop(audioCtx.currentTime + 0.05);
+            osc.stop(audioCtx.currentTime + 0.04);
         }
 
-
-        // --- LÓGICA DE INTERACCIÓN DE LA ESFERA (Swipe/Arrastre) ---
+        // --- MECÁNICA DE FÍSICA INERCIAL Y ARRASTRE FLUIDO ---
         const planet = document.getElementById('planet');
         const numberDisplay = document.getElementById('displayNumber');
-        const enterBtn = document.getElementById('enterBtn');
 
         let currentClass = 1;
         let isDragging = false;
-        let startY = 0;
-        let startX = 0;
+        let startX = 0, startY = 0;
+        let lastX = 0, lastY = 0;
+        let velocityX = 0, velocityY = 0;
+        let inertiaId = null;
+        
         let accumulatedDelta = 0;
-        let rotationX = 0; // Para el efecto visual de giro
+        let texturePosX = 0;
+        let texturePosY = 0;
+        
+        const threshold = 35; // Sensibilidad de distancia para cambiar de número
 
-        // Sensibilidad: Cuántos píxeles debes arrastrar para cambiar de número.
-        // Si mueves rápido, la acumulación es grande y cambia los números rapidísimo.
-        const sensitivity = 25; 
-
-        function updateDisplay(nuevoNumero) {
-            if (nuevoNumero !== currentClass && nuevoNumero >= 1 && nuevoNumero <= maxAvailableClass) {
-                currentClass = nuevoNumero;
+        function changeClassBy(amount) {
+            let next = currentClass + amount;
+            if (next < 1) next = 1;
+            if (next > maxAvailableClass) next = maxAvailableClass;
+            if (next !== currentClass) {
+                currentClass = next;
                 numberDisplay.innerText = currentClass;
-                enterBtn.innerText = `INICIAR CLASE ${currentClass}`;
+                updateButtonText();
                 playDigitalTick();
             }
         }
 
-        // Manejo táctil (Móviles)
-        planet.addEventListener('touchstart', (e) => {
+        // Eventos de inicio de interacción
+        function onPointerStart(x, y) {
             isDragging = true;
-            startY = e.touches[0].clientY;
-            startX = e.touches[0].clientX;
+            startX = lastX = x;
+            startY = lastY = y;
             accumulatedDelta = 0;
-            if (audioCtx.state === 'suspended') audioCtx.resume(); // Desbloquear audio
-        });
-
-        planet.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            const currentY = e.touches[0].clientY;
-            const currentX = e.touches[0].clientX;
-            
-            // Calculamos el movimiento (soporta diagonal, pero prioriza el movimiento más largo)
-            const deltaY = startY - currentY; 
-            const deltaX = currentX - startX; 
-            
-            // Usamos el delta predominante para scrollear (horizontal o vertical)
-            const movement = Math.abs(deltaY) > Math.abs(deltaX) ? deltaY : deltaX;
-
-            accumulatedDelta += movement;
-
-            // Efecto visual de rotación del background de la esfera
-            rotationX += deltaX * 0.5;
-            planet.style.backgroundPosition = `${rotationX}px ${rotationX * 0.2}px`;
-
-            if (Math.abs(accumulatedDelta) > sensitivity) {
-                const steps = Math.floor(Math.abs(accumulatedDelta) / sensitivity);
-                const direction = accumulatedDelta > 0 ? 1 : -1; // 1 = arriba/derecha, -1 = abajo/izquierda
-                
-                let nextNumber = currentClass + (steps * direction);
-                
-                // Limitar al mínimo 1 y al máximo detectado
-                if (nextNumber < 1) nextNumber = 1;
-                if (nextNumber > maxAvailableClass) nextNumber = maxAvailableClass;
-
-                updateDisplay(nextNumber);
-                
-                // Resetear acumulador restando los pasos tomados
-                accumulatedDelta = 0; 
-            }
-
-            startY = currentY;
-            startX = currentX;
-        });
-
-        planet.addEventListener('touchend', () => isDragging = false);
-
-        // Manejo con Mouse (Laptops)
-        planet.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startY = e.clientY;
-            startX = e.clientX;
-            accumulatedDelta = 0;
+            if (inertiaId) cancelAnimationFrame(inertiaId);
             if (audioCtx.state === 'suspended') audioCtx.resume();
-        });
+        }
 
-        window.addEventListener('mousemove', (e) => {
+        // Movimiento en tiempo real (Sosteniendo el dedo / Clic)
+        function onPointerMove(x, y) {
             if (!isDragging) return;
-            const currentY = e.clientY;
-            const currentX = e.clientX;
+
+            const deltaX = x - lastX;
+            const deltaY = y - lastY;
             
-            const deltaY = startY - currentY;
-            const deltaX = currentX - startX;
-            const movement = Math.abs(deltaY) > Math.abs(deltaX) ? deltaY : deltaX;
+            // Velocidad instantánea para inercia al soltar
+            velocityX = deltaX;
+            velocityY = deltaY;
 
-            accumulatedDelta += movement;
-            rotationX += deltaX * 0.5;
-            planet.style.backgroundPosition = `${rotationX}px ${rotationX * 0.2}px`;
+            // Movimiento controlado según el tamaño del desplazamiento del dedo
+            accumulatedDelta += deltaX;
 
-            if (Math.abs(accumulatedDelta) > sensitivity) {
-                const steps = Math.floor(Math.abs(accumulatedDelta) / sensitivity);
-                const direction = accumulatedDelta > 0 ? 1 : -1;
-                let nextNumber = currentClass + (steps * direction);
-                
-                if (nextNumber < 1) nextNumber = 1;
-                if (nextNumber > maxAvailableClass) nextNumber = maxAvailableClass;
+            // Desplazamiento dinámico del fondo de puntitos de la esfera y del fondo espacial en conjunto
+            texturePosX += deltaX * 0.4;
+            texturePosY += deltaY * 0.4;
+            planet.style.backgroundPosition = `${texturePosX}px ${texturePosY}px`;
 
-                updateDisplay(nextNumber);
-                accumulatedDelta = 0;
+            if (Math.abs(accumulatedDelta) >= threshold) {
+                const steps = Math.trunc(accumulatedDelta / threshold);
+                changeClassBy(-steps); // Invertido natural para que arrastrar a la derecha baje o suba intuitivamente
+                accumulatedDelta %= threshold;
             }
 
-            startY = currentY;
-            startX = currentX;
-        });
+            lastX = x;
+            lastY = y;
+        }
 
-        window.addEventListener('mouseup', () => isDragging = false);
+        // Al soltar: Efecto Inercial en el vacío con frenado proporcional
+        function onPointerEnd() {
+            if (!isDragging) return;
+            isDragging = false;
 
-        // Navegación
-        enterBtn.addEventListener('click', () => {
+            let currentVelocity = Math.abs(velocityX) > Math.abs(velocityY) ? velocityX : velocityY;
+            let momentum = currentVelocity * 0.8; // Factor de impulso proporcional al tirón
+
+            function applyInertia() {
+                if (Math.abs(momentum) > 0.5) {
+                    texturePosX += momentum * 0.3;
+                    texturePosY += momentum * 0.3;
+                    planet.style.backgroundPosition = `${texturePosX}px ${texturePosY}px`;
+
+                    accumulatedDelta += momentum;
+                    if (Math.abs(accumulatedDelta) >= threshold) {
+                        const steps = Math.trunc(accumulatedDelta / threshold);
+                        changeClassBy(-steps);
+                        accumulatedDelta %= threshold;
+                    }
+
+                    momentum *= 0.92; // Fricción espacial simulada para que se detenga suavemente
+                    inertiaId = requestAnimationFrame(applyInertia);
+                }
+            }
+            if (Math.abs(currentVelocity) > 2) {
+                inertiaId = requestAnimationFrame(applyInertia);
+            }
+        }
+
+        // Listeners táctiles
+        planet.addEventListener('touchstart', e => onPointerStart(e.touches[0].clientX, e.touches[0].clientY));
+        window.addEventListener('touchmove', e => { if(isDragging) onPointerMove(e.touches[0].clientX, e.touches[0].clientY); });
+        window.addEventListener('touchend', onPointerEnd);
+
+        // Listeners de mouse
+        planet.addEventListener('mousedown', e => onPointerStart(e.clientX, e.clientY));
+        window.addEventListener('mousemove', e => { if(isDragging) onPointerMove(e.clientX, e.clientY); });
+        window.addEventListener('mouseup', onPointerEnd);
+
+        // Click de acceso
+        document.getElementById('enterBtn').addEventListener('click', () => {
             window.location.href = `class${currentClass}.html`;
         });
-        
-        // Atajo: Hacer click en la esfera también entra a la clase si no hubo arrastre
-        planet.addEventListener('click', (e) => {
-            if(Math.abs(accumulatedDelta) < 5) {
+        planet.addEventListener('click', () => {
+            if (Math.abs(startX - lastX) < 5) {
                 window.location.href = `class${currentClass}.html`;
             }
         });
 
 
-        // --- LÓGICA DEL FONDO ESPACIAL (Canvas) ---
+        // --- FONDO DE ESTRELLAS Y GALAXIAS MEJORADO ---
         const canvas = document.getElementById('spaceCanvas');
         const ctx = canvas.getContext('2d');
         let width, height;
@@ -373,25 +384,24 @@
             width = canvas.width = window.innerWidth;
             height = canvas.height = window.innerHeight;
             stars = [];
-            for (let i = 0; i < 300; i++) {
+            for (let i = 0; i < 350; i++) {
                 stars.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
-                    radius: Math.random() * 1.5,
+                    radius: Math.random() * 1.6,
                     alpha: Math.random(),
-                    speed: Math.random() * 0.5 + 0.1
+                    speed: Math.random() * 0.3 + 0.05
                 });
             }
         }
 
-        function animateStars() {
+        function animateSpace() {
             ctx.clearRect(0, 0, width, height);
             
-            // Gradiente espacial
-            let gradient = ctx.createLinearGradient(0, 0, width, height);
-            gradient.addColorStop(0, '#05050a');
-            gradient.addColorStop(1, '#0a0a1a');
-            ctx.fillStyle = gradient;
+            let bgGrad = ctx.createRadialGradient(width/2, height/2, 50, width/2, height/2, Math.max(width, height));
+            bgGrad.addColorStop(0, '#060614');
+            bgGrad.addColorStop(1, '#020205');
+            ctx.fillStyle = bgGrad;
             ctx.fillRect(0, 0, width, height);
 
             ctx.fillStyle = '#ffffff';
@@ -401,10 +411,8 @@
                 ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Parallax suave
                 star.y -= star.speed;
-                // Titileo de estrellas
-                star.alpha += (Math.random() - 0.5) * 0.05;
+                star.alpha += (Math.random() - 0.5) * 0.04;
                 if(star.alpha < 0.1) star.alpha = 0.1;
                 if(star.alpha > 1) star.alpha = 1;
 
@@ -413,13 +421,12 @@
                     star.x = Math.random() * width;
                 }
             });
-            requestAnimationFrame(animateStars);
+            requestAnimationFrame(animateSpace);
         }
 
         window.addEventListener('resize', initCanvas);
         initCanvas();
-        animateStars();
-
+        animateSpace();
     </script>
 </body>
 </html>
