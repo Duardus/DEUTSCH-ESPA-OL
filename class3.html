@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>Entrenador Multilingüe - Educación Mixta</title>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+    --bg-base:#05070f;
+    --card-surface:rgba(16,23,38,.98);
+    --text-main:#f8fafc;
+    --text-muted:#94a3b8;
+    --accent:#00f0ff;
+    --success:#00ff88;
+    --error:#ff0055;
+    --border:rgba(255,255,255,.08);
+    --glow:0 0 12px rgba(0,240,255,.2);
+}
+
+* {
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body {
+    font-family:'Inter',sans-serif;
+    background:
+        radial-gradient(circle at 50% 0%,rgba(0,240,255,.06),transparent 50%),
+        radial-gradient(circle at 50% 100%,rgba(255,0,85,.04),transparent 50%),
+        var(--bg-base);
+    color:var(--text-main);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100dvh;
+    width:100vw;
+    padding:4px;
+    overflow:hidden;
+}
+
+.app-container {
+    width:100%;
+    max-width:400px;
+    height:96dvh;
+    background:var(--card-surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.8);
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    gap:8px;
+    padding:12px;
+}
+
+.global-progress {
+    width:100%;
+    height:8px;
+    background:rgba(255,255,255,.05);
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+    margin-bottom:2px;
+    display:none;
+    flex-shrink: 0;
+}
+.global-progress.active {
+    display:block;
+}
+.global-progress-fill {
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, var(--accent), #0077ff);
+    box-shadow:var(--glow);
+    border-radius:10px;
+    transition:width 0.4s ease-out;
+}
+
+.screen {
+    display:none;
+    flex-direction:column;
+    width:100%;
+    height: 100%;
+    justify-content:center;
+    gap:8px;
+    animation:fadeIn .2s ease;
+}
+
+.screen.active {
+    display:flex;
+}
+
+h1,h2 {
+    font-family:'Rajdhani',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    text-align:center;
+}
+
+.intro-screen {
+    align-items:center;
+    text-align:center;
+    gap:10px;
+}
+
+.intro-screen h1 {
+    color:var(--accent);
+    font-size:1.4rem;
+    text-shadow:var(--glow);
+}
+
+.intro-screen p {
+    color:var(--text-muted);
+    font-size:.72rem;
+    line-height:1.4;
+    max-width:290px;
+    margin:auto;
+}
+
+.name-input,
+.user-input {
+    width:100%;
+    padding:10px;
+    background:#090d16;
+    border:2px solid var(--border);
+    border-radius:10px;
+    color:#fff;
+    font-size:.9rem;
+    outline:none;
+    text-align:center;
+}
+
+.name-input:focus,
+.user-input:focus {
+    border-color:var(--accent);
+    box-shadow:var(--glow);
+}
+
+.btn-main {
+    background:linear-gradient(135deg,var(--accent),#0077ff);
+    color:#000;
+    border:none;
+    border-radius:10px;
+    padding:10px;
+    font-size:.85rem;
+    font-weight:700;
+    text-transform:uppercase;
+    font-family:'Rajdhani',sans-serif;
+    letter-spacing:1px;
+    cursor:pointer;
+    width:100%;
+}
+
+.game-header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid var(--border);
+    padding-bottom:4px;
+}
+
+.hud-stats {
+    display:flex;
+    justify-content:space-between;
+    font-size:.65rem;
+    color:var(--text-muted);
+    font-weight:600;
+    text-transform:uppercase;
+    width:100%;
+}
+
+.config-lang-box {
+    background:#090d16;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:6px;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    font-size:.68rem;
+}
+
+.lang-row {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.lang-row select {
+    background:#101726;
+    color:#fff;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:3px 6px;
+    font-size:.68rem;
+    outline:none;
+}
+
+.prompt-card {
+    background:#090d16;
+    border-radius:12px;
+    padding:14px 12px;
+    border-left:3px solid var(--accent);
+    box-shadow:inset 0 2px 4px rgba(0,0,0,.4);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:flex-start;
+    width:100%;
+}
+
+.prompt-tag {
+    font-size:.58rem;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--text-muted);
+    margin-bottom:4px;
+}
+
+.target-sentence {
+    font-size:1.05rem;
+    font-weight:700;
+    color:#fff;
+    line-height:1.3;
+}
+
+.hint {
+    font-size:.68rem;
+    color:var(--text-muted);
+    font-style:italic;
+    margin-top:4px;
+    display:none;
+}
+
+.feedback-box {
+    padding:8px;
+    border-radius:8px;
+    text-align:center;
+    font-size:.72rem;
+    display:none;
+    line-height:1.3;
+    width:100%;
+}
+
+.feedback-box.success {
+    background:rgba(0,255,136,.08);
+    color:var(--success);
+    border:1px solid rgba(0,255,136,.3);
+    display:block;
+}
+
+.feedback-box.error {
+    background:rgba(255,0,85,.08);
+    color:var(--error);
+    border:1px solid rgba(255,0,85,.3);
+    display:block;
+}
+
+.correct-answer-text {
+    display:block;
+    font-size:.85rem;
+    color:#fff;
+    font-weight:bold;
+    margin-top:3px;
+    background:rgba(0,0,0,.3);
+    padding:4px;
+    border-radius:4px;
+}
+
+.vocab-word {
+    width:100%;
+    padding:10px;
+    background:#090d16;
+    border-radius:10px;
+    border:1px solid var(--border);
+    text-align:center;
+}
+
+.vocab-word .main-term {
+    font-size:1.15rem;
+    font-weight:700;
+    color:#fff;
+}
+
+.vocab-word .sub-term {
+    font-size:.78rem;
+    color:var(--text-muted);
+    margin-top:3px;
+}
+
+.stats-screen {
+    text-align:center;
+}
+
+.stats-card {
+    background:#090d16;
+    border-radius:10px;
+    padding:8px;
+    border:1px solid var(--border);
+    width:100%;
+}
+
+.stat-row {
+    display:flex;
+    justify-content:space-between;
+    padding:4px 0;
+    border-bottom:1px dashed rgba(255,255,255,.06);
+    font-size:.72rem;
+}
+
+.stat-row:last-child {
+    border:none;
+}
+
+.stat-value {
+    font-weight:bold;
+    color:var(--accent);
+}
+
+.stat-value.green {
+    color:var(--success);
+}
+
+@keyframes fadeIn {
+    from { opacity:0; transform:scale(.98); }
+    to { opacity:1; transform:scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app-container">
+
+    <!-- BARRA DE PROGRESO GLOBAL -->
+    <div id="global-progress" class="global-progress">
+        <div id="global-progress-fill" class="global-progress-fill"></div>
+    </div>
+
+    <!-- PANTALLA INICIO -->
+    <div id="screen-intro" class="screen intro-screen active">
+        <div>
+            <h1>Entrenador de Idiomas</h1>
+            <p>
+                Tema: Educación Mixta (De, It, Fr, En). Vocabulario palabra por palabra y oraciones en bloques inteligentes de 3.
+            </p>
+        </div>
+
+        <!-- CONFIGURACIÓN INICIAL DE 3 IDIOMAS -->
+        <div class="config-lang-box" style="width:100%;">
+            <div class="lang-row">
+                <span>Preguntar en:</span>
+                <select id="cfg-lang-q" onchange="updateDefaultLangs()">
+                    <option value="de" selected>Alemán (DE)</option>
+                    <option value="it">Italiano (IT)</option>
+                    <option value="fr">Francés (FR)</option>
+                    <option value="en">Inglés (EN)</option>
+                    <option value="es">Español (ES)</option>
+                </select>
+            </div>
+            <div class="lang-row">
+                <span>Responder en:</span>
+                <select id="cfg-lang-a" onchange="updateDefaultLangs()">
+                    <option value="es" selected>Español (ES)</option>
+                    <option value="de">Alemán (DE)</option>
+                    <option value="it">Italiano (IT)</option>
+                    <option value="fr">Francés (FR)</option>
+                    <option value="en">Inglés (EN)</option>
+                </select>
+            </div>
+            <div class="lang-row">
+                <span>Pista / Ayuda en:</span>
+                <select id="cfg-lang-h" onchange="updateDefaultLangs()">
+                    <option value="en" selected>Inglés (EN)</option>
+                    <option value="es">Español (ES)</option>
+                    <option value="de">Alemán (DE)</option>
+                    <option value="it">Italiano (IT)</option>
+                    <option value="fr">Francés (FR)</option>
+                </select>
+            </div>
+        </div>
+
+        <input
+            type="text"
+            id="input-name"
+            class="name-input"
+            placeholder="Ingresa tu nombre..."
+            autocomplete="off"
+        >
+
+        <button class="btn-main" onclick="startApp()">
+            Comenzar Desafío ➔
+        </button>
+    </div>
+
+    <!-- FASE 1: VOCABULARIO -->
+    <div id="screen-vocab" class="screen">
+        <div class="game-header">
+            <h2 style="font-size:.82rem;color:var(--accent)">
+                Fase 1 · Vocabulario
+            </h2>
+            <span id="vocab-progress" style="font-size:.65rem;color:var(--text-muted)">0/0</span>
+        </div>
+
+        <div class="prompt-card">
+            <div class="prompt-tag" id="vocab-tag-label">Aprende esta palabra</div>
+            <div class="vocab-word">
+                <div class="main-term" id="vocab-main"></div>
+                <div class="sub-term" id="vocab-sub"></div>
+            </div>
+        </div>
+
+        <button class="btn-main" onclick="nextVocabulary()">
+            Ya la aprendí ➔
+        </button>
+    </div>
+
+    <!-- FASE 2: ORACIONES CON CAMBIO DE IDIOMAS EN VIVO -->
+    <div id="screen-game" class="screen">
+        <div class="game-header">
+            <h2 style="font-size:.82rem;color:var(--accent)">
+                Fase 2 · Oraciones
+            </h2>
+            <!-- Selector flotante en partida para cambiar idiomas a voluntad -->
+            <div style="display:flex;gap:4px;">
+                <select id="live-lang-q" onchange="changeLiveLanguages()" style="background:#090d16;color:var(--accent);border:1px solid var(--border);border-radius:4px;font-size:.62rem;padding:2px;">
+                    <option value="de">DE</option><option value="it">IT</option><option value="fr">FR</option><option value="en">EN</option><option value="es">ES</option>
+                </select>
+                <span style="font-size:.62rem;color:var(--text-muted);align-self:center;">➔</span>
+                <select id="live-lang-a" onchange="changeLiveLanguages()" style="background:#090d16;color:var(--success);border:1px solid var(--border);border-radius:4px;font-size:.62rem;padding:2px;">
+                    <option value="de">DE</option><option value="it">IT</option><option value="fr">FR</option><option value="en">EN</option><option value="es">ES</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="hud-stats">
+            <span id="hud-progress">Progreso: 0/10</span>
+            <span id="hud-streak">Racha: 0/3</span>
+        </div>
+
+        <div class="prompt-card">
+            <div class="prompt-tag" id="label-instruction">Traduce:</div>
+            <div class="target-sentence" id="display-target"></div>
+            <div class="hint" id="display-hint"></div>
+        </div>
+
+        <div id="feedback-box" class="feedback-box"></div>
+
+        <div class="action-panel">
+            <input
+                type="text"
+                id="user-input"
+                class="user-input"
+                placeholder="Escribe tu respuesta..."
+                autocomplete="off"
+            >
+            <button
+                class="btn-main"
+                id="action-btn"
+                onclick="handleAction()"
+            >
+                Comprobar
+            </button>
+        </div>
+    </div>
+
+    <!-- PANTALLA ESTADÍSTICAS -->
+    <div id="screen-stats" class="screen stats-screen">
+        <div>
+            <h2 style="color:var(--success);font-size:1rem">¡Misión Cumplida!</h2>
+            <p id="final-greeting" style="font-size:.68rem;color:var(--text-muted)"></p>
+        </div>
+
+        <div class="stats-card">
+            <div style="text-align:center;font-family:'Rajdhani';font-weight:700;color:var(--accent);margin-bottom:3px;font-size:.7rem;">
+                ⚡ RESUMEN DE RENDIMIENTO ⚡
+            </div>
+            <div class="stat-row">
+                <span>Tiempo total:</span>
+                <span class="stat-value" id="stat-time">00:00</span>
+            </div>
+            <div class="stat-row">
+                <span>Precisión global:</span>
+                <span class="stat-value green" id="stat-accuracy">0%</span>
+            </div>
+            <div class="stat-row">
+                <span>Errores cometidos:</span>
+                <span class="stat-value" id="stat-errors">0</span>
+            </div>
+        </div>
+
+        <button class="btn-main" onclick="location.reload()">
+            Jugar de Nuevo ➔
+        </button>
+    </div>
+
+</div>
+
+<script>
+
+/* =========================================================
+   BASE DE DATOS MULTILINGÜE — TEMA: EDUCACIÓN MIXTA
+========================================================= */
+
+const database = [
+    {
+        de: "Ich finde gemischten Unterricht besser, weil Jungen und Mädchen lernen, sich zusammenzureißen und sich gegenseitig zu verstehen.",
+        it: "Secondo me l'educazione mista è meglio, perché ogni genere impara a controllarsi e a capire come si comporta l'altro.",
+        fr: "Je pense que l'éducation mixte, c'est mieux, parce que chaque genre apprend à se contrôler et à comprendre l'autre.",
+        en: "I think co-ed education is better because each gender learns to control itself and understand how the other one behaves.",
+        es: "Yo creo que la educación mixta es mejor, porque cada género aprende a controlarse y a entender cómo se comporta el otro."
+    },
+    {
+        de: "Vor allem lernt man Respekt.",
+        it: "Ma soprattutto si impara il rispetto.",
+        fr: "Mais surtout, on apprend le respect.",
+        en: "But above all, you learn respect.",
+        es: "Pero sobre todo, se aprende a respetar."
+    },
+    {
+        de: "Klar, reine Jungs- oder Mädchenschulen haben auch Vorteile, man konzentriert sich mehr auf den Unterricht.",
+        it: "Certo, anche le scuole solo maschili o solo femminili hanno i loro lati positivi, ti concentri di più sullo studio.",
+        fr: "Bien sûr, les écoles non mixtes ont aussi des avantages, on est plus concentré sur les cours.",
+        en: "Of course, all-boys or all-girls schools have positives too, you focus more on studying.",
+        es: "Claro que la educación solo de hombres o solo de mujeres también tiene cosas buenas, te concentras más en estudiar."
+    },
+    {
+        de: "Am besten wäre eine Mischung: mal zusammen, mal getrennt – so hat man von beidem etwas.",
+        it: "Per me l'ideale sarebbe fare un po' e un po': a volte classi miste e a volte separate, così prendi il meglio di entrambi i mondi.",
+        fr: "Pour moi, l'idéal ce serait de faire les deux : parfois ensemble, parfois séparés, pour avoir le meilleur des deux mondes.",
+        en: "For me, the ideal would be a mix of both: sometimes together, sometimes separated, to get the best of both worlds.",
+        es: "Para mí, lo ideal sería combinar ambos: a veces mixto y a veces separado, para tener lo mejor de los dos mundos."
+    }
+];
+
+const vocabulary = [
+    // Alemán
+    { de: "Ich finde", es: "Yo pienso / me parece", it: "Secondo me", fr: "Je pense que", en: "I think" },
+    { de: "gemischten Unterricht", es: "clases mixtas", it: "l'educazione mista", fr: "l'éducation mixte", en: "co-ed education" },
+    { de: "besser", es: "mejor", it: "è meglio", fr: "c'est mieux", en: "is better" },
+    { de: "weil", es: "porque", it: " perché", fr: "parce que", en: "because" },
+    { de: "Jungen und Mädchen", es: "chicos y chicas", it: "ogni genere", fr: "chaque genre", en: "each gender" },
+    { de: "lernen", es: "aprenden", it: "impara", fr: "apprend", en: "learns" },
+    { de: "sich zusammenzureißen", es: "a controlarse", it: "a controllarsi", fr: "à se contrôler", en: "to control itself" },
+    { de: "sich gegenseitig zu verstehen", es: "a entenderse entre sí", it: "a capire l'altro", fr: "à comprendre l'autre", en: "to understand the other" },
+    { de: "Vor allem", es: "sobre todo", it: "Ma soprattutto", fr: "Mais surtout", en: "But above all" },
+    { de: "lernt man Respekt", es: "se aprende respeto", it: "si impara il rispetto", fr: "on apprend le respect", en: "you learn respect" },
+    { de: "Klar", es: "claro / obvio", it: "Certo", fr: "Bien sûr", en: "Of course" },
+    { de: "haben auch Vorteile", es: "también tienen ventajas", it: "hanno i loro lati positivi", fr: "ont aussi des avantages", en: "have positives too" },
+    { de: "man konzentriert sich mehr", es: "uno se concentra más", it: "ti concentri di più", fr: "on est plus concentré", en: "you focus more" },
+    { de: "Am besten wäre", es: "lo mejor sería", it: "l'ideale sarebbe", fr: "l'idéal ce serait", en: "the ideal would be" },
+    { de: "eine Mischung", es: "una mezcla", it: "fare un po' e un po'", fr: "faire les deux", en: "a mix of both" },
+    { de: "mal zusammen, mal getrennt", es: "a veces juntos, a veces separados", it: "a volte miste e a volte separate", fr: "parfois ensemble, parfois séparés", en: "sometimes together, sometimes separated" },
+    { de: "so hat man von beidem etwas", es: "así tienes un poco de ambos", it: "così prendi il meglio", fr: "pour avoir le meilleur", en: "to get the best of both worlds" }
+];
+
+
+/* =========================================================
+   VARIABLES Y ESTADO
+========================================================= */
+
+let playerName = "";
+let vocabIndex = 0;
+let pool = [];
+let activeGroup = [];
+let currentItem = null;
+let forcedItem = null;
+let lastItem = null;
+let streaks = {};
+let completedCount = 0;
+
+let langQ = "de";
+let langA = "es";
+let langH = "en";
+
+let gameState = "QUESTION";
+let startTime = 0;
+let totalAttempts = 0;
+let totalErrors = 0;
+let itemAnalytics = [];
+
+const langNames = {
+    de: "Alemán",
+    es: "Español",
+    en: "Inglés",
+    fr: "Francés",
+    it: "Italiano"
+};
+
+function updateDefaultLangs() {
+    langQ = document.getElementById("cfg-lang-q").value;
+    langA = document.getElementById("cfg-lang-a").value;
+    langH = document.getElementById("cfg-lang-h").value;
+}
+
+function changeLiveLanguages() {
+    langQ = document.getElementById("live-lang-q").value;
+    langA = document.getElementById("live-lang-a").value;
+    if (gameState === "QUESTION") {
+        loadNextQuestion();
+    }
+}
+
+function updateGlobalProgress() {
+    const totalSteps = vocabulary.length + database.length;
+    let currentStep = 0;
+
+    if (document.getElementById("screen-vocab").classList.contains("active")) {
+        currentStep = vocabIndex;
+    } else if (document.getElementById("screen-game").classList.contains("active")) {
+        currentStep = vocabulary.length + completedCount;
+    } else if (document.getElementById("screen-stats").classList.contains("active")) {
+        currentStep = totalSteps;
+    }
+
+    const percentage = (currentStep / totalSteps) * 100;
+    document.getElementById("global-progress-fill").style.width = percentage + "%";
+}
+
+function switchScreen(id) {
+    document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    updateGlobalProgress();
+}
+
+function startApp() {
+    const input = document.getElementById("input-name").value.trim();
+    playerName = input === "" ? "Estudiante" : input;
+    startTime = Date.now();
+    totalAttempts = 0;
+    totalErrors = 0;
+
+    itemAnalytics = database.map((_, index) => ({ index, errors: 0, successes: 0 }));
+
+    pool = [...database];
+    activeGroup = [];
+    completedCount = 0;
+    forcedItem = null;
+    lastItem = null;
+    streaks = {};
+
+    database.forEach((_, index) => { streaks[index] = 0; });
+    vocabIndex = 0;
+
+    document.getElementById("global-progress").classList.add("active");
+    
+    document.getElementById("live-lang-q").value = langQ;
+    document.getElementById("live-lang-a").value = langA;
+
+    switchScreen("screen-vocab");
+    showVocabulary();
+}
+
+
+/* =========================================================
+   FASE 1 — VOCABULARIO
+========================================================= */
+
+function showVocabulary() {
+    updateGlobalProgress();
+
+    if (vocabIndex >= vocabulary.length) {
+        startSentencePhase();
+        return;
+    }
+
+    const item = vocabulary[vocabIndex];
+    document.getElementById("vocab-tag-label").textContent = `Aprende (${langNames[langQ]} ➔ ${langNames[langA]})`;
+    
+    // Si la palabra no existe en el idioma elegido, usa alemán como respaldo
+    const mainText = item[langQ] || item["de"];
+    const subText = item[langA] || item["es"];
+
+    document.getElementById("vocab-main").textContent = mainText;
+    document.getElementById("vocab-sub").textContent = subText;
+    document.getElementById("vocab-progress").textContent = `${vocabIndex + 1}/${vocabulary.length}`;
+}
+
+function nextVocabulary() {
+    vocabIndex++;
+    if (vocabIndex >= vocabulary.length) {
+        startSentencePhase();
+        return;
+    }
+    showVocabulary();
+}
+
+
+/* =========================================================
+   FASE 2 — ORACIONES & GRUPO DE 3
+========================================================= */
+
+function startSentencePhase() {
+    switchScreen("screen-game");
+    loadNextQuestion();
+}
+
+function refillActiveGroup() {
+    while (activeGroup.length < 3 && pool.length > 0) {
+        activeGroup.push(pool.shift());
+    }
+}
+
+function chooseNextItem() {
+    if (forcedItem !== null && activeGroup.includes(forcedItem)) {
+        const item = forcedItem;
+        forcedItem = null;
+        return item;
+    }
+
+    let candidates = activeGroup.filter(item => item !== lastItem);
+    if (candidates.length === 0) {
+        candidates = [...activeGroup];
+    }
+
+    const randomIndex = Math.floor(Math.random() * candidates.length);
+    return candidates[randomIndex];
+}
+
+function loadNextQuestion() {
+    gameState = "QUESTION";
+
+    const btn = document.getElementById("action-btn");
+    btn.textContent = "Comprobar";
+    btn.style.background = "";
+
+    const feedback = document.getElementById("feedback-box");
+    feedback.className = "feedback-box";
+    feedback.style.display = "none";
+
+    const hint = document.getElementById("display-hint");
+    hint.style.display = "none";
+
+    refillActiveGroup();
+
+    if (activeGroup.length === 0) {
+        finishGame();
+        return;
+    }
+
+    currentItem = chooseNextItem();
+    const origIdx = database.indexOf(currentItem);
+
+    document.getElementById("label-instruction").textContent = `Traduce al ${langNames[langA]}:`;
+    document.getElementById("display-target").textContent = currentItem[langQ];
+    document.getElementById("display-hint").textContent = `Pista (${langNames[langH]}): ${currentItem[langH]}`;
+
+    document.getElementById("hud-streak").textContent = `Racha: ${streaks[origIdx]}/3`;
+    document.getElementById("hud-progress").textContent = `Progreso: ${completedCount}/${database.length}`;
+
+    const input = document.getElementById("user-input");
+    input.value = "";
+    input.disabled = false;
+    setTimeout(() => input.focus(), 50);
+}
+
+function normalize(text) {
+    return text.trim().toLowerCase().normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "")
+        .replace(/\s+/g, " ");
+}
+
+function handleAction() {
+    if (gameState === "ERROR_WAIT" || gameState === "SUCCESS_WAIT") {
+        loadNextQuestion();
+        return;
+    }
+    evaluateAnswer();
+}
+
+function evaluateAnswer() {
+    if (!currentItem) return;
+
+    const userVal = document.getElementById("user-input").value;
+    const correctVal = currentItem[langA];
+    const origIdx = database.indexOf(currentItem);
+    const feedback = document.getElementById("feedback-box");
+    const btn = document.getElementById("action-btn");
+    const input = document.getElementById("user-input");
+
+    totalAttempts++;
+    input.disabled = true;
+
+    if (normalize(userVal) === normalize(correctVal)) {
+        streaks[origIdx]++;
+        itemAnalytics[origIdx].successes++;
+        forcedItem = null;
+        lastItem = currentItem;
+
+        if (streaks[origIdx] >= 3) {
+            feedback.innerHTML = `<strong>¡Excelente!</strong><br>Frase dominada y retirada del grupo.`;
+            activeGroup = activeGroup.filter(item => item !== currentItem);
+            completedCount++;
+            updateGlobalProgress();
+        } else {
+            feedback.innerHTML = `<strong>¡Correcto!</strong><br>Llevas ${streaks[origIdx]}/3 aciertos consecutivos.`;
+        }
+
+        feedback.className = "feedback-box success";
+        feedback.style.display = "block";
+        gameState = "SUCCESS_WAIT";
+        btn.textContent = "Siguiente ➔";
+        btn.style.background = "linear-gradient(135deg,#00ff88,#00b35f)";
+
+        setTimeout(() => {
+            if (gameState === "SUCCESS_WAIT") loadNextQuestion();
+        }, 1200);
+
+    } else {
+        streaks[origIdx] = 0;
+        itemAnalytics[origIdx].errors++;
+        totalErrors++;
+        forcedItem = currentItem;
+
+        document.getElementById("hud-streak").textContent = "Racha: 0/3";
+        document.getElementById("display-hint").style.display = "block";
+
+        feedback.innerHTML = `
+            <div style="font-weight:700;margin-bottom:2px;">INCORRECTO</div>
+            La respuesta exacta en ${langNames[langA]} es:
+            <span class="correct-answer-text">${correctVal}</span>
+            <span style="font-size:.62rem;color:var(--text-muted);display:block;margin-top:2px;">
+                Repite esta misma oración ahora.
+            </span>
+        `;
+        feedback.className = "feedback-box error";
+        feedback.style.display = "block";
+        gameState = "ERROR_WAIT";
+        btn.textContent = "Repetir la misma ➔";
+        btn.style.background = "linear-gradient(135deg,#ff0055,#cc0044)";
+    }
+}
+
+document.getElementById("user-input").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        handleAction();
+    }
+});
+
+function fireConfetti() {
+    if (typeof confetti === "function") {
+        const duration = 3.5 * 1000;
+        const end = Date.now() + duration;
+        (function frame() {
+            confetti({ particleCount:3, angle:60, spread:55, origin:{x:0} });
+            confetti({ particleCount:3, angle:120, spread:55, origin:{x:1} });
+            if (Date.now() < end) requestAnimationFrame(frame);
+        })();
+    }
+}
+
+function finishGame() {
+    switchScreen("screen-stats");
+    fireConfetti();
+    document.getElementById("final-greeting").textContent = `¡Excelente ritmo, ${playerName}!`;
+    
+    const totalSecs = Math.floor((Date.now() - startTime) / 1000);
+    const minutes = Math.floor(totalSecs / 60);
+    const seconds = totalSecs % 60;
+    
+    document.getElementById("stat-time").textContent = 
+        `${minutes < 10 ? "0" : ""}${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+        
+    const accuracy = totalAttempts === 0 ? 100 : ((totalAttempts - totalErrors) / totalAttempts) * 100;
+    document.getElementById("stat-accuracy").textContent = accuracy.toFixed(1) + "%";
+    document.getElementById("stat-errors").textContent = totalErrors;
+}
+
+</script>
+
+</body>
+</html>
+
