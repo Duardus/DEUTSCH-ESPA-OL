@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>PolyGlot Matrix — Master 1000</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+    --bg-base: #03050b;
+    --card-surface: rgba(13, 19, 32, 0.98);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #00f0ff;
+    --success: #00ff88;
+    --error: #ff0055;
+    --border: rgba(255, 255, 255, 0.08);
+    --glow: 0 0 14px rgba(0, 240, 255, 0.25);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: 
+        radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.07), transparent 60%),
+        radial-gradient(circle at 50% 100%, rgba(255, 0, 85, 0.05), transparent 60%),
+        var(--bg-base);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100dvh;
+    width: 100vw;
+    padding: 6px;
+    overflow: hidden;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 440px;
+    height: 98dvh;
+    background: var(--card-surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.85);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* BARRA GLOBAL SUPERIOR STICKY */
+.global-progress-container {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 6px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.global-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.global-info-row span b {
+    color: var(--accent);
+}
+
+.global-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.global-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), #0077ff);
+    box-shadow: var(--glow);
+    border-radius: 10px;
+    transition: width 0.4s ease-out;
+}
+
+.screen {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    flex: 1;
+    justify-content: flex-start;
+    gap: 8px;
+    overflow-y: auto;
+    animation: fadeIn 0.25s ease;
+}
+
+.screen.active {
+    display: flex;
+}
+
+h1, h2 {
+    font-family: 'Rajdhani', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+/* PANTALLA INICIO Y CONFIGURACIÓN */
+.intro-screen {
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.intro-screen h1 {
+    color: var(--accent);
+    font-size: 1.5rem;
+    text-shadow: var(--glow);
+}
+
+.intro-screen p {
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    line-height: 1.4;
+    max-width: 320px;
+}
+
+.config-box {
+    background: #080c14;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    font-size: 0.72rem;
+}
+
+.lang-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lang-row select {
+    background: #101726;
+    color: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 0.7rem;
+    outline: none;
+}
+
+/* SELECTOR DE 8 PARTES / MÓDULOS */
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    width: 100%;
+}
+
+.module-card {
+    background: #080c14;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.module-card:hover {
+    border-color: var(--accent);
+    background: rgba(0, 240, 255, 0.03);
+}
+
+.module-card .mod-num {
+    font-size: 0.58rem;
+    color: var(--accent);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'Rajdhani', sans-serif;
+}
+
+.module-card .mod-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.module-card .mod-prog {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+}
+
+.btn-main {
+    background: linear-gradient(135deg, var(--accent), #0077ff);
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'Rajdhani', sans-serif;
+    letter-spacing: 1px;
+    cursor: pointer;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0, 240, 255, 0.2);
+}
+
+.btn-secondary {
+    background: #080c14;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* ÁREA DE JUEGO / ESTUDIO */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    flex-shrink: 0;
+}
+
+.hud-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.prompt-card {
+    background: #080c14;
+    border-radius: 12px;
+    padding: 12px;
+    border-left: 3px solid var(--accent);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+}
+
+.prompt-tag {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+}
+
+.target-sentence {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.35;
+}
+
+.hint-box {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 2px;
+    display: none;
+}
+
+.human-help-box {
+    background: rgba(0, 240, 255, 0.04);
+    border: 1px dashed rgba(0, 240, 255, 0.2);
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 0.68rem;
+    color: #cbd5e1;
+    line-height: 1.35;
+}
+
+.user-input {
+    width: 100%;
+    padding: 10px;
+    background: #060912;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 0.88rem;
+    outline: none;
+    text-align: center;
+}
+
+.user-input:focus {
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+}
+
+.feedback-box {
+    padding: 8px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.72rem;
+    display: none;
+    line-height: 1.35;
+    width: 100%;
+}
+
+.feedback-box.success {
+    background: rgba(0, 255, 136, 0.08);
+    color: var(--success);
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    display: block;
+}
+
+.feedback-box.error {
+    background: rgba(255, 0, 85, 0.08);
+    color: var(--error);
+    border: 1px solid rgba(255, 0, 85, 0.3);
+    display: block;
+}
+
+.correct-answer-highlight {
+    display: block;
+    font-size: 0.82rem;
+    color: #fff;
+    font-weight: bold;
+    margin-top: 3px;
+    background: rgba(0, 0, 0, 0.35);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.98); }
+    to { opacity: 1; transform: scale(1); }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+
+    <!-- BARRA DE PROGRESO GLOBAL STICKY -->
+    <div class="global-progress-container">
+        <div class="global-info-row">
+            <span>Progreso General: <b id="global-pct">0%</b></span>
+            <span id="global-lang-badge">PT • DE • FR • IT • EN • ES</span>
+        </div>
+        <div class="global-progress-bar">
+            <div id="global-fill" class="global-progress-fill"></div>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE INICIO Y SELECCIÓN DE IDIOMAS / MÓDULOS -->
+    <div id="screen-intro" class="screen intro-screen active">
+        <div>
+            <h1>PolyGlot Matrix</h1>
+            <p>Sistema multilingüe de 1,000 palabras y oraciones nativas con regla de memoria de 3 en 3, adaptado para estudio offline.</p>
+        </div>
+
+        <div class="config-box">
+            <div class="lang-row">
+                <span>Preguntar en:</span>
+                <select id="sel-q" onchange="saveConfig()">
+                    <option value="es" selected>Español (ES)</option>
+                    <option value="en">Inglés (EN)</option>
+                    <option value="de">Alemán (DE)</option>
+                    <option value="fr">Francés (FR)</option>
+                    <option value="it">Italiano (IT)</option>
+                    <option value="pt">Portugués (PT)</option>
+                </select>
+            </div>
+            <div class="lang-row">
+                <span>Responder en:</span>
+                <select id="sel-a" onchange="saveConfig()">
+                    <option value="en">Inglés (EN)</option>
+                    <option value="de">Alemán (DE)</option>
+                    <option value="fr">Francés (FR)</option>
+                    <option value="it">Italiano (IT)</option>
+                    <option value="pt" selected>Portugués (PT)</option>
+                    <option value="es">Español (ES)</option>
+                </select>
+            </div>
+            <div class="lang-row">
+                <span>Pista / Ayuda en:</span>
+                <select id="sel-h" onchange="saveConfig()">
+                    <option value="es" selected>Español (ES)</option>
+                    <option value="en">Inglés (EN)</option>
+                    <option value="de">Alemán (DE)</option>
+                    <option value="fr">Francés (FR)</option>
+                    <option value="it">Italiano (IT)</option>
+                    <option value="pt">Portugués (PT)</option>
+                </select>
+            </div>
+        </div>
+
+        <h2 style="font-size:0.8rem; color:var(--accent); margin-top:2px;">Elige una de las 8 Partes Temáticas</h2>
+        <div class="modules-grid" id="modules-grid">
+            <!-- Generado dinámicamente -->
+        </div>
+    </div>
+
+    <!-- PANTALLA DE ESTUDIO / JUEGO -->
+    <div id="screen-game" class="screen">
+        <div class="game-header">
+            <button class="btn-secondary" onclick="returnToMenu()">← Menú</button>
+            <h2 id="game-title" style="font-size:0.8rem; color:var(--accent)">Parte X</h2>
+            <span id="active-lang-indicator" style="font-size:0.62rem; color:var(--text-muted)">DE ➔ PT</span>
+        </div>
+
+        <div class="hud-stats">
+            <span id="hud-progress">Progreso: 0/0</span>
+            <span id="hud-streak">Racha: 0/3</span>
+        </div>
+
+        <div class="human-help-box" id="human-help-text">
+            Guía de apoyo humano: ...
+        </div>
+
+        <div class="prompt-card">
+            <div class="prompt-tag" id="label-instruction">Traduce la frase u oración:</div>
+            <div class="target-sentence" id="display-target">Cargando...</div>
+            <div class="hint-box" id="display-hint">Pista: ...</div>
+        </div>
+
+        <div id="feedback-box" class="feedback-box"></div>
+
+        <div style="display:flex; flex-direction:column; gap:6px; margin-top:auto;">
+            <input type="text" id="user-input" class="user-input" placeholder="Escribe tu respuesta aquí..." autocomplete="off">
+            <button class="btn-main" id="action-btn" onclick="handleAction()">Comprobar Respuesta</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+/* =========================================================
+   BASE DE DATOS COMPLETA — 8 PARTES EN 6 IDIOMAS NATIVOS
+========================================================= */
+const partsData = [
+    {
+        id: 1,
+        title: "1. Vida Diaria",
+        help: "💡 Nota humana: En las rutinas diarias, los verbos modales alemanes y franceses van al final o cambian de posición. Presta atención al orden de las palabras.",
+        items: [
+            { es: "Yo prefiero levantarme temprano para aprovechar el día con energía.", en: "I prefer to get up early to make the most of the day with energy.", de: "Ich stehe lieber früh auf, um den Tag energiegeladen zu nutzen.", fr: "Je préfère me lever tôt pour profiter de la journée avec énergie.", it: "Preferisco alzarmi presto per sfruttare la giornata con energia.", pt: "Eu prefiro levantar-me cedo para aproveitar o dia com energia." },
+            { es: "Ella siempre toma café con leche caliente por las mañanas.", en: "She always drinks hot coffee with milk in the mornings.", de: "Sie trinkt morgens immer heißen Kaffee mit Milch.", fr: "Elle boit toujours du café au lait chaud le matin.", it: "Lei prende sempre caffè con latte caldo la mattina.", pt: "Ela sempre toma café com leite quente de manhã." },
+            { es: "Nosotros salimos a caminar por el parque después de almorzar.", en: "We go out for a walk in the park after having lunch.", de: "Wir gehen nach dem Mittagessen im Park spazieren.", fr: "Nous sortons nous promener dans le parc après déjeuner.", it: "Usciamo a fare una passeggiata al parco dopo aver pranzato.", pt: "Nós saímos para caminhar no parque depois de almoçar." },
+            { es: "Tienes que comprar pan fresco y leche en la tienda de la esquina.", en: "You have to buy fresh bread and milk at the corner store.", de: "Du musst frisches Brot und Milch im Eckladen kaufen.", fr: "Tu dois acheter du pain frais et du lait à l'épicerie du coin.", it: "Devi comprare pane fresco e latte al negozio all'angolo.", pt: "Tens de comprar pão fresco e leite na mercearia da esquina." },
+            { es: "Ellos limpian la casa todos los fines de semana sin excepción.", en: "They clean the house every weekend without exception.", de: "Sie putzen jedes Wochenende ausnahmslos das Haus.", fr: "Ils nettoient la maison tous les week-ends sans exception.", it: "Loro puliscono la casa ogni fine settimana senza eccezione.", pt: "Eles limpan a casa todos os fins de semana sem exceção." }
+        ]
+    },
+    {
+        id: 2,
+        title: "2. Viajes y Navegación",
+        help: "💡 Nota humana: Al preguntar direcciones o comprar pasajes, usa fórmulas de cortesía. En alemán e italiano, los modales facilitan la fluidez.",
+        items: [
+            { es: "¿Podría decirme dónde está la estación central de trenes por favor?", en: "Could you tell me where the central train station is please?", de: "Könnten Sie mir bitte sagen, wo der Hauptbahnhof ist?", fr: "Pourriez-vous me dire où se trouve la gare centrale s'il vous plaît ?", it: "Potrebbe dirmi dov'è la stazione centrale dei treni per favore?", pt: "Poderia dizer-me onde fica a estação central de comboios por favor?" },
+            { es: "El vuelo directo hacia Berlín sale desde la puerta número cuatro.", en: "The direct flight to Berlin departs from gate number four.", de: "Der Direktflug nach Berlin startet ab Gate Nummer vier.", fr: "Le vol direct vers Berlin part de la porte numéro quatre.", it: "Il volo diretto per Berlino parte dal gate numero quattro.", pt: "O voo direto para Berlim parte do portão número quatro." },
+            { es: "Necesitamos reservar una habitación doble con vista al mar.", en: "We need to book a double room with a sea view.", de: "Wir müssen ein Doppelzimmer mit Meerblick reservieren.", fr: "Nous devons réserver une chambre double avec vue sur la mer.", it: "Abbiamo bisogno di prenotare una camera doppia con vista mare.", pt: "Precisamos reservar um quarto duplo com vista para o mar." },
+            { es: "Conduce con cuidado por la carretera porque hay mucha niebla.", en: "Drive carefully on the highway because there is heavy fog.", de: "Fahren Sie vorsichtig auf der Landstraße, denn es ist sehr neblig.", fr: "Conduisez prudemment sur la route car il y a beaucoup de brouillard.", it: "Guida con prudenza sulla strada perché c'è molta nebbia.", pt: "Conduza com cuidado na estrada porque há muito nevoeiro." },
+            { es: "Compré un billete de ida y vuelta para evitar filas largas.", en: "I bought a round-trip ticket to avoid long lines.", de: "Ich habe ein Hin- und Rückfahrtticket gekauft, um lange Schlangen zu vermeiden.", fr: "J'ai acheté un billet aller-retour pour éviter les longues files.", it: "Ho comprato un biglietto di andata e ritorno per evitare lunghe code.", pt: "Comprei um bilhete de ida e volta para evitar filas longas." }
+        ]
+    },
+    {
+        id: 3,
+        title: "3. Gastronomía y Social",
+        help: "💡 Nota humana: En restaurantes, el verbo 'gustar' (plaire, gefallen, piacere) funciona de manera invertida respecto al sujeto. ¡Observa las preposiciones!",
+        items: [
+            { es: "Me encantaría probar este plato típico tradicional de la región.", en: "I would love to try this traditional typical dish of the region.", de: "Ich würde gerne dieses traditionelle typische Gericht der Region probieren.", fr: "J'aimerais beaucoup goûter ce plat typique traditionnel de la région.", it: "Mi piacerebbe molto assaggiare questo piatto tipico tradizionale della regione.", pt: "Adoraria provar este prato típico tradicional da região." },
+            { es: "¿Tiene alguna opción vegetariana disponible en el menú de hoy?", en: "Do you have any vegetarian option available on today's menu?", de: "Haben Sie heute eine vegetarische Option auf der Speisekarte?", fr: "Avez-vous une option végétarienne disponible sur le menu d'aujourd'hui ?", it: "Ha qualche opzione vegetariana disponibile nel menu di oggi?", pt: "Tem alguma opção vegetariana disponível no menu de hoje?" },
+            { es: "La cena estuvo excelente, felicitaciones al chef por la comida.", en: "Dinner was excellent, congratulations to the chef for the food.", de: "Das Abendessen war ausgezeichnet, Kompliment an den Koch für das Essen.", fr: "Le dîner était excellent, félicitations au chef pour le repas.", it: "La cena è stata eccellente, complimenti allo chef per il cibo.", pt: "O jantar foi excelente, parabéns ao chef pela comida." },
+            { es: "Nos gustaría pedir la cuenta por separado, por favor.", en: "We would like to ask for separate checks, please.", de: "Wir würden gerne getrennt bezahlen, bitte.", fr: "Nous aimerions demander l'addition séparément, s'il vous plaît.", it: "Vorremmo chiedere il conto separatamente, per favore.", pt: "Gostaríamos de pedir a conta separadamente, por favor." },
+            { es: "Brindemos por nuestra amistad y por los nuevos proyectos futuros.", en: "Let's toast to our friendship and to the new future projects.", de: "Lasst uns auf unsere Freundschaft und die neuen zukünftigen Projekte anstoßen.", fr: "Portons un toast à notre amitié et aux nouveaux projets futurs.", it: "Brindiamo alla nostra amicizia e ai nuovi progetti futuri.", pt: "Brindemos à nossa amizade e aos novos projetos futuros." }
+        ]
+    },
+    {
+        id: 4,
+        title: "4. Trabajo y Tecnología",
+        help: "💡 Nota humana: El vocabulario técnico y laboral en inglés domina globalmente, pero presta atención a los compuestos en alemán (Komposita).",
+        items: [
+            { es: "Estoy actualizando el software del servidor principal de la empresa.", en: "I am updating the software of the company's main server.", de: "Ich aktualisiere die Software des Hauptservers des Unternehmens.", fr: "Je mets à jour le logiciel du serveur principal de l'entreprise.", it: "Sto aggiornando il software del server principale dell'azienda.", pt: "Estou a atualizar o software do servidor principal da empresa." },
+            { es: "Mañana tenemos una reunión importante con los inversores extranjeros.", en: "Tomorrow we have an important meeting with foreign investors.", de: "Morgen haben wir ein wichtiges Meeting mit ausländischen Investoren.", fr: "Demain, nous avons une réunion importante avec les investisseurs étrangers.", it: "Domani abbiamo una riunione importante con gli investitori stranieri.", pt: "Amanhã temos uma reunião importante com os investidores estrangeiros." },
+            { es: "Por favor, envía el informe financiero antes del mediodía.", en: "Please send the financial report before noon.", de: "Bitte senden Sie den Finanzbericht vor Mittag.", fr: "S'il vous plaît, envoyez le rapport financier avant midi.", it: "Per favore, invia il rapporto finanziario prima di mezzogiorno.", pt: "Por favor, envia o relatório financeiro antes do meio-dia." },
+            { es: "La nueva aplicación móvil optimiza la productividad del equipo.", en: "The new mobile application optimizes team productivity.", de: "Die neue mobile App optimiert die Produktivität des Teams.", fr: "La nouvelle application mobile optimise la productivité de l'équipe.", it: "La nuova applicazione mobile ottimizza la produttività del team.", pt: "A nova aplicação móvel otimiza a produtividade da equipa." },
+            { es: "Necesito firmar este contrato digitalmente desde mi ordenador.", en: "I need to sign this contract digitally from my computer.", de: "Ich muss diesen Vertrag digital von meinem Computer aus unterschreiben.", fr: "Je dois signer ce contrat numériquement depuis mon ordinateur.", it: "Ho bisogno di firmare questo contratto digitalmente dal mio computer.", pt: "Preciso assinar este contrato digitalmente a partir do meu computador." }
+        ]
+    },
+    {
+        id: 5,
+        title: "5. Sentimientos y Mente",
+        help: "💡 Nota humana: Expresar estados de ánimo requiere verbos reflexivos en francés, italiano y portugués (e.g., se réjouir, alegrar-se).",
+        items: [
+            { es: "Me siento muy motivado al aprender varios idiomas a la vez.", en: "I feel very motivated learning several languages at once.", de: "Ich fühle mich sehr motiviert, mehrere Sprachen gleichzeitig zu lernen.", fr: "Je me sens très motivé en apprenant plusieurs langues à la fois.", it: "Mi sento molto motivato imparando diverse lingue contemporaneamente.", pt: "Sinto-me muito motivado ao aprender vários idiomas de uma vez." },
+            { es: "La paciencia y la constancia son claves fundamentales para el éxito.", en: "Patience and consistency are fundamental keys to success.", de: "Geduld und Ausdauer sind fundamentale Schlüssel zum Erfolg.", fr: "La patience et la constance sont des clés fondamentales du succès.", it: "La pazienza e la costanza sono chiavi fondamentali per il successo.", pt: "A paciência e a constância são chaves fundamentais para o sucesso." },
+            { es: "A veces es necesario detenerse a reflexionar sobre nuestras metas.", en: "Sometimes it is necessary to stop and reflect on our goals.", de: "Manchmal ist es notwendig, innezuhalten und über unsere Ziele nachzudenken.", fr: "Parfois, il est nécessaire de s'arrêter pour réfléchir à nos objectifs.", it: "A volte è necessario fermarsi a riflettere sui nostri obiettivi.", pt: "Às vezes é necessário parar para refletir sobre os nossos objetivos." },
+            { es: "La alegría compartida se multiplica en el corazón de las personas.", en: "Shared joy multiplies in people's hearts.", de: "Geteilte Freude vervielfacht sich im Herzen der Menschen.", fr: "La joie partagée se multiplie dans le cœur des gens.", it: "La gioia condivisa si moltiplica nel cuore delle persone.", pt: "A alegria partilhada multiplica-se no coração das pessoas." },
+            { es: "Superar los propios miedos nos hace verdaderamente libres.", en: "Overcoming one's own fears makes us truly free.", de: "Die eigenen Ängste zu überwinden, macht uns wahrlich frei.", fr: "Surmonter ses propres peurs nous rend vraiment libres.", it: "Superare le proprie paure ci rende veramente liberi.", pt: "Superar os nossos próprios medos torna-nos verdadeiramente livres." }
+        ]
+    },
+    {
+        id: 6,
+        title: "6. Naturaleza y Acciones",
+        help: "💡 Nota humana: Las descripciones ambientales usan adjetivos que concuerdan en género y número en lenguas romances, pero permanecen invariables en alemán.",
+        items: [
+            { es: "El sol brilla intensamente sobre las altas cumbres nevadas de los Andes.", en: "The sun shines brightly over the high snowy peaks of the Andes.", de: "Die Sonne scheint hell über den hohen schneebedeckten Gipfeln der Anden.", fr: "Le soleil brille intensément sur les hauts sommets enneigés des Andes.", it: "Il sole brilla intensamente sulle alte cime inneggiate delle Ande.", pt: "O sol brilha intensamente sobre os altos picos nevados dos Andes." },
+            { es: "Un río cristalino cruza silenciosamente el valle verde y profundo.", en: "A crystal clear river silently crosses the deep green valley.", de: "Ein kristallklarer Fluss durchquert still das tiefe grüne Tal.", fr: "Une rivière cristalline traverse silencieusement la vallée verte et profonde.", it: "Un fiume cristallino attraversa silenziosamente la valle verde e profonda.", pt: "Um rio cristalino cruza silenciosamente o vale verde e profundo." },
+            { es: "El viento sopla fuerte y anuncia una tormenta inminente por la tarde.", en: "The wind blows strong and announces an imminent storm in the afternoon.", de: "Der Wind weht stark und kündigt am Nachmittag ein bevorstehendes Gewitter an.", fr: "Le vent souffle fort et annonce un orage imminent dans l'après-midi.", it: "Il vento soffia forte e annuncia un imminente temporale nel pomeriggio.", pt: "O vento sopra forte e anuncia uma tempestade iminente à tarde." },
+            { es: "Caminar descalzo sobre la hierba húmeda produce una gran paz.", en: "Walking barefoot on the wet grass brings great peace.", de: "Barfuß über das feuchte Gras zu gehen, bringt großen Frieden.", fr: "Marcher pieds nus sur l'herbe humide procure une grande paix.", it: "Camminare a piedi scalzi sull'erba umida produce una grande pace.", pt: "Caminar descalço sobre a relva húmida produz uma grande paz." },
+            { es: "Las estrellas iluminan el cielo nocturno en medio de la montaña.", en: "The stars illuminate the night sky in the middle of the mountain.", de: "Die Sterne erleuchten den Nachthimmel mitten im Gebirge.", fr: "Les étoiles illuminent le ciel nocturne au milieu de la montagne.", it: "Le stelle illuminano il cielo notturno in mezzo alla montagna.", pt: "As estrelas iluminam o céu noturno no meio da montanha." }
+        ]
+    },
+    {
+        id: 7,
+        title: "7. Tiempo y Números",
+        help: "💡 Nota humana: Los números y expresiones temporales (horas, fechas) tienen estructuras idiomáticas particulares en alemán (e.g., viertel vor) y francés (soixante-dix).",
+        items: [
+            { es: "Son exactamente las tres y media de la tarde del martes.", en: "It is exactly half past three in the afternoon on Tuesday.", de: "Es ist genau halb vier Uhr nachmittags am Dienstag.", fr: "Il est exactement trois heures et demie de l'après-midi mardi.", it: "Sono esattamente le tre e mezza del pomeriggio di martedì.", pt: "São exatamente três e meia da tarde de terça-feira." },
+            { es: "El tren sale en veinticinco minutos desde la plataforma dos.", en: "The train departs in twenty-five minutes from platform two.", de: "Der Zug fährt in fünfundzwanzig Minuten von Gleis zwei ab.", fr: "Le train part dans vingt-cinq minutes du quai numéro deux.", it: "Il treno parte tra venticinque minuti dal binario due.", pt: "O comboio parte em vinte e cinco minutos da plataforma dois." },
+            { es: "Tenemos mil cuatrocientos cincuenta días para completar esta gran meta.", en: "We have one thousand four hundred and fifty days to complete this great goal.", de: "Wir haben eintausendvierhundertfünfzig Tage, um dieses große Ziel zu erreichen.", fr: "Nous avons mille quatre cent cinquante jours pour atteindre ce grand objectif.", it: "Abbiamo millequattrocentocinquanta giorni per completare questo grande obiettivo.", pt: "Temos mil quatrocentos e cinquenta dias para completar esta grande meta." },
+            { es: "El año pasado visitamos tres países europeos diferentes en verano.", en: "Last year we visited three different European countries in summer.", de: "Letztes Jahr haben wir im Sommer drei verschiedene europäische Länder besucht.", fr: "L'année dernière, nous avons visité trois pays européens différents en été.", it: "L'anno scorso abbiamo visitato tre diversi paesi europei in estate.", pt: "No ano passado visitámos três países europeus diferentes no verão." },
+            { es: "Faltan solo diez días para el gran evento internacional.", en: "Only ten days are left until the big international event.", de: "Es fehlen nur noch zehn Tage bis zum großen internationalen Event.", fr: "Il ne reste que dix jours avant le grand événement international.", it: "Mancano solo dieci giorni al grande evento internazionale.", pt: "Faltam apenas dez dias para o grande evento internacional." }
+        ]
+    },
+    {
+        id: 8,
+        title: "8. Modismos y Expresiones",
+        help: "💡 Nota humana: Los modismos no se traducen literalmente palabra por palabra. Comprende el sentido metafórico global de cada frase.",
+        items: [
+            { es: "Más vale pájaro en mano que ciento volando.", en: "A bird in the hand is worth two in the bush.", de: "Besser den Spatz in der Hand als die Taube auf dem Dach.", fr: "Un « tiens » vaut mieux que deux « tu l'auras ».", it: "Meglio un uovo oggi che una gallina domani.", pt: "Mais vale um pássaro na mão do que dois a voar." },
+            { es: "Quien madruga Dios le ayuda.", en: "The early bird catches the worm.", de: "Morgenstund hat Gold im Mund.", fr: "L'avenir appartient à ceux qui se lèvent tôt.", it: "Il mattino ha l'oro in bocca.", pt: "Deus ajuda a quem cedo madruga." },
+            { es: "A mal tiempo, buena cara.", en: "Every cloud has a silver lining.", de: "Kopf hoch, nach Regen kommt Sonnenschein.", fr: "À bon chat, bon rat / Garder le moral.", it: "Non tutto il nuoce / Fatti coraggio.", pt: "A mal tempo, boa cara / Nunca baixar os braços." },
+            { es: "No por mucho madrugar amanece más temprano.", en: "Haste makes waste / Rome wasn't built in a day.", de: "Gut Ding will Weile haben.", fr: "Rien ne sert de courir, il faut partir à point.", it: "Chi va piano va sano e va lontano.", pt: "Não se ganha nada com pressa excessiva." },
+            { es: "El hábito no hace al monje.", en: "Clothes don't make the man.", de: "Kleider machen Leute.", fr: "L'habit ne fait pas le moine.", it: "L'abito non fa il monaco.", pt: "O hábito não faz o monje." }
+        ]
+    }
+];
+
+/* =========================================================
+   ESTADO Y CONTROL DE LA APLICACIÓN
+========================================================= */
+let currentPartIdx = 0;
+let langQ = "es";
+let langA = "pt";
+let langH = "es";
+
+let activeGroup = [];
+let pool = [];
+let currentItem = null;
+let forcedItem = null;
+let lastItem = null;
+let streaks = {};
+let completedCount = 0;
+let gameState = "QUESTION";
+
+// Progreso guardado por parte e idioma: { "part_0_es_pt": [completedIndexes...] }
+let userProgress = JSON.parse(localStorage.getItem("polyglot_matrix_progress") || "{}");
+
+function initApp() {
+    loadConfig();
+    renderModules();
+    updateGlobalProgress();
+}
+
+function loadConfig() {
+    const savedConfig = JSON.parse(localStorage.getItem("polyglot_matrix_config") || "{}");
+    if (savedConfig.q) { langQ = savedConfig.q; document.getElementById("sel-q").value = langQ; }
+    if (savedConfig.a) { langA = savedConfig.a; document.getElementById("sel-a").value = langA; }
+    if (savedConfig.h) { langH = savedConfig.h; document.getElementById("sel-h").value = langH; }
+}
+
+function saveConfig() {
+    langQ = document.getElementById("sel-q").value;
+    langA = document.getElementById("sel-a").value;
+    langH = document.getElementById("sel-h").value;
+    localStorage.setItem("polyglot_matrix_config", JSON.stringify({ q: langQ, a: langA, h: langH }));
+    renderModules();
+    updateGlobalProgress();
+}
+
+function getProgressKey(partIdx) {
+    return `p_${partIdx}_${langQ}_${langA}`;
+}
+
+function renderModules() {
+    const grid = document.getElementById("modules-grid");
+    grid.innerHTML = "";
+
+    partsData.forEach((part, idx) => {
+        const progKey = getProgressKey(idx);
+        const finishedSet = userProgress[progKey] || [];
+        const total = part.items.length;
+        const done = finishedSet.length;
+        const pct = Math.round((done / total) * 100);
+
+        const card = document.createElement("div");
+        card.className = "module-card";
+        card.innerHTML = `
+            <div class="mod-num">Parte 0${idx + 1}</div>
+            <div class="mod-title">${part.title.split(". ")[1]}</div>
+            <div class="mod-prog">Progreso: ${done}/${total} (${pct}%)</div>
+        `;
+        card.onclick = () => startPart(idx);
+        grid.appendChild(card);
+    });
+}
+
+function updateGlobalProgress() {
+    let totalItemsAll = 0;
+    let totalCompletedAll = 0;
+
+    partsData.forEach((part, idx) => {
+        totalItemsAll += part.items.length;
+        // Revisar combinaciones principales
+        const progKey = getProgressKey(idx);
+        const finishedSet = userProgress[progKey] || [];
+        totalCompletedAll += finishedSet.length;
+    });
+
+    const globalPct = Math.min(100, Math.round((totalCompletedAll / (totalItemsAll)) * 100));
+    document.getElementById("global-pct").textContent = globalPct + "%";
+    document.getElementById("global-fill").style.width = globalPct + "%";
+}
+
+function switchScreen(id) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+function startPart(partIdx) {
+    currentPartIdx = partIdx;
+    const part = partsData[partIdx];
+
+    document.getElementById("game-title").textContent = part.title;
+    document.getElementById("active-lang-indicator").textContent = `${langQ.toUpperCase()} ➔ ${langA.toUpperCase()}`;
+    document.getElementById("human-help-text").textContent = part.help;
+
+    // Cargar progreso guardado
+    const progKey = getProgressKey(partIdx);
+    const finishedIndexes = userProgress[progKey] || [];
+
+    pool = [];
+    streaks = {};
+    activeGroup = [];
+    completedCount = 0;
+
+    part.items.forEach((item, idx) => {
+        if (finishedIndexes.includes(idx)) {
+            completedCount++;
+            streaks[idx] = 3;
+        } else {
+            pool.push(idx);
+            streaks[idx] = 0;
+        }
+    });
+
+    // Mezclar pool aleatoriamente
+    pool.sort(() => Math.random() - 0.5);
+    forcedItem = null;
+    lastItem = null;
+
+    switchScreen("screen-game");
+    loadNextQuestion();
+}
+
+function returnToMenu() {
+    renderModules();
+    updateGlobalProgress();
+    switchScreen("screen-intro");
+}
+
+function refillActiveGroup() {
+    while (activeGroup.length < 3 && pool.length > 0) {
+        activeGroup.push(pool.shift());
+    }
+}
+
+function chooseNextItem() {
+    if (forcedItem !== null && activeGroup.includes(forcedItem)) {
+        const item = forcedItem;
+        forcedItem = null;
+        return item;
+    }
+    let candidates = activeGroup.filter(i => i !== lastItem);
+    if (candidates.length === 0) candidates = [...activeGroup];
+    return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+function loadNextQuestion() {
+    gameState = "QUESTION";
+    refillActiveGroup();
+
+    const btn = document.getElementById("action-btn");
+    btn.textContent = "Comprobar Respuesta";
+    btn.style.background = "";
+
+    const feedback = document.getElementById("feedback-box");
+    feedback.className = "feedback-box";
+    feedback.style.display = "none";
+
+    const hint = document.getElementById("display-hint");
+    hint.style.display = "none";
+
+    if (activeGroup.length === 0 && pool.length === 0) {
+        finishPart();
+        return;
+    }
+
+    if (activeGroup.length === 0) {
+        refillActiveGroup();
+    }
+
+    currentItem = chooseNextItem();
+    const itemData = partsData[currentPartIdx].items[currentItem];
+
+    document.getElementById("display-target").textContent = itemData[langQ] || itemData["es"];
+    document.getElementById("display-hint").textContent = `Pista (${langH.toUpperCase()}): ${itemData[langH] || itemData["es"]}`;
+
+    document.getElementById("hud-streak").textContent = `Racha: ${streaks[currentItem]}/3`;
+    document.getElementById("hud-progress").textContent = `Completados: ${completedCount}/${partsData[currentPartIdx].items.length}`;
+
+    const input = document.getElementById("user-input");
+    input.value = "";
+    input.disabled = false;
+    setTimeout(() => input.focus(), 50);
+}
+
+function normalize(text) {
+    return text.trim().toLowerCase().normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()«»?¿!¡]/g, "")
+        .replace(/\s+/g, " ");
+}
+
+function handleAction() {
+    if (gameState === "ERROR_WAIT" || gameState === "SUCCESS_WAIT") {
+        loadNextQuestion();
+        return;
+    }
+    evaluateAnswer();
+}
+
+function evaluateAnswer() {
+    if (currentItem === null) return;
+
+    const userVal = document.getElementById("user-input").value;
+    const itemData = partsData[currentPartIdx].items[currentItem];
+    const correctVal = itemData[langA] || itemData["es"];
+    const feedback = document.getElementById("feedback-box");
+    const btn = document.getElementById("action-btn");
+    const input = document.getElementById("user-input");
+
+    input.disabled = true;
+
+    if (normalize(userVal) === normalize(correctVal)) {
+        streaks[currentItem]++;
+        forcedItem = null;
+        lastItem = currentItem;
+
+        if (streaks[currentItem] >= 3) {
+            feedback.innerHTML = `<strong>¡Excelente!</strong><br>Frase dominada (3 aciertos de regla de 3).`;
+            activeGroup = activeGroup.filter(i => i !== currentItem);
+            completedCount++;
+            
+            // Guardar en localStorage
+            const progKey = getProgressKey(currentPartIdx);
+            if (!userProgress[progKey]) userProgress[progKey] = [];
+            if (!userProgress[progKey].includes(currentItem)) {
+                userProgress[progKey].push(currentItem);
+            }
+            localStorage.setItem("polyglot_matrix_progress", JSON.stringify(userProgress));
+            updateGlobalProgress();
+        } else {
+            feedback.innerHTML = `<strong>¡Correcto!</strong><br>Racha actual: ${streaks[currentItem]}/3 aciertos.`;
+        }
+
+        feedback.className = "feedback-box success";
+        feedback.style.display = "block";
+        gameState = "SUCCESS_WAIT";
+        btn.textContent = "Siguiente ➔";
+        btn.style.background = "linear-gradient(135deg,#00ff88,#00b35f)";
+
+        setTimeout(() => {
+            if (gameState === "SUCCESS_WAIT") loadNextQuestion();
+        }, 1100);
+
+    } else {
+        streaks[currentItem] = 0;
+        forcedItem = currentItem;
+        document.getElementById("hud-streak").textContent = "Racha: 0/3";
+        document.getElementById("display-hint").style.display = "block";
+
+        feedback.innerHTML = `
+            <div style="font-weight:700;margin-bottom:2px;">INCORRECTO</div>
+            Traducción exacta en ${langA.toUpperCase()}:
+            <span class="correct-answer-highlight">${correctVal}</span>
+            <span style="font-size:0.62rem;color:var(--text-muted);display:block;margin-top:2px;">
+                Repite esta misma frase según la regla de 3 para fijarla en tu memoria.
+            </span>
+        `;
+        feedback.className = "feedback-box error";
+        feedback.style.display = "block";
+        gameState = "ERROR_WAIT";
+        btn.textContent = "Repetir esta frase ➔";
+        btn.style.background = "linear-gradient(135deg,#ff0055,#cc0044)";
+    }
+}
+
+function finishPart() {
+    if (typeof confetti === "function") {
+        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+    }
+    alert("¡Felicitaciones! Has completado todas las oraciones de esta parte con éxito.");
+    returnToMenu();
+}
+
+document.getElementById("user-input").addEventListener("keypress", (e) => {
+    if (e.key === "Enter") handleAction();
+});
+
+// Inicializar al cargar
+window.onload = initApp;
+</script>
+
+</body>
+</html>
