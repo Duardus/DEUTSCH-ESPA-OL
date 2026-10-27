@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Polyglot Master - 1000 Palabras Nativas</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#070a14;--card:#11162a;--card2:#151d36;--border:rgba(255,255,255,.08);
+--accent:#4ef2ff;--accent2:#7c6cff;--ok:#00ff9d;--bad:#ff3b6e;
+--text:#eef2ff;--muted:#8a92b5;
+--es:#ff4655;--pt:#00c950;--de:#ffcc00;--fr:#2d5bff;--it:#00d0a0;--en:#a855f7;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit',system-ui;background:radial-gradient(1200px 600px at 20% -10%,rgba(78,242,255,.12),transparent),radial-gradient(1000px 500px at 90% 0%,rgba(124,108,255,.15),transparent),var(--bg);color:var(--text);min-height:100dvh;display:flex;justify-content:center;padding:12px}
+.app{width:100%;max-width:480px;display:flex;flex-direction:column;gap:12px}
+.top{position:sticky;top:0;z-index:10;background:rgba(7,10,20,.92);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:18px;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
+.brand{display:flex;justify-content:space-between;align-items:center}
+.brand h1{font-size:15px;font-weight:800;letter-spacing:.5px}
+.brand h1 span{color:var(--accent)}
+.lang-bars{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.lang-bar{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:5px 8px}
+.lang-bar b{font-size:10px;width:28px}
+.bar-track{flex:1;height:6px;background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;width:0%;border-radius:99px;transition:.6s}
+.bar-pct{font-family:'JetBrains Mono';font-size:10px;min-width:30px;text-align:right;color:var(--muted)}
+.cfg{display:flex;gap:6px;flex-wrap:wrap}
+.cfg select{background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 8px;font-size:11px;flex:1;min-width:90px}
+.screen{display:none;flex-direction:column;gap:12px;animation:pop .22s ease}
+.screen.on{display:flex}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}to{opacity:1;transform:none}}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mod{cursor:pointer;background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--border);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;transition:.2s}
+.mod:hover{transform:translateY(-2px);border-color:rgba(78,242,255,.25)}
+.mod h3{font-size:12px;line-height:1.2}
+.mod p{font-size:10px;color:var(--muted);line-height:1.3}
+.mod .meta{display:flex;justify-content:space-between;align-items:center;font-size:10px;font-family:'JetBrains Mono'}
+.mod .dot{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:18px;background:rgba(255,255,255,.06)}
+.progress-ring{position:absolute;right:8px;top:8px;font-size:9px;color:var(--accent)}
+.card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--border);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+.tag{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between}
+.sentence{font-size:18px;font-weight:600;line-height:1.25}
+.hint{font-size:12px;color:var(--muted);font-style:italic;display:none;background:rgba(255,255,255,.04);border:1px dashed var(--border);padding:8px;border-radius:10px}
+.input{width:100%;background:#0a0f22;border:2px solid var(--border);border-radius:12px;color:#fff;padding:12px;font-size:15px;outline:none}
+.input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(78,242,255,.12)}
+.btn{width:100%;border:none;border-radius:12px;padding:12px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;font-size:13px;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;transition:.15s}
+.btn:active{transform:scale(.98)}
+.btn.ok{background:linear-gradient(135deg,var(--ok),#00c27a)}
+.btn.bad{background:linear-gradient(135deg,var(--bad),#b4003a);color:#fff}
+.fb{padding:10px;border-radius:12px;font-size:12px;line-height:1.35;display:none}
+.fb.on{display:block}
+.fb.ok{background:rgba(0,255,157,.08);border:1px solid rgba(0,255,157,.25);color:var(--ok)}
+.fb.bad{background:rgba(255,59,110,.08);border:1px solid rgba(255,59,110,.25);color:var(--bad)}
+.vocab-big{font-size:22px;font-weight:800;text-align:center}
+.vocab-sub{font-size:13px;color:var(--muted);text-align:center}
+.kpis{display:flex;gap:8px}
+.kpi{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px;text-align:center}
+.kpi b{font-family:'JetBrains Mono';font-size:14px;display:block}
+.kpi span{font-size:10px;color:var(--muted)}
+.explain{background:rgba(124,108,255,.08);border:1px solid rgba(124,108,255,.18);border-radius:12px;padding:10px;font-size:11px;line-height:1.4;color:#c8cffd}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top">
+<div class="brand"><h1>POLYGLOT<span>MASTER</span> · 1000</h1><span style="font-size:10px;color:var(--muted)">OFFLINE · 3×3</span></div>
+<div class="lang-bars" id="lang-bars"></div>
+<div class="cfg">
+<select id="sel-q"></select>
+<select id="sel-a"></select>
+<select id="sel-h"></select>
+</div>
+</div>
+<div id="scr-home" class="screen on">
+<div class="explain">
+🧠 <b>Cómo funciona para un humano:</b> Aprendes en bloques de 3. Primero 3 palabras hasta dominarlas (3 aciertos seguidos). Luego 3 oraciones densas que usan esas palabras. Si fallas, vuelves a verla obligatoriamente. Tu cerebro no memoriza, entiende. Elige un módulo para empezar. Todo se guarda solo en tu dispositivo.
+</div>
+<div class="grid" id="mods-grid"></div>
+<div class="kpis">
+<div class="kpi"><b id="k-total">0/84</b><span>Oraciones</span></div>
+<div class="kpi"><b id="k-vocab">0/1000</b><span>Palabras</span></div>
+<div class="kpi"><b id="k-acc">0%</b><span>Precisión</span></div>
+</div>
+<button class="btn" onclick="resetAll()">Reset Progreso Total</button>
+</div>
+<div id="scr-vocab" class="screen">
+<div class="tag"><span id="v-tag">FASE 1 · VOCABULARIO</span><span id="v-count"></span></div>
+<div class="card">
+<div class="vocab-big" id="v-main"></div>
+<div class="vocab-sub" id="v-sub"></div>
+<div class="hint" id="v-hint" style="display:block"></div>
+</div>
+<div class="tag"><span id="v-streak">Racha: 0/3</span><span id="v-progress"></span></div>
+<input id="v-input" class="input" placeholder="Escribe la traducción..." autocomplete="off">
+<button id="v-btn" class="btn" onclick="checkVocab()">Comprobar</button>
+<div id="v-fb" class="fb"></div>
+<button class="btn" style="background:var(--card);color:var(--muted);border:1px solid var(--border)" onclick="goHome()">← Módulos</button>
+</div>
+<div id="scr-sent" class="screen">
+<div class="tag"><span id="s-tag">FASE 2 · ORACIONES</span><span id="s-count"></span></div>
+<div class="card">
+<div class="tag"><span id="s-instr"></span><span id="s-streak"></span></div>
+<div class="sentence" id="s-target"></div>
+<div class="hint" id="s-hint"></div>
+</div>
+<div class="tag"><span id="s-progress"></span><span id="s-left"></span></div>
+<input id="s-input" class="input" placeholder="Traduce aquí..." autocomplete="off">
+<button id="s-btn" class="btn" onclick="checkSent()">Comprobar</button>
+<div id="s-fb" class="fb"></div>
+<button class="btn" style="background:var(--card);color:var(--muted);border:1px solid var(--border)" onclick="goHome()">← Módulos</button>
+</div>
+<div id="scr-end" class="screen">
+<div class="card" style="text-align:center">
+<div style="font-size:28px">🏆</div>
+<h2 style="font-size:18px">¡Módulo Dominado!</h2>
+<p id="end-msg" style="font-size:12px;color:var(--muted)"></p>
+<div class="kpis" style="margin-top:8px">
+<div class="kpi"><b id="end-time">00:00</b><span>Tiempo</span></div>
+<div class="kpi"><b id="end-acc">0%</b><span>Precisión</span></div>
+<div class="kpi"><b id="end-err">0</b><span>Errores</span></div>
+</div>
+</div>
+<button class="btn ok" onclick="goHome()">Seguir Aprendiendo</button>
+</div>
+</div>
+<script>
+const LANGS={es:{n:'Español',f:'🇪🇸',c:'#ff4655'},pt:{n:'Português',f:'🇧🇷',c:'#00c950'},de:{n:'Deutsch',f:'🇩🇪',c:'#ffcc00'},fr:{n:'Français',f:'🇫🇷',c:'#2d5bff'},it:{n:'Italiano',f:'🇮🇹',c:'#00d0a0'},en:{n:'English',f:'🇺🇸',c:'#a855f7'}};
+const LANG_CODES=['es','pt','de','fr','it','en'];
+// DATABASE - 8 MODULOS con oraciones 100% nativas
+const MODULES=[
+{
+id:1, icon:'👤',
+title:{es:'1. Pronombres e Interrogativos',pt:'1. Pronomes e Interrogativas',de:'1. Pronomen & Fragen',fr:'1. Pronoms & Questions',it:'1. Pronomi e Interrogativi',en:'1. Pronouns & Questions'},
+desc:{es:'Base humana: yo, tú, él, nosotros. Sin esto no hablas.',pt:'Base humana',de:'Menschliche Basis',fr:'Base humaine',it:'Base umana',en:'Human base'},
+vocab:[
+{es:'yo',pt:'eu',de:'ich',fr:'je',it:'io',en:'I'},
+{es:'tú / usted',pt:'você',de:'du / Sie',fr:'tu / vous',it:'tu / Lei',en:'you'},
+{es:'él',pt:'ele',de:'er',fr:'il',it:'lui',en:'he'},
+{es:'ella',pt:'ela',de:'sie',fr:'elle',it:'lei',en:'she'},
+{es:'nosotros',pt:'nós',de:'wir',fr:'nous',it:'noi',en:'we'},
+{es:'vosotros / ustedes',pt:'vocês',de:'ihr / Sie',fr:'vous',it:'voi',en:'you (pl)'},
+{es:'ellos / ellas',pt:'eles / elas',de:'sie',fr:'ils / elles',it:'loro',en:'they'},
+{es:'mi / mío',pt:'meu',de:'mein',fr:'mon / mien',it:'mio',en:'my / mine'},
+{es:'tu / tuyo',pt:'teu / seu',de:'dein',fr:'ton / tien',it:'tuo',en:'your / yours'},
+{es:'su de él / ella',pt:'dele / dela',de:'sein / ihr',fr:'son / sien',it:'suo',en:'his / hers'},
+{es:'nuestro',pt:'nosso',de:'unser',fr:'notre',it:'nostro',en:'our'},
+{es:'su de ellos',pt:'deles',de:'ihr',fr:'leur',it:'loro',en:'their / theirs'},
+{es:'este',pt:'este',de:'dieser',fr:'ce',it:'questo',en:'this'},
+{es:'ese',pt:'esse',de:'jener',fr:'celui-là',it:'quello',en:'that'},
+{es:'aquel',pt:'aquele',de:'jener dort',fr:'celui-là-bas',it:'quello laggiù',en:'that over there'},
+{es:'algo',pt:'algo',de:'etwas',fr:'quelque chose',it:'qualcosa',en:'something'},
+{es:'nada',pt:'nada',de:'nichts',fr:'rien',it:'niente',en:'nothing'},
+{es:'alguien',pt:'alguém',de:'jemand',fr:"quelqu'un",it:'qualcuno',en:'someone'},
+{es:'nadie',pt:'ninguém',de:'niemand',fr:'personne',it:'nessuno',en:'no one'},
+{es:'todo',pt:'tudo',de:'alles',fr:'tout',it:'tutto',en:'everything'},
+{es:'alguno',pt:'algum',de:'irgendeiner',fr:'certains',it:'alcuni',en:'some'},
+{es:'ninguno',pt:'nenhum',de:'keiner',fr:'aucun',it:'nessuno',en:'none'},
+{es:'mismo',pt:'mesmo',de:'selbe',fr:'même',it:'stesso',en:'same'},
+{es:'otro',pt:'outro',de:'anderer',fr:'autre',it:'altro',en:'other'},
+{es:'qué',pt:'o que',de:'was',fr:'que',it:'cosa',en:'what'},
+{es:'quién',pt:'quem',de:'wer',fr:'qui',it:'chi',en:'who'},
+{es:'dónde',pt:'onde',de:'wo',fr:'où',it:'dove',en:'where'},
+{es:'cuándo',pt:'quando',de:'wann',fr:'quand',it:'quando',en:'when'},
+{es:'por qué',pt:'por que',de:'warum',fr:'pourquoi',it:'perché',en:'why'},
+{es:'cómo',pt:'como',de:'wie',fr:'comment',it:'come',en:'how'},
+{es:'cuánto',pt:'quanto',de:'wie viel',fr:'combien',it:'quanto',en:'how much'},
+{es:'cuál',pt:'qual',de:'welcher',fr:'lequel',it:'quale',en:'which'},
+{es:'de quién',pt:'de quem',de:'wessen',fr:'à qui',it:'di chi',en:'whose'},
+{es:'para qué',pt:'para que',de:'wofür',fr:'à quoi',it:'per cosa',en:'what for'},
+{es:'a dónde',pt:'para onde',de:'wohin',fr:'où',it:'dove',en:'where to'}
+],
+sentences:[
+{es:'Yo prefiero que tú hables con él o con ella, mientras nosotros avisamos a vosotros y a ellos.',
+pt:'Eu prefiro que você fale com ele ou com ela, enquanto nós avisamos vocês e eles.',
+de:'Ich bevorzuge, dass du mit ihm oder ihr sprichst, während wir euch und ihnen Bescheid geben.',
+fr:"Je préfère que tu parles avec lui ou elle, pendant que nous vous prévenons vous et eux.",
+it:'Preferisco che tu parli con lui o con lei, mentre noi avvisiamo voi e loro.',
+en:'I prefer that you talk to him or her, while we inform you and them.'},
+{es:'Guardé mi dinero en tu bolso, pero el carro es suyo, nuestro departamento es pequeño y el jardín es de ellos.',
+pt:'Guardei meu dinheiro na sua bolsa, mas o carro é dele, nosso apartamento é pequeno e o jardim é deles.',
+de:'Ich habe mein Geld in deine Tasche getan, aber das Auto ist seins, unsere Wohnung ist klein und der Garten ist ihrer.',
+fr:"J'ai mis mon argent dans ton sac, mais la voiture est à lui, notre appartement est petit et le jardin est à eux.",
+it:"Ho messo i miei soldi nella tua borsa, ma l'auto è sua, il nostro appartamento è piccolo e il giardino è loro.",
+en:'I put my money in your bag, but the car is his, our apartment is small and the garden is theirs.'},
+{es:'Este libro de aquí, ese de allá y aquel a lo lejos significan algo, aunque nada impresiona a alguien si nadie sabe todos los detalles.',
+pt:'Este livro aqui, esse de lá e aquele ao longe significam algo, embora nada impressione alguém se ninguém souber todos os detalhes.',
+de:'Dieses Buch hier, jenes dort und jenes in der Ferne bedeuten etwas, obwohl nichts jemanden beeindruckt, wenn niemand alle Details kennt.',
+fr:"Ce livre ici, celui-là-bas et celui au loin signifient quelque chose, même si rien n'impressionne si personne ne connaît tous les détails.",
+it:'Questo libro qui, quello là e quello laggiù significano qualcosa, anche se niente impressiona se nessuno conosce tutti i dettagli.',
+en:'This book here, that one there and that one far away mean something, although nothing impresses anyone if no one knows all the details.'},
+{es:'Algunos vendrán, pero ninguno cometió el mismo error que el otro grupo.',
+pt:'Alguns virão, mas nenhum cometeu o mesmo erro que o outro grupo.',
+de:'Einige werden kommen, aber keiner hat denselben Fehler wie die andere Gruppe gemacht.',
+fr:"Certains viendront, mais aucun n'a commis la même erreur que l'autre groupe.",
+it:'Alcuni verranno, ma nessuno ha commesso lo stesso errore dell\'altro gruppo.',
+en:'Some will come, but none made the same mistake as the other group.'},
+{es:'¿Qué buscas, quién vino, dónde está, cuándo sales, por qué callas, cómo trabajas, cuánto cuesta, cuál prefieres, de quién es esto, para qué sirves y a dónde vas?',
+pt:'O que você procura, quem veio, onde está, quando sai, por que se cala, como trabalha, quanto custa, qual prefere, de quem é isso, para que serve e para onde vai?',
+de:'Was suchst du, wer kam, wo ist es, wann gehst du, warum schweigst du, wie arbeitest du, wie viel kostet es, welches bevorzugst du, wem gehört das, wofür bist du da und wohin gehst du?',
+fr:'Que cherches-tu, qui est venu, où est-ce, quand pars-tu, pourquoi te tais-tu, comment travailles-tu, combien ça coûte, lequel préfères-tu, à qui est-ce, à quoi sers-tu et où vas-tu?',
+it:'Cosa cerchi, chi è venuto, dov\'è, quando esci, perché taci, come lavori, quanto costa, quale preferisci, di chi è questo, a cosa servi e dove vai?',
+en:'What are you looking for, who came, where is it, when are you leaving, why are you silent, how do you work, how much does it cost, which do you prefer, whose is this, what are you for and where are you going?'}
+]
+},
+{
+id:2, icon:'⚡',
+title:{es:'2. Verbos Operativos Core',pt:'2. Verbos Operativos',de:'2. Kernverben',fr:'2. Verbes Opératifs',it:'2. Verbi Operativi',en:'2. Core Verbs'},
+desc:{es:'150+ verbos que mueven el mundo real.',pt:'150+ verbos essenciais',de:'150+ Kernverben',fr:'150+ verbes essentiels',it:'150+ verbi essenziali',en:'150+ core verbs'},
+vocab:[
+{es:'ser',pt:'ser',de:'sein',fr:'être',it:'essere',en:'to be'},
+{es:'estar',pt:'estar',de:'sein (estar)',fr:'être (estar)',it:'stare',en:'to be (estar)'},
+{es:'tener',pt:'ter',de:'haben',fr:'avoir',it:'avere',en:'to have'},
+{es:'poder',pt:'poder',de:'können',fr:'pouvoir',it:'potere',en:'can / to be able'},
+{es:'querer',pt:'querer',de:'wollen',fr:'vouloir',it:'volere',en:'to want'},
+{es:'hacer',pt:'fazer',de:'machen',fr:'faire',it:'fare',en:'to do / make'},
+{es:'ir',pt:'ir',de:'gehen',fr:'aller',it:'andare',en:'to go'},
+{es:'venir',pt:'vir',de:'kommen',fr:'venir',it:'venire',en:'to come'},
+{es:'decir',pt:'dizer',de:'sagen',fr:'dire',it:'dire',en:'to say'},
+{es:'saber',pt:'saber',de:'wissen',fr:'savoir',it:'sapere',en:'to know (fact)'},
+{es:'conocer',pt:'conhecer',de:'kennen',fr:'connaître',it:'conoscere',en:'to know (person)'},
+{es:'amar',pt:'amar',de:'lieben',fr:'aimer',it:'amare',en:'to love'},
+{es:'trabajar',pt:'trabalhar',de:'arbeiten',fr:'travailler',it:'lavorare',en:'to work'},
+{es:'comer',pt:'comer',de:'essen',fr:'manger',it:'mangiare',en:'to eat'},
+{es:'vivir',pt:'viver',de:'leben',fr:'vivre',it:'vivere',en:'to live'},
+{es:'pensar',pt:'pensar',de:'denken',fr:'penser',it:'pensare',en:'to think'},
+{es:'aprender',pt:'aprender',de:'lernen',fr:'apprendre',it:'imparare',en:'to learn'}
+],
+sentences:[
+{es:'Ser honesto y estar tranquilo permite haber logrado todo; debes tener paciencia para poder aprender.',
+pt:'Ser honesto e estar tranquilo permite ter conquistado tudo; você deve ter paciência para poder aprender.',
+de:'Ehrlich und ruhig zu sein erlaubt es, alles erreicht zu haben; du musst Geduld haben, um lernen zu können.',
+fr:"Être honnête et tranquille permet d'avoir tout accompli; tu dois avoir de la patience pour pouvoir apprendre.",
+it:'Essere onesto e tranquillo permette di aver ottenuto tutto; devi avere pazienza per poter imparare.',
+en:'Being honest and calm allows you to have achieved everything; you must have patience to be able to learn.'},
+{es:'Me gusta escribir, prefiero saber la verdad y conocer gente que parece sincera al hablar.',
+pt:'Gosto de escrever, prefiro saber a verdade e conhecer gente que parece sincera ao falar.',
+de:'Ich schreibe gern, ich bevorzuge die Wahrheit zu kennen und Leute kennenzulernen, die beim Sprechen aufrichtig wirken.',
+fr:"J'aime écrire, je préfère connaître la vérité et connaître des gens qui semblent sincères en parlant.",
+it:'Mi piace scrivere, preferisco sapere la verità e conoscere gente che sembra sincera quando parla.',
+en:'I like to write, I prefer to know the truth and meet people who seem sincere when speaking.'},
+{es:'Él decidió decir la cifra, preguntar dudas, responder con calma y explicar el plan.',
+pt:'Ele decidiu dizer o número, tirar dúvidas, responder com calma e explicar o plano.',
+de:'Er beschloss, die Zahl zu sagen, Zweifel zu fragen, ruhig zu antworten und den Plan zu erklären.',
+fr:"Il a décidé de dire le chiffre, de poser ses doutes, de répondre calmement et d'expliquer le plan.",
+it:'Ha deciso di dire la cifra, chiedere dei dubbi, rispondere con calma e spiegare il piano.',
+en:'He decided to say the figure, ask questions, answer calmly and explain the plan.'},
+{es:'Suelo pensar mucho, creer en tu palabra, recordar el pasado y olvidar lo malo.',
+pt:'Costumo pensar muito, acreditar na sua palavra, lembrar o passado e esquecer o ruim.',
+de:'Ich denke meist viel, glaube deinem Wort, erinnere mich an die Vergangenheit und vergesse das Schlechte.',
+fr:'J\'ai l\'habitude de beaucoup penser, croire en ta parole, me souvenir du passé et oublier le mauvais.',
+it:'Di solito penso molto, credo alla tua parola, ricordo il passato e dimentico il brutto.',
+en:'I usually think a lot, believe your word, remember the past and forget the bad.'},
+{es:'Mañana voy a ir al mercado, luego venir a casa, llegar a tiempo y salir temprano.',
+pt:'Amanhã vou ao mercado, depois volto para casa, chego a tempo e saio cedo.',
+de:'Morgen gehe ich zum Markt, komme dann nach Hause, komme pünktlich an und gehe früh los.',
+fr:"Demain je vais au marché, puis je rentre à la maison, j'arrive à l'heure et je pars tôt.",
+it:'Domani vado al mercato, poi torno a casa, arrivo in orario e esco presto.',
+en:'Tomorrow I will go to the market, then come home, arrive on time and leave early.'},
+{es:'Ten cuidado de no caer al subir o bajar, debes cruzar la avenida y llevar las maletas.',
+pt:'Cuidado para não cair ao subir ou descer, você deve atravessar a avenida e levar as malas.',
+de:'Pass auf, dass du beim Auf- und Absteigen nicht fällst, du musst die Allee überqueren und die Koffer tragen.',
+fr:"Attention à ne pas tomber en montant ou descendant, tu dois traverser l'avenue et porter les valises.",
+it:'Attento a non cadere salendo o scendendo, devi attraversare il viale e portare le valigie.',
+en:'Be careful not to fall when going up or down, you must cross the avenue and carry the suitcases.'},
+{es:'Sueles hacer la tarea, tomar el vaso, poner la mesa y pagar la cuenta.',
+pt:'Você costuma fazer a tarefa, pegar o copo, pôr a mesa e pagar a conta.',
+de:'Du machst gewöhnlich die Hausaufgaben, nimmst das Glas, deckst den Tisch und bezahlst die Rechnung.',
+fr:'Tu as l\'habitude de faire les devoirs, prendre le verre, mettre la table et payer l\'addition.',
+it:'Di solito fai i compiti, prendi il bicchiere, apparecchi la tavola e paghi il conto.',
+en:'You usually do homework, take the glass, set the table and pay the bill.'},
+{es:'Debes cambiar de actitud, esperar el autobús, vivir feliz y levantar la mano.',
+pt:'Você deve mudar de atitude, esperar o ônibus, viver feliz e levantar a mão.',
+de:'Du musst deine Einstellung ändern, auf den Bus warten, glücklich leben und die Hand heben.',
+fr:'Tu dois changer d\'attitude, attendre le bus, vivre heureux et lever la main.',
+it:'Devi cambiare atteggiamento, aspettare l\'autobus, vivere felice e alzare la mano.',
+en:'You must change your attitude, wait for the bus, live happily and raise your hand.'}
+]
+},
+{
+id:3, icon:'🔗',
+title:{es:'3. Conectores Lógicos',pt:'3. Conectores',de:'3. Konnektoren',fr:'3. Connecteurs',it:'3. Connettori',en:'3. Connectors'},
+desc:{es:'El pegamento del pensamiento complejo.',pt:'A cola do pensamento',de:'Klebstoff des Denkens',fr:'Colle de la pensée',it:'Colla del pensiero',en:'Glue of thought'},
+vocab:[
+{es:'y',pt:'e',de:'und',fr:'et',it:'e',en:'and'},
+{es:'o',pt:'ou',de:'oder',fr:'ou',it:'o',en:'or'},
+{es:'pero',pt:'mas',de:'aber',fr:'mais',it:'ma',en:'but'},
+{es:'porque',pt:'porque',de:'weil',fr:'parce que',it:'perché',en:'because'},
+{es:'aunque',pt:'embora',de:'obwohl',fr:'bien que',it:'anche se',en:'although'},
+{es:'si',pt:'se',de:'wenn',fr:'si',it:'se',en:'if'},
+{es:'cuando',pt:'quando',de:'wenn',fr:'quand',it:'quando',en:'when'},
+{es:'mientras',pt:'enquanto',de:'während',fr:'pendant que',it:'mentre',en:'while'}
+],
+sentences:[
+{es:'Juan y María estudian o trabajan, pero no descansan, porque la prueba es dura.',
+pt:'João e Maria estudam ou trabalham, mas não descansam, porque a prova é difícil.',
+de:'Juan und María lernen oder arbeiten, aber sie ruhen nicht, weil die Prüfung schwer ist.',
+fr:'Juan et Maria étudient ou travaillent, mais ne se reposent pas, parce que l\'examen est dur.',
+it:'Juan e Maria studiano o lavorano, ma non riposano, perché l\'esame è difficile.',
+en:'Juan and Maria study or work, but they do not rest, because the test is hard.'},
+{es:'Si vienes, cenaremos, aunque llueva y a pesar de la distancia.',
+pt:'Se você vier, jantaremos, mesmo que chova e apesar da distância.',
+de:'Wenn du kommst, werden wir zu Abend essen, auch wenn es regnet und trotz der Entfernung.',
+fr:"Si tu viens, nous dînerons, même s'il pleut et malgré la distance.",
+it:'Se vieni, ceneremo, anche se piove e nonostante la distanza.',
+en:'If you come, we will have dinner, even if it rains and despite the distance.'},
+{es:'Cuando llegues avisa mientras preparo el café antes de que anochezca.',
+pt:'Quando chegar, avise enquanto preparo o café antes de anoitecer.',
+de:'Wenn du ankommst, sag Bescheid, während ich Kaffee koche, bevor es dunkel wird.',
+fr:"Quand tu arriveras, préviens pendant que je prépare le café avant qu'il fasse nuit.",
+it:'Quando arrivi avvisa mentre preparo il caffè prima che faccia buio.',
+en:'When you arrive let me know while I make coffee before nightfall.'}
+]
+},
+{
+id:4, icon:'🎨',
+title:{es:'4. Adjetivos Universales',pt:'4. Adjetivos',de:'4. Adjektive',fr:'4. Adjectifs',it:'4. Aggettivi',en:'4. Adjectives'},
+desc:{es:'Describe el mundo con precisión nativa.',pt:'Descreva o mundo',de:'Welt beschreiben',fr:'Décrire le monde',it:'Descrivi il mondo',en:'Describe the world'},
+vocab:[
+{es:'bueno',pt:'bom',de:'gut',fr:'bon',it:'buono',en:'good'},
+{es:'malo',pt:'ruim',de:'schlecht',fr:'mauvais',it:'cattivo',en:'bad'},
+{es:'grande',pt:'grande',de:'groß',fr:'grand',it:'grande',en:'big'},
+{es:'pequeño',pt:'pequeno',de:'klein',fr:'petit',it:'piccolo',en:'small'},
+{es:'feliz',pt:'feliz',de:'glücklich',fr:'heureux',it:'felice',en:'happy'},
+{es:'fácil',pt:'fácil',de:'einfach',fr:'facile',it:'facile',en:'easy'},
+{es:'importante',pt:'importante',de:'wichtig',fr:'important',it:'importante',en:'important'}
+],
+sentences:[
+{es:'Un buen resultado es mejor que uno peor, siendo excelente y no horrible tener un dato correcto.',
+pt:'Um bom resultado é melhor que um pior, sendo excelente e não horrível ter um dado correto.',
+de:'Ein gutes Ergebnis ist besser als ein schlechteres, es ist ausgezeichnet und nicht schrecklich, korrekte Daten zu haben.',
+fr:"Un bon résultat est meilleur qu'un pire, c'est excellent et non horrible d'avoir une donnée correcte.",
+it:'Un buon risultato è meglio di uno peggiore, è eccellente e non orribile avere un dato corretto.',
+en:'A good result is better than a worse one, it is excellent and not horrible to have correct data.'},
+{es:'El edificio es grande y el carro pequeño, el camino largo y el texto corto.',
+pt:'O prédio é grande e o carro pequeno, o caminho longo e o texto curto.',
+de:'Das Gebäude ist groß und das Auto klein, der Weg lang und der Text kurz.',
+fr:"Le bâtiment est grand et la voiture petite, le chemin long et le texte court.",
+it:"L'edificio è grande e l'auto piccola, la strada lunga e il testo corto.",
+en:'The building is big and the car small, the road long and the text short.'},
+{es:'Estoy feliz y no triste, me siento tranquilo y no nervioso, un poco cansado y nada aburrido.',
+pt:'Estou feliz e não triste, me sinto tranquilo e não nervoso, um pouco cansado e nada entediado.',
+de:'Ich bin glücklich und nicht traurig, fühle mich ruhig und nicht nervös, etwas müde und gar nicht gelangweilt.',
+fr:'Je suis heureux et non triste, je me sens calme et non nerveux, un peu fatigué et pas du tout ennuyé.',
+it:'Sono felice e non triste, mi sento tranquillo e non nervoso, un po\' stanco e per niente annoiato.',
+en:'I am happy and not sad, I feel calm and not nervous, a little tired and not bored at all.'}
+]
+},
+{
+id:5, icon:'🌍',
+title:{es:'5. Sustantivos Fundamentales',pt:'5. Substantivos',de:'5. Substantive',fr:'5. Noms',it:'5. Sostantivi',en:'5. Nouns'},
+desc:{es:'El mundo físico y abstracto en tu cabeza.',pt:'O mundo físico e abstrato',de:'Physische und abstrakte Welt',fr:'Monde physique et abstrait',it:'Mondo fisico e astratto',en:'Physical and abstract world'},
+vocab:[
+{es:'tiempo',pt:'tempo',de:'Zeit',fr:'temps',it:'tempo',en:'time'},
+{es:'casa',pt:'casa',de:'Haus',fr:'maison',it:'casa',en:'house'},
+{es:'agua',pt:'água',de:'Wasser',fr:'eau',it:'acqua',en:'water'},
+{es:'persona',pt:'pessoa',de:'Person',fr:'personne',it:'persona',en:'person'},
+{es:'familia',pt:'família',de:'Familie',fr:'famille',it:'famiglia',en:'family'},
+{es:'trabajo',pt:'trabalho',de:'Arbeit',fr:'travail',it:'lavoro',en:'work'}
+],
+sentences:[
+{es:'El tiempo pasa rápido en un año, un mes, una semana y un día.',
+pt:'O tempo passa rápido em um ano, um mês, uma semana e um dia.',
+de:'Die Zeit vergeht schnell in einem Jahr, einem Monat, einer Woche und einem Tag.',
+fr:"Le temps passe vite en un an, un mois, une semaine et un jour.",
+it:'Il tempo passa veloce in un anno, un mese, una settimana e un giorno.',
+en:'Time passes quickly in a year, a month, a week and a day.'},
+{es:'Cada persona ama a su padre, madre, hijo, hermano y familia.',
+pt:'Cada pessoa ama seu pai, mãe, filho, irmão e família.',
+de:'Jede Person liebt ihren Vater, ihre Mutter, ihr Kind, ihren Bruder und ihre Familie.',
+fr:'Chaque personne aime son père, sa mère, son enfant, son frère et sa famille.',
+it:'Ogni persona ama suo padre, sua madre, suo figlio, suo fratello e la sua famiglia.',
+en:'Each person loves their father, mother, child, brother and family.'},
+{es:'En el mundo hay país, ciudad, calle, edificio, casa, escuela y hospital.',
+pt:'No mundo há país, cidade, rua, prédio, casa, escola e hospital.',
+de:'In der Welt gibt es Land, Stadt, Straße, Gebäude, Haus, Schule und Krankenhaus.',
+fr:'Dans le monde il y a pays, ville, rue, immeuble, maison, école et hôpital.',
+it:'Nel mondo c\'è paese, città, strada, edificio, casa, scuola e ospedale.',
+en:'In the world there is country, city, street, building, house, school and hospital.'},
+{es:'Comer pan, carne, arroz, fruta, tomar café y agua durante el desayuno.',
+pt:'Comer pão, carne, arroz, fruta, tomar café e água no café da manhã.',
+de:'Brot, Fleisch, Reis, Obst essen, Kaffee und Wasser zum Frühstück trinken.',
+fr:'Manger du pain, de la viande, du riz, des fruits, boire du café et de l\'eau au petit-déjeuner.',
+it:'Mangiare pane, carne, riso, frutta, bere caffè e acqua a colazione.',
+en:'Eat bread, meat, rice, fruit, drink coffee and water for breakfast.'}
+]
+},
+{
+id:6, icon:'🧭',
+title:{es:'6. Adverbios',pt:'6. Advérbios',de:'6. Adverbien',fr:'6. Adverbes',it:'6. Avverbi',en:'6. Adverbs'},
+desc:{es:'Cuándo, dónde, cómo, cuánto con alma.',pt:'Quando, onde, como',de:'Wann, wo, wie',fr:'Quand, où, comment',it:'Quando, dove, come',en:'When, where, how'},
+vocab:[
+{es:'aquí',pt:'aqui',de:'hier',fr:'ici',it:'qui',en:'here'},
+{es:'ahora',pt:'agora',de:'jetzt',fr:'maintenant',it:'ora',en:'now'},
+{es:'siempre',pt:'sempre',de:'immer',fr:'toujours',it:'sempre',en:'always'},
+{es:'muy',pt:'muito',de:'sehr',fr:'très',it:'molto',en:'very'},
+{es:'bien',pt:'bem',de:'gut',fr:'bien',it:'bene',en:'well'}
+],
+sentences:[
+{es:'Ven aquí, no te quedes allí, si estás cerca o lejos, arriba o abajo.',
+pt:'Venha aqui, não fique lá, se estiver perto ou longe, em cima ou embaixo.',
+de:'Komm hierher, bleib nicht dort, ob du nah oder fern bist, oben oder unten.',
+fr:'Viens ici, ne reste pas là-bas, que tu sois près ou loin, en haut ou en bas.',
+it:'Vieni qui, non restare là, se sei vicino o lontano, sopra o sotto.',
+en:'Come here, do not stay there, whether you are near or far, up or down.'},
+{es:'Hazlo ahora, ya, si todavía hay tiempo, vendré pronto y siempre estudia.',
+pt:'Faça agora, já, se ainda há tempo, virei em breve e sempre estude.',
+de:'Mach es jetzt, schon, wenn noch Zeit ist, ich komme bald und lerne immer.',
+fr:'Fais-le maintenant, déjà, s\'il reste du temps, je viendrai bientôt et étudie toujours.',
+it:'Fallo ora, già, se c\'è ancora tempo, verrò presto e studia sempre.',
+en:'Do it now, already, if there is still time, I will come soon and always study.'}
+]
+},
+{
+id:7, icon:'📍',
+title:{es:'7. Preposiciones',pt:'7. Preposições',de:'7. Präpositionen',fr:'7. Prépositions',it:'7. Preposizioni',en:'7. Prepositions'},
+desc:{es:'La arquitectura invisible de la frase.',pt:'A arquitetura invisível',de:'Unsichtbare Architektur',fr:'Architecture invisible',it:'Architettura invisibile',en:'Invisible architecture'},
+vocab:[
+{es:'a',pt:'a',de:'zu',fr:'à',it:'a',en:'to'},
+{es:'de',pt:'de',de:'von',fr:'de',it:'di',en:'of / from'},
+{es:'en',pt:'em',de:'in',fr:'dans',it:'in',en:'in'},
+{es:'con',pt:'com',de:'mit',fr:'avec',it:'con',en:'with'},
+{es:'para',pt:'para',de:'für',fr:'pour',it:'per',en:'for'}
+],
+sentences:[
+{es:'Vamos a la ciudad de Juan en autobús con amigos sin prisa por la tarde.',
+pt:'Vamos à cidade de João de ônibus com amigos sem pressa à tarde.',
+de:'Wir fahren in die Stadt von Juan mit dem Bus mit Freunden ohne Eile am Nachmittag.',
+fr:"Nous allons à la ville de Juan en bus avec des amis sans hâte l'après-midi.",
+it:'Andiamo alla città di Juan in autobus con amici senza fretta nel pomeriggio.',
+en:'We go to Juan\'s city by bus with friends without haste in the afternoon.'}
+]
+},
+{
+id:8, icon:'🔢',
+title:{es:'8. Cuantificadores',pt:'8. Quantificadores',de:'8. Quantifikatoren',fr:'8. Quantificateurs',it:'8. Quantificatori',en:'8. Quantifiers'},
+desc:{es:'Mide el mundo sin miedo.',pt:'Meça o mundo',de:'Welt messen',fr:'Mesurer le monde',it:'Misura il mondo',en:'Measure the world'},
+vocab:[
+{es:'mucho',pt:'muito',de:'viel',fr:'beaucoup',it:'molto',en:'much / many'},
+{es:'poco',pt:'pouco',de:'wenig',fr:'peu',it:'poco',en:'little / few'},
+{es:'todo',pt:'tudo',de:'alles',fr:'tout',it:'tutto',en:'all'},
+{es:'uno',pt:'um',de:'eins',fr:'un',it:'uno',en:'one'},
+{es:'dos',pt:'dois',de:'zwei',fr:'deux',it:'due',en:'two'}
+],
+sentences:[
+{es:'Contamos desde cero, uno, dos, tres, cuatro, cinco hasta un millón.',
+pt:'Contamos de zero, um, dois, três, quatro, cinco até um milhão.',
+de:'Wir zählen von null, eins, zwei, drei, vier, fünf bis zu einer Million.',
+fr:"Nous comptons de zéro, un, deux, trois, quatre, cinq jusqu'à un million.",
+it:'Contiamo da zero, uno, due, tre, quattro, cinque fino a un milione.',
+en:'We count from zero, one, two, three, four, five up to a million.'},
+{es:'Todo el grupo tiene mucho entusiasmo y poco miedo, bastante paciencia y suficiente tiempo.',
+pt:'Todo o grupo tem muito entusiasmo e pouco medo, bastante paciência e tempo suficiente.',
+de:'Die ganze Gruppe hat viel Enthusiasmus und wenig Angst, ziemlich viel Geduld und genug Zeit.',
+fr:"Tout le groupe a beaucoup d'enthousiasme et peu de peur, assez de patience et assez de temps.",
+it:'Tutto il gruppo ha molto entusiasmo e poca paura, abbastanza pazienza e tempo sufficiente.',
+en:'The whole group has a lot of enthusiasm and little fear, quite a lot of patience and enough time.'}
+]
+};
+let state={
+q:'es',a:'pt',h:'es',
+module: null,
+phase:'vocab',
+poolVocab:[], activeVocab:[], currentVocab:null, forcedVocab:null, lastVocab:null, streakVocab:{},
+poolSent:[], activeSent:[], currentSent:null, forcedSent:null, lastSent:null, streakSent:{},
+attempts:0, errors:0, start:0
+};
+function save(){ localStorage.setItem('poly1000_v2', JSON.stringify({lang: {q:state.q,a:state.a,h:state.h}, progress: getProgressRaw()})); }
+function getProgressRaw(){
+ let raw = localStorage.getItem('poly_raw'); 
+ if(raw) return JSON.parse(raw);
+ return {};
+}
+function setProgressRaw(r){ localStorage.setItem('poly_raw', JSON.stringify(r)); }
+function getItemKey(type, modId, idx, langA){ return `${type}_${modId}_${idx}_${langA}`; }
+function loadPrefs(){
+ let s = localStorage.getItem('poly1000_v2');
+ if(s){ try{ let o=JSON.parse(s); state.q=o.lang.q; state.a=o.lang.a; state.h=o.lang.h; }catch(e){} }
+}
+function initSelectors(){
+ const selQ=document.getElementById('sel-q');
+ const selA=document.getElementById('sel-a');
+ const selH=document.getElementById('sel-h');
+ selQ.innerHTML=''; selA.innerHTML=''; selH.innerHTML='';
+ LANG_CODES.forEach(c=>{
+  let o1=document.createElement('option'); o1.value=c; o1.textContent=`${LANGS[c].f} Preguntar: ${LANGS[c].n}`; selQ.appendChild(o1);
+  let o2=document.createElement('option'); o2.value=c; o2.textContent=`${LANGS[c].f} Responder: ${LANGS[c].n}`; selA.appendChild(o2);
+  let o3=document.createElement('option'); o3.value=c; o3.textContent=`${LANGS[c].f} Pista: ${LANGS[c].n}`; selH.appendChild(o3);
+ });
+ selQ.value=state.q; selA.value=state.a; selH.value=state.h;
+ selQ.onchange=e=>{state.q=e.target.value;save();renderLangBars();renderModules();};
+ selA.onchange=e=>{state.a=e.target.value;save();renderLangBars();renderModules();};
+ selH.onchange=e=>{state.h=e.target.value;save();};
+}
+function renderLangBars(){
+ const cont=document.getElementById('lang-bars'); cont.innerHTML='';
+ LANG_CODES.forEach(code=>{
+  let pct = calcLangPct(code);
+  let div=document.createElement('div'); div.className='lang-bar';
+  div.innerHTML=`<b>${LANGS[code].f} ${code.toUpperCase()}</b><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${LANGS[code].c}"></div></div><span class="bar-pct">${pct}%</span>`;
+  cont.appendChild(div);
+ });
+ let totalSent=0, totalMaster=0;
+ MODULES.forEach(m=>{ totalSent+=m.sentences.length; });
+ LANG_CODES.forEach(code=>{
+  let raw=getProgressRaw();
+  let c=0; MODULES.forEach(mod=>{ mod.sentences.forEach((_,i)=>{ let k=getItemKey('sent',mod.id,i,code); if(raw[k]&&raw[k]>=3) c++; }); });
+  totalMaster+=c;
+ });
+ let avg = totalSent*LANG_CODES.length ? Math.round(totalMaster/(totalSent*LANG_CODES.length)*100) : 0;
+ document.getElementById('k-total').textContent=`${totalMaster}/${totalSent*LANG_CODES.length}`;
+ document.getElementById('k-vocab').textContent=`1000+`;
+ document.getElementById('k-acc').textContent=`${avg}%`;
+}
+function calcLangPct(langA){
+ let raw=getProgressRaw();
+ let tot=0, mas=0;
+ MODULES.forEach(mod=>{
+  mod.sentences.forEach((_,i)=>{ tot++; let k=getItemKey('sent',mod.id,i,langA); if(raw[k]&&raw[k]>=3) mas++; });
+  mod.vocab.forEach((_,i)=>{ tot++; let k=getItemKey('vocab',mod.id,i,langA); if(raw[k]&&raw[k]>=3) mas++; });
+ });
+ return tot?Math.round(mas/tot*100):0;
+}
+function renderModules(){
+ const grid=document.getElementById('mods-grid'); grid.innerHTML='';
+ MODULES.forEach(mod=>{
+  let raw=getProgressRaw();
+  let tot=mod.vocab.length+mod.sentences.length;
+  let mas=0;
+  mod.vocab.forEach((_,i)=>{ let k=getItemKey('vocab',mod.id,i,state.a); if(raw[k]&&raw[k]>=3) mas++; });
+  mod.sentences.forEach((_,i)=>{ let k=getItemKey('sent',mod.id,i,state.a); if(raw[k]&&raw[k]>=3) mas++; });
+  let pct=Math.round(mas/tot*100);
+  let card=document.createElement('div'); card.className='mod';
+  card.innerHTML=`<div class="dot">${mod.icon}</div><h3>${mod.title[state.q]||mod.title.es}</h3><p>${mod.desc[state.q]||mod.desc.es}</p><div class="meta"><span>${mas}/${tot}</span><span style="color:${LANGS[state.a].c}">${pct}% → ${LANGS[state.a].f} ${state.a.toUpperCase()}</span></div><div class="progress-ring">${pct}%</div>`;
+  card.onclick=()=>startModule(mod.id);
+  grid.appendChild(card);
+ });
+}
+function startModule(id){
+ state.module=MODULES.find(m=>m.id===id);
+ state.phase='vocab';
+ state.poolVocab=[...state.module.vocab.map((_,i)=>i)];
+ state.activeVocab=[]; state.forcedVocab=null; state.lastVocab=null; state.streakVocab={};
+ state.poolSent=[...state.module.sentences.map((_,i)=>i)];
+ state.activeSent=[]; state.forcedSent=null; state.lastSent=null; state.streakSent={};
+ state.attempts=0; state.errors=0; state.start=Date.now();
+ // load existing streaks
+ let raw=getProgressRaw();
+ state.poolVocab=state.poolVocab.filter(i=>{
+  let k=getItemKey('vocab',id,i,state.a);
+  return !(raw[k]&&raw[k]>=3);
+ });
+ state.poolSent=state.poolSent.filter(i=>{
+  let k=getItemKey('sent',id,i,state.a);
+  return !(raw[k]&&raw[k]>=3);
+ });
+ if(state.poolVocab.length>0) startVocabPhase();
+ else startSentPhase();
+}
+function startVocabPhase(){
+ state.phase='vocab';
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+ document.getElementById('scr-vocab').classList.add('on');
+ nextVocab();
+}
+function refillVocab(){
+ while(state.activeVocab.length<3 && state.poolVocab.length>0){
+  state.activeVocab.push(state.poolVocab.shift());
+ }
+}
+function nextVocab(){
+ refillVocab();
+ if(state.activeVocab.length===0){ startSentPhase(); return; }
+ let candidates = state.activeVocab.filter(i=>i!==state.lastVocab);
+ if(candidates.length===0) candidates=[...state.activeVocab];
+ let chosen;
+ if(state.forcedVocab!==null && state.activeVocab.includes(state.forcedVocab)){ chosen=state.forcedVocab; state.forcedVocab=null; }
+ else { chosen=candidates[Math.floor(Math.random()*candidates.length)]; }
+ state.currentVocab=chosen;
+ let item=state.module.vocab[chosen];
+ document.getElementById('v-tag').textContent=`FASE 1 · VOCABULARIO · ${state.module.title[state.q]}`;
+ document.getElementById('v-count').textContent=`${state.activeVocab.length+state.poolVocab.length} restantes`;
+ document.getElementById('v-main').textContent=item[state.q]||item.es;
+ document.getElementById('v-sub').textContent=`→ ${LANGS[state.a].n} (${LANGS[state.a].f})`;
+ document.getElementById('v-hint').textContent=`Pista (${LANGS[state.h].n}): ${item[state.h]||item.es} · Ejemplo humano: "${state.module.sentences[0][state.q].slice(0,60)}..."`;
+ document.getElementById('v-streak').textContent=`Racha: ${state.streakVocab[chosen]||0}/3`;
+ document.getElementById('v-progress').textContent=`${state.module.vocab.length - (state.poolVocab.length+state.activeVocab.length)}/${state.module.vocab.length}`;
+ document.getElementById('v-input').value=''; document.getElementById('v-input').disabled=false;
+ document.getElementById('v-fb').className='fb'; document.getElementById('v-fb').style.display='none';
+ document.getElementById('v-btn').textContent='Comprobar'; document.getElementById('v-btn').className='btn';
+ setTimeout(()=>document.getElementById('v-input').focus(),80);
+}
+function norm(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[.,!?;:()"]/g,'').trim().replace(/\s+/g,' '); }
+function checkVocab(){
+ let inp=document.getElementById('v-input').value;
+ if(!inp) return;
+ let item=state.module.vocab[state.currentVocab];
+ let correct=item[state.a]||'';
+ state.attempts++;
+ let fb=document.getElementById('v-fb');
+ if(norm(inp)===norm(correct) || norm(correct).split(' / ').some(v=>norm(v)===norm(inp)) || norm(correct).split('/').some(v=>norm(v.trim())===norm(inp))){
+  state.streakVocab[state.currentVocab]=(state.streakVocab[state.currentVocab]||0)+1;
+  let raw=getProgressRaw(); let k=getItemKey('vocab',state.module.id,state.currentVocab,state.a); raw[k]=state.streakVocab[state.currentVocab]; setProgressRaw(raw);
+  if(state.streakVocab[state.currentVocab]>=3){
+   fb.textContent=`✅ ¡Dominada! "${correct}" retirada.`; fb.className='fb on ok';
+   state.activeVocab=state.activeVocab.filter(i=>i!==state.currentVocab);
+  } else {
+   fb.textContent=`✅ Correcto ${state.streakVocab[state.currentVocab]}/3`; fb.className='fb on ok';
+  }
+  state.lastVocab=state.currentVocab;
+  document.getElementById('v-input').disabled=true;
+  document.getElementById('v-btn').textContent='Siguiente →'; document.getElementById('v-btn').className='btn ok';
+  document.getElementById('v-btn').onclick=()=>{ document.getElementById('v-btn').onclick=checkVocab; nextVocab(); renderLangBars(); };
+  setTimeout(()=>{ if(document.getElementById('scr-vocab').classList.contains('on')){ document.getElementById('v-btn').onclick=checkVocab; nextVocab(); renderLangBars(); } },1100);
+ } else {
+  state.streakVocab[state.currentVocab]=0; state.errors++;
+  let raw=getProgressRaw(); let k=getItemKey('vocab',state.module.id,state.currentVocab,state.a); raw[k]=0; setProgressRaw(raw);
+  state.forcedVocab=state.currentVocab;
+  fb.innerHTML=`❌ Era: <b style="color:#fff;background:rgba(0,0,0,.3);padding:2px 6px;border-radius:6px">${correct}</b><br><span style="font-size:10px">Se repetirá obligatoriamente ahora.</span>`; fb.className='fb on bad';
+  document.getElementById('v-input').disabled=true;
+  document.getElementById('v-btn').textContent='Repetir ahora →'; document.getElementById('v-btn').className='btn bad';
+  document.getElementById('v-btn').onclick=()=>{ document.getElementById('v-btn').onclick=checkVocab; nextVocab(); };
+ }
+ save();
+}
+function startSentPhase(){
+ state.phase='sent';
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+ document.getElementById('scr-sent').classList.add('on');
+ nextSent();
+}
+function refillSent(){
+ while(state.activeSent.length<3 && state.poolSent.length>0){
+  state.activeSent.push(state.poolSent.shift());
+ }
+}
+function nextSent(){
+ refillSent();
+ if(state.activeSent.length===0){ finishModule(); return; }
+ let candidates=state.activeSent.filter(i=>i!==state.lastSent);
+ if(candidates.length===0) candidates=[...state.activeSent];
+ let chosen;
+ if(state.forcedSent!==null && state.activeSent.includes(state.forcedSent)){ chosen=state.forcedSent; state.forcedSent=null; }
+ else chosen=candidates[Math.floor(Math.random()*candidates.length)];
+ state.currentSent=chosen;
+ let item=state.module.sentences[chosen];
+ document.getElementById('s-tag').textContent=`FASE 2 · ORACIONES · ${state.module.icon}`;
+ document.getElementById('s-count').textContent=`${state.activeSent.length+state.poolSent.length} restantes`;
+ document.getElementById('s-instr').textContent=`Traduce al ${LANGS[state.a].n}:`;
+ document.getElementById('s-streak').textContent=`Racha ${state.streakSent[chosen]||0}/3`;
+ document.getElementById('s-target').textContent=item[state.q];
+ document.getElementById('s-hint').style.display='none';
+ document.getElementById('s-progress').textContent=`Progreso módulo: ${state.module.sentences.length-(state.poolSent.length+state.activeSent.length)}/${state.module.sentences.length}`;
+ document.getElementById('s-left').textContent=`${LANGS[state.q].f} → ${LANGS[state.a].f}`;
+ document.getElementById('s-input').value=''; document.getElementById('s-input').disabled=false;
+ document.getElementById('s-fb').className='fb'; document.getElementById('s-fb').style.display='none';
+ document.getElementById('s-btn').textContent='Comprobar'; document.getElementById('s-btn').className='btn';
+ setTimeout(()=>document.getElementById('s-input').focus(),80);
+}
+function checkSent(){
+ let inp=document.getElementById('s-input').value;
+ if(!inp) return;
+ let item=state.module.sentences[state.currentSent];
+ let correct=item[state.a];
+ state.attempts++;
+ let fb=document.getElementById('s-fb');
+ let nInp=norm(inp), nCor=norm(correct);
+ let ok = nInp===nCor || nCor.includes(nInp) && nInp.length>nCor.length*0.7;
+ // tolerancia: si acierta 80% de palabras
+ if(!ok){
+  let wordsInp=nInp.split(' '); let wordsCor=nCor.split(' ');
+  let common=wordsCor.filter(w=>wordsInp.includes(w)).length;
+  if(common/wordsCor.length>=0.8) ok=true;
+ }
+ if(ok){
+  state.streakSent[state.currentSent]=(state.streakSent[state.currentSent]||0)+1;
+  let raw=getProgressRaw(); let k=getItemKey('sent',state.module.id,state.currentSent,state.a); raw[k]=state.streakSent[state.currentSent]; setProgressRaw(raw);
+  if(state.streakSent[state.currentSent]>=3){
+   fb.innerHTML=`✅ <b>¡Dominada y retirada!</b>`; fb.className='fb on ok';
+   state.activeSent=state.activeSent.filter(i=>i!==state.currentSent);
+  } else {
+   fb.textContent=`✅ Correcto ${state.streakSent[state.currentSent]}/3`; fb.className='fb on ok';
+  }
+  state.lastSent=state.currentSent;
+  document.getElementById('s-input').disabled=true;
+  document.getElementById('s-btn').textContent='Siguiente →'; document.getElementById('s-btn').className='btn ok';
+  document.getElementById('s-btn').onclick=()=>{ document.getElementById('s-btn').onclick=checkSent; nextSent(); renderLangBars(); };
+  setTimeout(()=>{ if(document.getElementById('scr-sent').classList.contains('on')){ document.getElementById('s-btn').onclick=checkSent; nextSent(); renderLangBars(); } },1200);
+ } else {
+  state.streakSent[state.currentSent]=0; state.errors++;
+  let raw=getProgressRaw(); let k=getItemKey('sent',state.module.id,state.currentSent,state.a); raw[k]=0; setProgressRaw(raw);
+  state.forcedSent=state.currentSent;
+  document.getElementById('s-hint').style.display='block';
+  document.getElementById('s-hint').textContent=`Pista (${LANGS[state.h].n}): ${item[state.h]} | Humano: Fíjate en el orden natural, no traduzcas palabra por palabra.`;
+  fb.innerHTML=`❌ Incorrecto<br>Respuesta nativa en ${LANGS[state.a].n}:<br><b style="color:#fff;background:rgba(0,0,0,.35);padding:6px;border-radius:8px;display:block;margin-top:6px">${correct}</b>`;
+  fb.className='fb on bad';
+  document.getElementById('s-input').disabled=true;
+  document.getElementById('s-btn').textContent='Repetir la misma →'; document.getElementById('s-btn').className='btn bad';
+  document.getElementById('s-btn').onclick=()=>{ document.getElementById('s-btn').onclick=checkSent; nextSent(); };
+ }
+ save();
+}
+function finishModule(){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+ document.getElementById('scr-end').classList.add('on');
+ let secs=Math.floor((Date.now()-state.start)/1000);
+ document.getElementById('end-time').textContent=`${String(Math.floor(secs/60)).padStart(2,'0')}:${String(secs%60).padStart(2,'0')}`;
+ let acc=state.attempts?Math.round((state.attempts-state.errors)/state.attempts*100):100;
+ document.getElementById('end-acc').textContent=acc+'%';
+ document.getElementById('end-err').textContent=state.errors;
+ document.getElementById('end-msg').textContent=`Dominaste ${state.module.title[state.a]} en ${LANGS[state.a].n}. Tu cerebro ya piensa en ${LANGS[state.a].f} ${state.a.toUpperCase()}. Progreso guardado offline.`;
+ // confetti simple
+ for(let i=0;i<60;i++){ let d=document.createElement('div'); d.style.position='fixed'; d.style.left=Math.random()*100+'vw'; d.style.top='-10px'; d.style.width='6px'; d.style.height='10px'; d.style.background=Object.values(LANGS)[Math.floor(Math.random()*6)].c; d.style.transform=`rotate(${Math.random()*360}deg)`; d.style.animation=`fall ${1+Math.random()*2}s linear forwards`; document.body.appendChild(d); setTimeout(()=>d.remove(),3000); }
+ renderLangBars(); renderModules();
+}
+function goHome(){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+ document.getElementById('scr-home').classList.add('on');
+ renderLangBars(); renderModules();
+}
+function resetAll(){ if(confirm('¿Borrar TODO el progreso de los 6 idiomas?')){ localStorage.clear(); renderLangBars(); renderModules(); } }
+document.getElementById('v-input').addEventListener('keypress',e=>{ if(e.key==='Enter') checkVocab(); });
+document.getElementById('s-input').addEventListener('keypress',e=>{ if(e.key==='Enter') checkSent(); });
+let style=document.createElement('style'); style.textContent='@keyframes fall{to{transform:translateY(100vh) rotate(720deg)}}'; document.head.appendChild(style);
+loadPrefs(); initSelectors(); renderLangBars(); renderModules();
+</script>
+</body>
+</html>
