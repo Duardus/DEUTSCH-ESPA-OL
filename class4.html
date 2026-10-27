@@ -1,1 +1,1676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>PolyLex · Entrenador Multilingüe Nativo</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
+:root {
+  --bg: #05070f;
+  --surface: rgba(14,20,35,.97);
+  --card: #0c1220;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --accent: #00e5ff;
+  --success: #00e676;
+  --error: #ff1744;
+  --border: rgba(255,255,255,.07);
+  --glow: 0 0 14px rgba(0,229,255,.25);
+  --radius: 14px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: radial-gradient(ellipse at 50% -20%, rgba(0,229,255,.07), transparent 55%),
+              radial-gradient(ellipse at 80% 100%, rgba(255,23,68,.04), transparent 50%),
+              var(--bg);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100dvh;
+  padding: 6px;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+.app {
+  width: 100%;
+  max-width: 420px;
+  height: 97dvh;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 12px 40px rgba(0,0,0,.75);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+/* ===== TOP PROGRESS BAR (always visible) ===== */
+.top-bar {
+  flex-shrink: 0;
+  padding: 10px 12px 8px;
+  background: rgba(0,0,0,.35);
+  border-bottom: 1px solid var(--border);
+}
+.lang-progress-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.lang-pill {
+  flex: 1;
+  min-width: 58px;
+  background: #0a0f1a;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 6px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.lang-pill.active-write {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(0,229,255,.3);
+}
+.lang-pill .code {
+  font-size: .58rem;
+  font-weight: 700;
+  letter-spacing: .5px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.lang-pill .pct {
+  font-size: .72rem;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: 'Rajdhani', sans-serif;
+}
+.lang-pill .fill {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), #0088ff);
+  transition: width .4s ease;
+}
+/* ===== SCREENS ===== */
+.screen {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  padding: 10px 12px 12px;
+  overflow-y: auto;
+  gap: 8px;
+  animation: fade .22s ease;
+}
+.screen.active { display: flex; }
+@keyframes fade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+h1, h2 {
+  font-family: 'Rajdhani', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  margin: 0;
+}
+.intro h1 {
+  color: var(--accent);
+  font-size: 1.35rem;
+  text-shadow: var(--glow);
+}
+.intro p {
+  color: var(--muted);
+  font-size: .7rem;
+  line-height: 1.45;
+  text-align: center;
+  max-width: 320px;
+  margin: 0 auto;
+}
+.config-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .72rem;
+  color: var(--muted);
+}
+.row select {
+  background: #101726;
+  color: #fff;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 5px 8px;
+  font-size: .72rem;
+  outline: none;
+  min-width: 110px;
+}
+.name-input, .user-input {
+  width: 100%;
+  padding: 11px;
+  background: #090d16;
+  border: 2px solid var(--border);
+  border-radius: 11px;
+  color: #fff;
+  font-size: .9rem;
+  outline: none;
+  text-align: center;
+}
+.name-input:focus, .user-input:focus {
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+}
+.btn {
+  background: linear-gradient(135deg, var(--accent), #0088ff);
+  color: #000;
+  border: none;
+  border-radius: 11px;
+  padding: 11px;
+  font-size: .85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 1px;
+  cursor: pointer;
+  width: 100%;
+  transition: transform .15s, filter .15s;
+}
+.btn:active { transform: scale(.97); }
+.btn.secondary {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-size: .75rem;
+  padding: 8px;
+}
+.btn.success-btn {
+  background: linear-gradient(135deg, #00e676, #00b35a);
+}
+.btn.error-btn {
+  background: linear-gradient(135deg, #ff1744, #c40030);
+}
+/* Theme selector */
+.theme-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  max-height: 42vh;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.theme-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  padding: 10px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color .2s, transform .15s;
+}
+.theme-card:hover, .theme-card:active {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+.theme-card .num {
+  font-size: .58rem;
+  color: var(--accent);
+  font-weight: 700;
+  letter-spacing: .5px;
+}
+.theme-card .title {
+  font-size: .72rem;
+  font-weight: 600;
+  margin: 3px 0 2px;
+  line-height: 1.25;
+}
+.theme-card .meta {
+  font-size: .58rem;
+  color: var(--muted);
+}
+/* Game header */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.game-header h2 {
+  font-size: .78rem;
+  color: var(--accent);
+  text-align: left;
+}
+.live-selects {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.live-selects select {
+  background: #090d16;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: .62rem;
+  padding: 3px 4px;
+}
+.hud {
+  display: flex;
+  justify-content: space-between;
+  font-size: .63rem;
+  color: var(--muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .3px;
+}
+.prompt-card {
+  background: var(--card);
+  border-radius: 13px;
+  padding: 14px 13px;
+  border-left: 3px solid var(--accent);
+  box-shadow: inset 0 2px 6px rgba(0,0,0,.35);
+  flex-shrink: 0;
+}
+.prompt-tag {
+  font-size: .55rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+.target {
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #fff;
+  word-break: break-word;
+}
+.hint {
+  font-size: .68rem;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 6px;
+  display: none;
+  line-height: 1.35;
+}
+.help-box {
+  background: rgba(0,229,255,.06);
+  border: 1px solid rgba(0,229,255,.15);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: .68rem;
+  color: var(--muted);
+  line-height: 1.4;
+  display: none;
+}
+.help-box.visible { display: block; }
+.feedback {
+  padding: 9px 10px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: .72rem;
+  line-height: 1.35;
+  display: none;
+}
+.feedback.ok {
+  background: rgba(0,230,118,.09);
+  color: var(--success);
+  border: 1px solid rgba(0,230,118,.28);
+  display: block;
+}
+.feedback.ko {
+  background: rgba(255,23,68,.09);
+  color: var(--error);
+  border: 1px solid rgba(255,23,68,.28);
+  display: block;
+}
+.correct-txt {
+  display: block;
+  font-size: .88rem;
+  color: #fff;
+  font-weight: 700;
+  margin-top: 4px;
+  background: rgba(0,0,0,.35);
+  padding: 5px 7px;
+  border-radius: 6px;
+}
+.vocab-card {
+  background: var(--card);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 16px 12px;
+  text-align: center;
+}
+.vocab-card .main {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.vocab-card .sub {
+  font-size: .82rem;
+  color: var(--muted);
+}
+.stats-card {
+  background: var(--card);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 10px;
+}
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(255,255,255,.05);
+  font-size: .74rem;
+}
+.stat-row:last-child { border: none; }
+.stat-val {
+  font-weight: 700;
+  color: var(--accent);
+  font-family: 'Rajdhani', sans-serif;
+}
+.stat-val.green { color: var(--success); }
+.mode-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.mode-tabs button {
+  flex: 1;
+  background: #0a0f1a;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  border-radius: 8px;
+  padding: 7px;
+  font-size: .68rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.mode-tabs button.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(0,229,255,.08);
+}
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- ALWAYS VISIBLE LANGUAGE PROGRESS -->
+  <div class="top-bar" id="top-bar">
+    <div class="lang-progress-row" id="lang-progress-row">
+      <!-- filled by JS -->
+    </div>
+  </div>
 
+  <!-- INTRO -->
+  <div id="screen-intro" class="screen intro active">
+    <div>
+      <h1>PolyLex</h1>
+      <p>Entrenador nativo de alta densidad léxica.<br>
+      8 temas independientes · sistema 3-en-3 · progreso offline por idioma.</p>
+    </div>
+    <div class="config-box">
+      <div class="row">
+        <span>Preguntar en</span>
+        <select id="cfg-q" onchange="syncLangs()">
+          <option value="de">Alemán</option>
+          <option value="pt">Portugués</option>
+          <option value="fr">Francés</option>
+          <option value="it">Italiano</option>
+          <option value="en">Inglés</option>
+          <option value="es" selected>Español</option>
+        </select>
+      </div>
+      <div class="row">
+        <span>Responder en</span>
+        <select id="cfg-a" onchange="syncLangs()">
+          <option value="es">Español</option>
+          <option value="de" selected>Alemán</option>
+          <option value="pt">Portugués</option>
+          <option value="fr">Francés</option>
+          <option value="it">Italiano</option>
+          <option value="en">Inglés</option>
+        </select>
+      </div>
+      <div class="row">
+        <span>Pista en</span>
+        <select id="cfg-h" onchange="syncLangs()">
+          <option value="en" selected>Inglés</option>
+          <option value="es">Español</option>
+          <option value="de">Alemán</option>
+          <option value="pt">Portugués</option>
+          <option value="fr">Francés</option>
+          <option value="it">Italiano</option>
+        </select>
+      </div>
+    </div>
+    <input type="text" id="input-name" class="name-input" placeholder="Tu nombre..." autocomplete="off" maxlength="24">
+    <button class="btn" onclick="goThemes()">Elegir Tema ➔</button>
+  </div>
+
+  <!-- THEME SELECTOR -->
+  <div id="screen-themes" class="screen">
+    <h2 style="font-size:.9rem;color:var(--accent);margin-bottom:4px">Elige un tema</h2>
+    <p style="font-size:.65rem;color:var(--muted);text-align:center;margin-bottom:6px">
+      Cada tema es independiente. Tu progreso se guarda automáticamente.
+    </p>
+    <div class="theme-grid" id="theme-grid"></div>
+    <button class="btn secondary" onclick="switchScreen('screen-intro')" style="margin-top:6px">← Volver</button>
+  </div>
+
+  <!-- VOCAB PHASE -->
+  <div id="screen-vocab" class="screen">
+    <div class="game-header">
+      <h2 id="vocab-title">Fase 1 · Vocabulario</h2>
+      <span id="vocab-counter" style="font-size:.65rem;color:var(--muted)">0/0</span>
+    </div>
+    <div class="mode-tabs">
+      <button class="active" id="tab-learn" onclick="setVocabMode('learn')">Aprender</button>
+      <button id="tab-quiz" onclick="setVocabMode('quiz')">Memorizar 3×3</button>
+    </div>
+    <div class="prompt-card" id="vocab-prompt">
+      <div class="prompt-tag" id="vocab-tag">Aprende esta palabra</div>
+      <div class="vocab-card">
+        <div class="main" id="vocab-main"></div>
+        <div class="sub" id="vocab-sub"></div>
+      </div>
+    </div>
+    <div class="help-box" id="vocab-help"></div>
+    <div id="vocab-feedback" class="feedback"></div>
+    <input type="text" id="vocab-input" class="user-input" placeholder="Escribe la traducción..." style="display:none" autocomplete="off">
+    <button class="btn" id="vocab-btn" onclick="handleVocab()">Ya la aprendí ➔</button>
+  </div>
+
+  <!-- SENTENCE PHASE -->
+  <div id="screen-game" class="screen">
+    <div class="game-header">
+      <h2 id="game-title">Fase 2 · Oraciones</h2>
+      <div class="live-selects">
+        <select id="live-q" onchange="changeLive()"></select>
+        <span style="font-size:.6rem;color:var(--muted)">→</span>
+        <select id="live-a" onchange="changeLive()"></select>
+      </div>
+    </div>
+    <div class="hud">
+      <span id="hud-progress">Progreso: 0/0</span>
+      <span id="hud-streak">Racha: 0/3</span>
+    </div>
+    <div class="prompt-card">
+      <div class="prompt-tag" id="label-instr">Traduce:</div>
+      <div class="target" id="display-target"></div>
+      <div class="hint" id="display-hint"></div>
+    </div>
+    <div class="help-box" id="sent-help"></div>
+    <div id="feedback-box" class="feedback"></div>
+    <input type="text" id="user-input" class="user-input" placeholder="Escribe tu respuesta..." autocomplete="off">
+    <button class="btn" id="action-btn" onclick="handleAction()">Comprobar</button>
+  </div>
+
+  <!-- STATS -->
+  <div id="screen-stats" class="screen" style="justify-content:center;text-align:center;gap:12px">
+    <div>
+      <h2 style="color:var(--success);font-size:1.05rem">¡Tema completado!</h2>
+      <p id="final-greeting" style="font-size:.7rem;color:var(--muted);margin-top:4px"></p>
+    </div>
+    <div class="stats-card">
+      <div style="font-family:'Rajdhani';font-weight:700;color:var(--accent);font-size:.72rem;margin-bottom:4px">
+        RESUMEN
+      </div>
+      <div class="stat-row"><span>Tiempo</span><span class="stat-val" id="stat-time">00:00</span></div>
+      <div class="stat-row"><span>Precisión</span><span class="stat-val green" id="stat-acc">0%</span></div>
+      <div class="stat-row"><span>Errores</span><span class="stat-val" id="stat-err">0</span></div>
+    </div>
+    <button class="btn" onclick="goThemes()">Elegir otro tema</button>
+    <button class="btn secondary" onclick="location.reload()">Reiniciar todo</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   BASE DE DATOS NATIVA — 8 TEMAS INDEPENDIENTES
+   Traducciones directas, naturales y nativas en:
+   es · pt · de · fr · it · en
+============================================================ */
+const THEMES = [
+  {
+    id: 0,
+    title: "Pronombres & Interrogativos",
+    help: "Aquí dominas los pronombres personales, posesivos, demostrativos e interrogativos. Son la base de cualquier frase. Presta atención a las formas de género y número.",
+    vocabulary: [
+      {es:"yo",pt:"eu",de:"ich",fr:"je",it:"io",en:"I"},
+      {es:"tú / usted",pt:"tu / você",de:"du / Sie",fr:"tu / vous",it:"tu / Lei",en:"you"},
+      {es:"él",pt:"ele",de:"er",fr:"il",it:"lui",en:"he"},
+      {es:"ella",pt:"ela",de:"sie",fr:"elle",it:"lei",en:"she"},
+      {es:"nosotros / nosotras",pt:"nós",de:"wir",fr:"nous",it:"noi",en:"we"},
+      {es:"vosotros / ustedes",pt:"vós / vocês",de:"ihr / Sie",fr:"vous",it:"voi",en:"you (pl)"},
+      {es:"ellos / ellas",pt:"eles / elas",de:"sie",fr:"ils / elles",it:"loro",en:"they"},
+      {es:"mi / mío",pt:"meu / minha",de:"mein / meiner",fr:"mon / le mien",it:"mio / mia",en:"my / mine"},
+      {es:"tu / tuyo",pt:"teu / tua",de:"dein / deiner",fr:"ton / le tien",it:"tuo / tua",en:"your / yours"},
+      {es:"su / suyo",pt:"seu / sua",de:"sein / ihrer",fr:"son / le sien",it:"suo / sua",en:"his / her / its"},
+      {es:"nuestro",pt:"nosso / nossa",de:"unser",fr:"notre / le nôtre",it:"nostro / nostra",en:"our / ours"},
+      {es:"este / esta / esto",pt:"este / esta / isto",de:"dieser / diese / dies",fr:"ce / cette / ceci",it:"questo / questa",en:"this"},
+      {es:"ese / esa / eso",pt:"esse / essa / isso",de:"dieser / diese (dort)",fr:"ce / cette (là)",it:"quello / quella",en:"that"},
+      {es:"aquel / aquella",pt:"aquele / aquela",de:"jener / jene",fr:"celui-là / celle-là",it:"quello / quella (lontano)",en:"that (over there)"},
+      {es:"algo",pt:"algo",de:"etwas",fr:"quelque chose",it:"qualcosa",en:"something"},
+      {es:"nada",pt:"nada",de:"nichts",fr:"rien",it:"niente",en:"nothing"},
+      {es:"alguien",pt:"alguém",de:"jemand",fr:"quelqu'un",it:"qualcuno",en:"someone"},
+      {es:"nadie",pt:"ninguém",de:"niemand",fr:"personne",it:"nessuno",en:"nobody"},
+      {es:"todo / todos",pt:"tudo / todos",de:"alles / alle",fr:"tout / tous",it:"tutto / tutti",en:"everything / all"},
+      {es:"alguno / algunos",pt:"algum / alguns",de:"irgendein / einige",fr:"quelque / quelques",it:"qualche / alcuni",en:"some"},
+      {es:"ninguno",pt:"nenhum",de:"kein / keiner",fr:"aucun",it:"nessuno",en:"none"},
+      {es:"mismo",pt:"mesmo",de:"derselbe / gleich",fr:"même",it:"stesso",en:"same"},
+      {es:"otro",pt:"outro",de:"anderer",fr:"autre",it:"altro",en:"other"},
+      {es:"qué",pt:"o que",de:"was",fr:"quoi / que",it:"che / cosa",en:"what"},
+      {es:"quién",pt:"quem",de:"wer",fr:"qui",it:"chi",en:"who"},
+      {es:"dónde",pt:"onde",de:"wo",fr:"où",it:"dove",en:"where"},
+      {es:"cuándo",pt:"quando",de:"wann",fr:"quand",it:"quando",en:"when"},
+      {es:"por qué",pt:"porquê / porque",de:"warum",fr:"pourquoi",it:"perché",en:"why"},
+      {es:"cómo",pt:"como",de:"wie",fr:"comment",it:"come",en:"how"},
+      {es:"cuánto / cuántos",pt:"quanto / quantos",de:"wie viel / wie viele",fr:"combien",it:"quanto / quanti",en:"how much / how many"},
+      {es:"cuál / cuáles",pt:"qual / quais",de:"welcher / welche",fr:"quel / quels",it:"quale / quali",en:"which"},
+      {es:"de quién",pt:"de quem",de:"wessen",fr:"à qui",it:"di chi",en:"whose"},
+      {es:"para qué",pt:"para quê",de:"wofür",fr:"pour quoi",it:"per cosa",en:"what for"},
+      {es:"a dónde",pt:"aonde",de:"wohin",fr:"où (direction)",it:"dove (direzione)",en:"where to"}
+    ],
+    sentences: [
+      {es:"Yo prefiero que tú hables con él o con ella, mientras nosotros avisamos a ustedes y a ellos.",
+       pt:"Eu prefiro que tu fales com ele ou com ela, enquanto nós avisamos a vocês e a eles.",
+       de:"Ich bevorzuge, dass du mit ihm oder mit ihr sprichst, während wir euch und sie benachrichtigen.",
+       fr:"Je préfère que tu parles avec lui ou avec elle, pendant que nous prévenons vous et eux.",
+       it:"Preferisco che tu parli con lui o con lei, mentre noi avvisiamo voi e loro.",
+       en:"I prefer that you speak with him or with her, while we notify you and them."},
+      {es:"Guardé mi dinero en tu bolso, pero el carro es suyo, nuestro departamento es pequeño y el jardín es de ellos.",
+       pt:"Guardei o meu dinheiro na tua bolsa, mas o carro é dele, o nosso apartamento é pequeno e o jardim é deles.",
+       de:"Ich habe mein Geld in deiner Tasche aufbewahrt, aber das Auto ist seins, unsere Wohnung ist klein und der Garten gehört ihnen.",
+       fr:"J'ai gardé mon argent dans ton sac, mais la voiture est à lui, notre appartement est petit et le jardin est à eux.",
+       it:"Ho messo i miei soldi nella tua borsa, ma la macchina è sua, il nostro appartamento è piccolo e il giardino è loro.",
+       en:"I kept my money in your bag, but the car is his, our apartment is small and the garden is theirs."},
+      {es:"Este libro de aquí, ese de allá y aquel a lo lejos significan algo, aunque nada impresiona a alguien si nadie sabe todos los detalles.",
+       pt:"Este livro daqui, esse dali e aquele ao longe significam algo, embora nada impressione alguém se ninguém souber todos os detalhes.",
+       de:"Dieses Buch hier, das dort und jenes in der Ferne bedeuten etwas, obwohl nichts jemanden beeindruckt, wenn niemand alle Details weiß.",
+       fr:"Ce livre ici, celui-là là-bas et celui au loin signifient quelque chose, même si rien n'impressionne personne si personne ne connaît tous les détails.",
+       it:"Questo libro qui, quello laggiù e quello lontano significano qualcosa, anche se niente impressiona qualcuno se nessuno sa tutti i dettagli.",
+       en:"This book here, that one over there and that one far away mean something, although nothing impresses anyone if nobody knows all the details."},
+      {es:"Algunos vendrán, pero ninguno cometió el mismo error que el otro grupo.",
+       pt:"Alguns virão, mas nenhum cometeu o mesmo erro que o outro grupo.",
+       de:"Einige werden kommen, aber keiner hat denselben Fehler wie die andere Gruppe gemacht.",
+       fr:"Certains viendront, mais aucun n'a commis la même erreur que l'autre groupe.",
+       it:"Alcuni verranno, ma nessuno ha commesso lo stesso errore dell'altro gruppo.",
+       en:"Some will come, but none made the same mistake as the other group."},
+      {es:"¿Qué buscas, quién vino, dónde está, cuándo sales, por qué callas, cómo trabajas, cuánto cuestan, cuál prefieres y a dónde vas?",
+       pt:"O que procuras, quem veio, onde está, quando sais, porque calas, como trabalhas, quanto custam, qual preferes e aonde vais?",
+       de:"Was suchst du, wer ist gekommen, wo ist es, wann gehst du, warum schweigst du, wie arbeitest du, wie viel kosten sie, welches bevorzugst du und wohin gehst du?",
+       fr:"Que cherches-tu, qui est venu, où est-ce, quand sors-tu, pourquoi te tais-tu, comment travailles-tu, combien coûtent-ils, lequel préfères-tu et où vas-tu?",
+       it:"Cosa cerchi, chi è venuto, dove si trova, quando esci, perché taci, come lavori, quanto costano, quale preferisci e dove vai?",
+       en:"What are you looking for, who came, where is it, when are you leaving, why are you silent, how do you work, how much do they cost, which do you prefer and where are you going?"}
+    ]
+  },
+  {
+    id: 1,
+    title: "Verbos Core · Modales & Cognición",
+    help: "Verbos esenciales de estado, obligación, deseo, pensamiento y comunicación. Practica las formas básicas; el resto del idioma se construye sobre ellos.",
+    vocabulary: [
+      {es:"ser",pt:"ser",de:"sein",fr:"être",it:"essere",en:"to be (essence)"},
+      {es:"estar",pt:"estar",de:"sein / sich befinden",fr:"être (état)",it:"essere / stare",en:"to be (state)"},
+      {es:"haber",pt:"haver",de:"haben (aux)",fr:"avoir (aux)",it:"avere (aux)",en:"to have (aux)"},
+      {es:"tener",pt:"ter",de:"haben",fr:"avoir",it:"avere",en:"to have"},
+      {es:"poder",pt:"poder",de:"können",fr:"pouvoir",it:"potere",en:"can / to be able"},
+      {es:"querer",pt:"querer",de:"wollen",fr:"vouloir",it:"volere",en:"to want"},
+      {es:"deber / tener que",pt:"dever / ter de",de:"müssen / sollen",fr:"devoir",it:"dovere",en:"must / have to"},
+      {es:"necesitar",pt:"precisar / necessitar",de:"brauchen",fr:"avoir besoin",it:"avere bisogno",en:"to need"},
+      {es:"gustar",pt:"gostar",de:"gefallen / mögen",fr:"aimer / plaire",it:"piacere",en:"to like"},
+      {es:"preferir",pt:"preferir",de:"bevorzugen",fr:"préférer",it:"preferire",en:"to prefer"},
+      {es:"saber",pt:"saber",de:"wissen / können",fr:"savoir",it:"sapere",en:"to know (fact)"},
+      {es:"conocer",pt:"conhecer",de:"kennen",fr:"connaître",it:"conoscere",en:"to know (person/place)"},
+      {es:"parecer",pt:"parecer",de:"scheinen",fr:"sembler / paraître",it:"sembrare",en:"to seem"},
+      {es:"intentar / tratar de",pt:"tentar",de:"versuchen",fr:"essayer",it:"cercare di / provare",en:"to try"},
+      {es:"hablar",pt:"falar",de:"sprechen / reden",fr:"parler",it:"parlare",en:"to speak"},
+      {es:"decir",pt:"dizer",de:"sagen",fr:"dire",it:"dire",en:"to say"},
+      {es:"preguntar",pt:"perguntar",de:"fragen",fr:"demander",it:"chiedere",en:"to ask"},
+      {es:"responder / contestar",pt:"responder",de:"antworten",fr:"répondre",it:"rispondere",en:"to answer"},
+      {es:"explicar",pt:"explicar",de:"erklären",fr:"expliquer",it:"spiegare",en:"to explain"},
+      {es:"llamar",pt:"ligar / chamar",de:"anrufen / nennen",fr:"appeler",it:"chiamare",en:"to call"},
+      {es:"escuchar",pt:"escutar / ouvir",de:"zuhören",fr:"écouter",it:"ascoltare",en:"to listen"},
+      {es:"oír",pt:"ouvir",de:"hören",fr:"entendre",it:"sentire",en:"to hear"},
+      {es:"entender / comprender",pt:"entender / compreender",de:"verstehen",fr:"comprendre",it:"capire",en:"to understand"},
+      {es:"pensar",pt:"pensar",de:"denken",fr:"penser",it:"pensare",en:"to think"},
+      {es:"creer",pt:"acreditar / crer",de:"glauben",fr:"croire",it:"credere",en:"to believe"},
+      {es:"recordar",pt:"lembrar",de:"sich erinnern",fr:"se souvenir",it:"ricordare",en:"to remember"},
+      {es:"olvidar",pt:"esquecer",de:"vergessen",fr:"oublier",it:"dimenticare",en:"to forget"},
+      {es:"aprender",pt:"aprender",de:"lernen",fr:"apprendre",it:"imparare",en:"to learn"},
+      {es:"enseñar",pt:"ensinar",de:"lehren / unterrichten",fr:"enseigner",it:"insegnare",en:"to teach"},
+      {es:"significar",pt:"significar",de:"bedeuten",fr:"signifier",it:"significare",en:"to mean"},
+      {es:"escribir",pt:"escrever",de:"schreiben",fr:"écrire",it:"scrivere",en:"to write"},
+      {es:"leer",pt:"ler",de:"lesen",fr:"lire",it:"leggere",en:"to read"},
+      {es:"contar (relatar)",pt:"contar",de:"erzählen",fr:"raconter",it:"raccontare",en:"to tell (a story)"},
+      {es:"prometer",pt:"prometer",de:"versprechen",fr:"promettre",it:"promettere",en:"to promise"},
+      {es:"aceptar",pt:"aceitar",de:"akzeptieren / annehmen",fr:"accepter",it:"accettare",en:"to accept"},
+      {es:"rechazar",pt:"rejeitar",de:"ablehnen",fr:"refuser",it:"rifiutare",en:"to reject"},
+      {es:"sugerir",pt:"sugerir",de:"vorschlagen",fr:"suggérer",it:"suggerire",en:"to suggest"},
+      {es:"discutir",pt:"discutir",de:"diskutieren",fr:"discuter",it:"discutere",en:"to discuss"},
+      {es:"aconsejar",pt:"aconselhar",de:"raten / beraten",fr:"conseiller",it:"consigliare",en:"to advise"}
+    ],
+    sentences: [
+      {es:"Ser honesto y estar tranquilo permite haber logrado todo; debes tener paciencia para poder aprender si quieres y debes cambiar.",
+       pt:"Ser honesto e estar tranquilo permite ter conseguido tudo; deves ter paciência para poder aprender se queres e deves mudar.",
+       de:"Ehrlich zu sein und ruhig zu sein ermöglicht, alles erreicht zu haben; du musst Geduld haben, um lernen zu können, wenn du willst und dich ändern musst.",
+       fr:"Être honnête et être calme permet d'avoir tout réussi ; tu dois avoir de la patience pour pouvoir apprendre si tu veux et dois changer.",
+       it:"Essere onesti e stare tranquilli permette di aver raggiunto tutto; devi avere pazienza per poter imparare se vuoi e devi cambiare.",
+       en:"Being honest and being calm allows having achieved everything; you must have patience to be able to learn if you want and must change."},
+      {es:"Me gusta escribir, prefiero saber la verdad y conocer gente que parece sincera al intentar hablar.",
+       pt:"Gosto de escrever, prefiro saber a verdade e conhecer pessoas que parecem sinceras ao tentar falar.",
+       de:"Ich mag schreiben, ich bevorzuge die Wahrheit zu wissen und Menschen kennenzulernen, die aufrichtig scheinen, wenn sie versuchen zu sprechen.",
+       fr:"J'aime écrire, je préfère savoir la vérité et connaître des gens qui semblent sincères en essayant de parler.",
+       it:"Mi piace scrivere, preferisco sapere la verità e conoscere persone che sembrano sincere quando cercano di parlare.",
+       en:"I like to write, I prefer to know the truth and meet people who seem sincere when trying to speak."},
+      {es:"Él decidió decir la cifra, preguntar dudas, responder con calma, explicar el plan, llamar al cliente, escuchar consejos, oír la música y entender la lección.",
+       pt:"Ele decidiu dizer a cifra, perguntar dúvidas, responder com calma, explicar o plano, ligar ao cliente, ouvir conselhos, escutar a música e entender a lição.",
+       de:"Er entschied sich, die Zahl zu sagen, Fragen zu stellen, ruhig zu antworten, den Plan zu erklären, den Kunden anzurufen, Ratschläge zu hören, die Musik zu hören und die Lektion zu verstehen.",
+       fr:"Il a décidé de dire le chiffre, de poser des questions, de répondre calmement, d'expliquer le plan, d'appeler le client, d'écouter les conseils, d'entendre la musique et de comprendre la leçon.",
+       it:"Ha deciso di dire la cifra, chiedere dubbi, rispondere con calma, spiegare il piano, chiamare il cliente, ascoltare consigli, sentire la musica e capire la lezione.",
+       en:"He decided to say the figure, ask questions, answer calmly, explain the plan, call the client, listen to advice, hear the music and understand the lesson."},
+      {es:"Suelo pensar mucho, creer en tu palabra, recordar el pasado, olvidar lo malo, aprender rápido, enseñar con gusto y significar paz.",
+       pt:"Costumo pensar muito, acreditar na tua palavra, lembrar o passado, esquecer o mau, aprender rápido, ensinar com gosto e significar paz.",
+       de:"Ich denke oft viel nach, glaube an dein Wort, erinnere mich an die Vergangenheit, vergesse das Schlechte, lerne schnell, unterrichte gerne und bedeute Frieden.",
+       fr:"J'ai l'habitude de beaucoup penser, de croire en ta parole, de me souvenir du passé, d'oublier le mauvais, d'apprendre vite, d'enseigner avec plaisir et de signifier la paix.",
+       it:"Di solito penso molto, credo alla tua parola, ricordo il passato, dimentico il brutto, imparo in fretta, insegno con piacere e significo pace.",
+       en:"I usually think a lot, believe in your word, remember the past, forget the bad, learn quickly, teach with pleasure and mean peace."}
+    ]
+  },
+  {
+    id: 2,
+    title: "Verbos · Movimiento & Cotidianos",
+    help: "Verbos de desplazamiento, acciones físicas diarias, trabajo y creación. Útiles para describir tu rutina y el mundo físico que te rodea.",
+    vocabulary: [
+      {es:"ir",pt:"ir",de:"gehen / fahren",fr:"aller",it:"andare",en:"to go"},
+      {es:"venir",pt:"vir",de:"kommen",fr:"venir",it:"venire",en:"to come"},
+      {es:"llegar",pt:"chegar",de:"ankommen",fr:"arriver",it:"arrivare",en:"to arrive"},
+      {es:"salir / partir",pt:"sair / partir",de:"gehen / abfahren",fr:"sortir / partir",it:"uscire / partire",en:"to leave"},
+      {es:"entrar",pt:"entrar",de:"eintreten",fr:"entrer",it:"entrare",en:"to enter"},
+      {es:"volver / regresar",pt:"voltar / regressar",de:"zurückkommen",fr:"revenir / rentrer",it:"tornare",en:"to return"},
+      {es:"mover",pt:"mover",de:"bewegen",fr:"bouger / déplacer",it:"muovere",en:"to move"},
+      {es:"caminar / andar",pt:"caminhar / andar",de:"gehen / laufen",fr:"marcher",it:"camminare",en:"to walk"},
+      {es:"correr",pt:"correr",de:"rennen / laufen",fr:"courir",it:"correre",en:"to run"},
+      {es:"manejar / conducir",pt:"conduzir",de:"fahren / steuern",fr:"conduire",it:"guidare",en:"to drive"},
+      {es:"volar",pt:"voar",de:"fliegen",fr:"voler",it:"volare",en:"to fly"},
+      {es:"viajar",pt:"viajar",de:"reisen",fr:"voyager",it:"viaggiare",en:"to travel"},
+      {es:"parar / detener",pt:"parar",de:"anhalten / stoppen",fr:"arrêter",it:"fermare",en:"to stop"},
+      {es:"seguir / continuar",pt:"seguir / continuar",de:"weitergehen / fortsetzen",fr:"continuer",it:"continuare",en:"to continue"},
+      {es:"caer",pt:"cair",de:"fallen",fr:"tomber",it:"cadere",en:"to fall"},
+      {es:"subir",pt:"subir",de:"hochgehen / steigen",fr:"monter",it:"salire",en:"to go up"},
+      {es:"bajar",pt:"descer",de:"runtergehen",fr:"descendre",it:"scendere",en:"to go down"},
+      {es:"cruzar",pt:"atravessar",de:"überqueren",fr:"traverser",it:"attraversare",en:"to cross"},
+      {es:"pasar",pt:"passar",de:"vorbeigehen / passieren",fr:"passer",it:"passare",en:"to pass"},
+      {es:"girar / doblar",pt:"virar / dobrar",de:"abbiegen / drehen",fr:"tourner",it:"girare",en:"to turn"},
+      {es:"llevar",pt:"levar",de:"bringen / tragen",fr:"apporter / emporter",it:"portare",en:"to take / carry"},
+      {es:"traer",pt:"trazer",de:"bringen",fr:"apporter",it:"portare (qui)",en:"to bring"},
+      {es:"hacer",pt:"fazer",de:"machen / tun",fr:"faire",it:"fare",en:"to do / make"},
+      {es:"tomar / coger",pt:"pegar / tomar",de:"nehmen",fr:"prendre",it:"prendere",en:"to take"},
+      {es:"poner",pt:"pôr / colocar",de:"legen / stellen",fr:"mettre",it:"mettere",en:"to put"},
+      {es:"dar",pt:"dar",de:"geben",fr:"donner",it:"dare",en:"to give"},
+      {es:"comprar",pt:"comprar",de:"kaufen",fr:"acheter",it:"comprare",en:"to buy"},
+      {es:"vender",pt:"vender",de:"verkaufen",fr:"vendre",it:"vendere",en:"to sell"},
+      {es:"pagar",pt:"pagar",de:"bezahlen",fr:"payer",it:"pagare",en:"to pay"},
+      {es:"comer",pt:"comer",de:"essen",fr:"manger",it:"mangiare",en:"to eat"},
+      {es:"beber",pt:"beber",de:"trinken",fr:"boire",it:"bere",en:"to drink"},
+      {es:"dormir",pt:"dormir",de:"schlafen",fr:"dormir",it:"dormire",en:"to sleep"},
+      {es:"despertar",pt:"acordar",de:"aufwachen",fr:"se réveiller",it:"svegliarsi",en:"to wake up"},
+      {es:"trabajar",pt:"trabalhar",de:"arbeiten",fr:"travailler",it:"lavorare",en:"to work"},
+      {es:"estudiar",pt:"estudar",de:"studieren",fr:"étudier",it:"studiare",en:"to study"},
+      {es:"jugar",pt:"jogar / brincar",de:"spielen",fr:"jouer",it:"giocare",en:"to play"},
+      {es:"usar",pt:"usar",de:"benutzen / verwenden",fr:"utiliser",it:"usare",en:"to use"},
+      {es:"ayudar",pt:"ajudar",de:"helfen",fr:"aider",it:"aiutare",en:"to help"},
+      {es:"buscar",pt:"procurar",de:"suchen",fr:"chercher",it:"cercare",en:"to look for"},
+      {es:"encontrar",pt:"encontrar",de:"finden",fr:"trouver",it:"trovare",en:"to find"},
+      {es:"mirar / ver",pt:"olhar / ver",de:"schauen / sehen",fr:"regarder / voir",it:"guardare / vedere",en:"to look / see"},
+      {es:"abrir",pt:"abrir",de:"öffnen",fr:"ouvrir",it:"aprire",en:"to open"},
+      {es:"cerrar",pt:"fechar",de:"schließen",fr:"fermer",it:"chiudere",en:"to close"},
+      {es:"cambiar",pt:"mudar / trocar",de:"ändern / wechseln",fr:"changer",it:"cambiare",en:"to change"},
+      {es:"esperar",pt:"esperar",de:"warten / hoffen",fr:"attendre / espérer",it:"aspettare / sperare",en:"to wait / hope"},
+      {es:"vivir",pt:"viver",de:"leben / wohnen",fr:"vivre",it:"vivere",en:"to live"},
+      {es:"nacer",pt:"nascer",de:"geboren werden",fr:"naître",it:"nascere",en:"to be born"},
+      {es:"morir",pt:"morrer",de:"sterben",fr:"mourir",it:"morire",en:"to die"},
+      {es:"sentar",pt:"sentar",de:"setzen / sitzen",fr:"s'asseoir",it:"sedersi",en:"to sit"},
+      {es:"levantar",pt:"levantar",de:"heben / aufstehen",fr:"lever / se lever",it:"alzare / alzarsi",en:"to lift / get up"},
+      {es:"lavar",pt:"lavar",de:"waschen",fr:"laver",it:"lavare",en:"to wash"},
+      {es:"limpiar",pt:"limpar",de:"putzen / reinigen",fr:"nettoyer",it:"pulire",en:"to clean"},
+      {es:"cocinar",pt:"cozinhar",de:"kochen",fr:"cuisiner",it:"cucinare",en:"to cook"},
+      {es:"cortar",pt:"cortar",de:"schneiden",fr:"couper",it:"tagliare",en:"to cut"},
+      {es:"romper",pt:"quebrar / romper",de:"brechen",fr:"casser",it:"rompere",en:"to break"},
+      {es:"reparar / arreglar",pt:"reparar / arranjar",de:"reparieren",fr:"réparer",it:"riparare",en:"to repair"},
+      {es:"vestir",pt:"vestir",de:"anziehen / kleiden",fr:"habiller / porter",it:"vestire",en:"to dress / wear"},
+      {es:"crear",pt:"criar",de:"schaffen / erstellen",fr:"créer",it:"creare",en:"to create"},
+      {es:"construir",pt:"construir",de:"bauen",fr:"construire",it:"costruire",en:"to build"},
+      {es:"destruir",pt:"destruir",de:"zerstören",fr:"détruire",it:"distruggere",en:"to destroy"},
+      {es:"organizar",pt:"organizar",de:"organisieren",fr:"organiser",it:"organizzare",en:"to organize"},
+      {es:"planear / planificar",pt:"planear / planificar",de:"planen",fr:"planifier",it:"pianificare",en:"to plan"},
+      {es:"empezar / comenzar",pt:"começar",de:"anfangen / beginnen",fr:"commencer",it:"iniziare / cominciare",en:"to start"},
+      {es:"terminar / acabar",pt:"terminar / acabar",de:"beenden / fertig werden",fr:"finir / terminer",it:"finire",en:"to finish"},
+      {es:"ganar",pt:"ganhar",de:"gewinnen / verdienen",fr:"gagner",it:"vincere / guadagnare",en:"to win / earn"},
+      {es:"perder",pt:"perder",de:"verlieren",fr:"perdre",it:"perdere",en:"to lose"},
+      {es:"gastar",pt:"gastar",de:"ausgeben",fr:"dépenser",it:"spendere",en:"to spend"},
+      {es:"guardar / salvar",pt:"guardar / salvar",de:"speichern / retten",fr:"sauvegarder / sauver",it:"salvare",en:"to save"},
+      {es:"enviar / mandar",pt:"enviar / mandar",de:"schicken / senden",fr:"envoyer",it:"inviare / mandare",en:"to send"},
+      {es:"recibir",pt:"receber",de:"empfangen / bekommen",fr:"recevoir",it:"ricevere",en:"to receive"},
+      {es:"elegir / seleccionar",pt:"escolher",de:"wählen / aussuchen",fr:"choisir",it:"scegliere",en:"to choose"},
+      {es:"decidir",pt:"decidir",de:"entscheiden",fr:"décider",it:"decidere",en:"to decide"},
+      {es:"resolver",pt:"resolver",de:"lösen",fr:"résoudre",it:"risolvere",en:"to solve"},
+      {es:"aumentar",pt:"aumentar",de:"erhöhen / zunehmen",fr:"augmenter",it:"aumentare",en:"to increase"},
+      {es:"reducir / disminuir",pt:"reduzir / diminuir",de:"verringern / reduzieren",fr:"réduire",it:"ridurre",en:"to reduce"},
+      {es:"producir",pt:"produzir",de:"produzieren",fr:"produire",it:"produrre",en:"to produce"},
+      {es:"desarrollar",pt:"desenvolver",de:"entwickeln",fr:"développer",it:"sviluppare",en:"to develop"},
+      {es:"mejorar",pt:"melhorar",de:"verbessern",fr:"améliorer",it:"migliorare",en:"to improve"},
+      {es:"empeorar",pt:"piorar",de:"sich verschlechtern",fr:"empirer",it:"peggiorare",en:"to get worse"},
+      {es:"funcionar",pt:"funcionar",de:"funktionieren",fr:"fonctionner",it:"funzionare",en:"to work (function)"},
+      {es:"servir",pt:"servir",de:"dienen / nützen",fr:"servir",it:"servire",en:"to serve / be useful"},
+      {es:"lograr / alcanzar",pt:"conseguir / alcançar",de:"erreichen",fr:"atteindre / réussir",it:"raggiungere / riuscire",en:"to achieve"},
+      {es:"permitir",pt:"permitir",de:"erlauben",fr:"permettre",it:"permettere",en:"to allow"},
+      {es:"prohibir",pt:"proibir",de:"verbieten",fr:"interdire",it:"proibire",en:"to forbid"},
+      {es:"evitar",pt:"evitar",de:"vermeiden",fr:"éviter",it:"evitare",en:"to avoid"},
+      {es:"proteger",pt:"proteger",de:"schützen",fr:"protéger",it:"proteggere",en:"to protect"},
+      {es:"ofrecer",pt:"oferecer",de:"anbieten",fr:"offrir",it:"offrire",en:"to offer"},
+      {es:"mostrar",pt:"mostrar",de:"zeigen",fr:"montrer",it:"mostrare",en:"to show"},
+      {es:"ocultar / esconder",pt:"esconder",de:"verstecken",fr:"cacher",it:"nascondere",en:"to hide"},
+      {es:"suceder / ocurrir",pt:"acontecer / suceder",de:"passieren / geschehen",fr:"se passer / arriver",it:"succedere / accadere",en:"to happen"},
+      {es:"pertenecer",pt:"pertencer",de:"gehören",fr:"appartenir",it:"appartenere",en:"to belong"},
+      {es:"depender",pt:"depender",de:"abhängen",fr:"dépendre",it:"dipendere",en:"to depend"}
+    ],
+    sentences: [
+      {es:"Mañana voy a ir al mercado, luego venir a casa, llegar a tiempo, salir temprano, entrar al aula y volver rápido.",
+       pt:"Amanhã vou ir ao mercado, depois vir a casa, chegar a tempo, sair cedo, entrar na sala e voltar depressa.",
+       de:"Morgen werde ich zum Markt gehen, dann nach Hause kommen, pünktlich ankommen, früh gehen, ins Klassenzimmer eintreten und schnell zurückkommen.",
+       fr:"Demain je vais aller au marché, puis venir à la maison, arriver à l'heure, partir tôt, entrer dans la classe et revenir vite.",
+       it:"Domani vado al mercato, poi vengo a casa, arrivo in tempo, esco presto, entro in aula e torno in fretta.",
+       en:"Tomorrow I'm going to go to the market, then come home, arrive on time, leave early, enter the classroom and return quickly."},
+      {es:"Es necesario mover la mesa, caminar por la calle, correr en el parque, conducir el coche, volar alto, viajar lejos, parar la marcha y seguir derecho.",
+       pt:"É necessário mover a mesa, caminhar pela rua, correr no parque, conduzir o carro, voar alto, viajar longe, parar a marcha e seguir em frente.",
+       de:"Es ist nötig, den Tisch zu bewegen, auf der Straße zu gehen, im Park zu rennen, das Auto zu fahren, hoch zu fliegen, weit zu reisen, anzuhalten und geradeaus weiterzugehen.",
+       fr:"Il faut déplacer la table, marcher dans la rue, courir dans le parc, conduire la voiture, voler haut, voyager loin, arrêter la marche et continuer tout droit.",
+       it:"È necessario spostare il tavolo, camminare per la strada, correre nel parco, guidare l'auto, volare alto, viaggiare lontano, fermarsi e proseguire dritto.",
+       en:"It is necessary to move the table, walk down the street, run in the park, drive the car, fly high, travel far, stop and continue straight."},
+      {es:"Sueles hacer la tarea, tomar el vaso, poner la mesa, dar las gracias, comprar fruta, vender ropa, pagar la cuenta, comer sano, beber frío y dormir ocho horas.",
+       pt:"Costumas fazer o dever, pegar o copo, pôr a mesa, dar as graças, comprar fruta, vender roupa, pagar a conta, comer saudável, beber frio e dormir oito horas.",
+       de:"Du machst normalerweise die Hausaufgaben, nimmst das Glas, deckst den Tisch, bedankst dich, kaufst Obst, verkaufst Kleidung, bezahlst die Rechnung, isst gesund, trinkst kalt und schläfst acht Stunden.",
+       fr:"Tu as l'habitude de faire les devoirs, prendre le verre, mettre la table, dire merci, acheter des fruits, vendre des vêtements, payer l'addition, manger sainement, boire froid et dormir huit heures.",
+       it:"Di solito fai i compiti, prendi il bicchiere, apparecchi la tavola, ringrazi, compri frutta, vendi vestiti, paghi il conto, mangi sano, bevi freddo e dormi otto ore.",
+       en:"You usually do the homework, take the glass, set the table, say thank you, buy fruit, sell clothes, pay the bill, eat healthy, drink cold and sleep eight hours."}
+    ]
+  },
+  {
+    id: 3,
+    title: "Emoción, Sensación & Estado",
+    help: "Verbos y expresiones de sentimiento, emoción y estado físico o mental. Esenciales para hablar de cómo te sientes de verdad.",
+    vocabulary: [
+      {es:"sentir",pt:"sentir",de:"fühlen / spüren",fr:"sentir / ressentir",it:"sentire",en:"to feel"},
+      {es:"amar",pt:"amar",de:"lieben",fr:"aimer",it:"amare",en:"to love"},
+      {es:"odiar",pt:"odiar",de:"hassen",fr:"haïr",it:"odiare",en:"to hate"},
+      {es:"desear",pt:"desejar",de:"wünschen / begehren",fr:"désirer",it:"desiderare",en:"to desire"},
+      {es:"temer / tener miedo",pt:"temer / ter medo",de:"fürchten / Angst haben",fr:"craindre / avoir peur",it:"temere / avere paura",en:"to fear"},
+      {es:"disfrutar",pt:"desfrutar / aproveitar",de:"genießen",fr:"profiter / jouir",it:"godere / divertirsi",en:"to enjoy"},
+      {es:"preocupar",pt:"preocupar",de:"sich sorgen",fr:"s'inquiéter",it:"preoccuparsi",en:"to worry"},
+      {es:"molestar",pt:"incomodar / molestar",de:"stören",fr:"déranger",it:"disturbare",en:"to bother"},
+      {es:"alegrar",pt:"alegrar",de:"freuen",fr:"réjouir",it:"rallegrare",en:"to make happy"},
+      {es:"sorprender",pt:"surpreender",de:"überraschen",fr:"surprendre",it:"sorprendere",en:"to surprise"},
+      {es:"cansar",pt:"cansar",de:"ermüden",fr:"fatiguer",it:"stancare",en:"to tire"},
+      {es:"doler",pt:"doer",de:"schmerzen",fr:"faire mal",it:"fare male",en:"to hurt"},
+      {es:"sanar / curar",pt:"curar / sarar",de:"heilen",fr:"guérir",it:"guarire",en:"to heal"},
+      {es:"soportar / aguantar",pt:"suportar / aguentar",de:"ertragen / aushalten",fr:"supporter",it:"sopportare",en:"to endure"},
+      {es:"confiar",pt:"confiar",de:"vertrauen",fr:"faire confiance",it:"fidarsi",en:"to trust"},
+      {es:"dudar",pt:"duvidar",de:"zweifeln",fr:"douter",it:"dubitare",en:"to doubt"},
+      {es:"importar",pt:"importar",de:"wichtig sein",fr:"importer",it:"importare",en:"to matter"},
+      {es:"faltar",pt:"faltar",de:"fehlen",fr:"manquer",it:"mancare",en:"to be missing"},
+      {es:"bastar / ser suficiente",pt:"bastar / ser suficiente",de:"reichen / genügen",fr:"suffire",it:"bastare",en:"to be enough"},
+      {es:"quedar / permanecer",pt:"ficar / permanecer",de:"bleiben",fr:"rester",it:"restare / rimanere",en:"to stay / remain"},
+      {es:"parecerse",pt:"parecer-se",de:"ähnlich sehen",fr:"se ressembler",it:"assomigliarsi",en:"to look alike"},
+      {es:"cuidar",pt:"cuidar",de:"sich kümmern",fr:"prendre soin",it:"prendersi cura",en:"to take care"},
+      {es:"extrañar / echar de menos",pt:"sentir falta / sentir saudade",de:"vermissen",fr:"manquer",it:"sentire la mancanza",en:"to miss"},
+      {es:"imaginar",pt:"imaginar",de:"sich vorstellen",fr:"imaginer",it:"immaginare",en:"to imagine"},
+      {es:"soñar",pt:"sonhar",de:"träumen",fr:"rêver",it:"sognare",en:"to dream"},
+      {es:"reír",pt:"rir",de:"lachen",fr:"rire",it:"ridere",en:"to laugh"},
+      {es:"llorar",pt:"chorar",de:"weinen",fr:"pleurer",it:"piangere",en:"to cry"},
+      {es:"sonreír",pt:"sorrir",de:"lächeln",fr:"sourire",it:"sorridere",en:"to smile"},
+      {es:"cantar",pt:"cantar",de:"singen",fr:"chanter",it:"cantare",en:"to sing"}
+    ],
+    sentences: [
+      {es:"Siento alegría, amo a la familia, no odio a nadie, deseo lo mejor, espero el cambio, no temo a nada, disfruto la vida y no me preocupo por gusto.",
+       pt:"Sinto alegria, amo a família, não odeio ninguém, desejo o melhor, espero a mudança, não temo nada, desfruto a vida e não me preocupo por gosto.",
+       de:"Ich fühle Freude, ich liebe die Familie, ich hasse niemanden, ich wünsche das Beste, ich hoffe auf den Wandel, ich fürchte nichts, ich genieße das Leben und mache mir keine Sorgen ohne Grund.",
+       fr:"Je ressens de la joie, j'aime la famille, je ne hais personne, je désire le meilleur, j'espère le changement, je ne crains rien, je profite de la vie et je ne m'inquiète pas pour le plaisir.",
+       it:"Sento gioia, amo la famiglia, non odio nessuno, desidero il meglio, spero nel cambiamento, non temo nulla, godo la vita e non mi preoccupo per piacere.",
+       en:"I feel joy, I love the family, I hate no one, I wish the best, I hope for change, I fear nothing, I enjoy life and I don't worry for fun."},
+      {es:"Nos va a alegrar el éxito, sorprender la noticia, cansar el viaje, doler la herida, sanar la piel, soportar el frío, confiar en ti y no dudar más.",
+       pt:"O sucesso vai alegrar-nos, a notícia surpreender, a viagem cansar, a ferida doer, a pele sarar, o frio ser suportado, confiar em ti e não duvidar mais.",
+       de:"Der Erfolg wird uns freuen, die Nachricht überraschen, die Reise ermüden, die Wunde schmerzen, die Haut heilen, die Kälte ertragen, dir vertrauen und nicht mehr zweifeln.",
+       fr:"Le succès va nous réjouir, la nouvelle surprendre, le voyage fatiguer, la blessure faire mal, la peau guérir, le froid supporter, te faire confiance et ne plus douter.",
+       it:"Il successo ci rallegrerà, la notizia sorprenderà, il viaggio stancherà, la ferita farà male, la pelle guarirà, il freddo sarà sopportato, fidarsi di te e non dubitare più.",
+       en:"The success will make us happy, the news surprise us, the trip tire us, the wound hurt, the skin heal, the cold be endured, trust you and not doubt any more."}
+    ]
+  },
+  {
+    id: 4,
+    title: "Conectores Lógicos",
+    help: "Los conectores unen ideas. Domínalos y tus frases pasarán de simples a fluidas y profesionales. Practica especialmente los de causa, contraste y condición.",
+    vocabulary: [
+      {es:"y",pt:"e",de:"und",fr:"et",it:"e",en:"and"},
+      {es:"o",pt:"ou",de:"oder",fr:"ou",it:"o",en:"or"},
+      {es:"pero",pt:"mas / porém",de:"aber",fr:"mais",it:"ma / però",en:"but"},
+      {es:"sino",pt:"senão",de:"sondern",fr:"mais (correction)",it:"bensì / ma",en:"but rather"},
+      {es:"porque",pt:"porque",de:"weil",fr:"parce que",it:"perché",en:"because"},
+      {es:"pues",pt:"pois",de:"denn",fr:"car / donc",it:"poiché / dunque",en:"for / so"},
+      {es:"así que / por lo tanto",pt:"por isso / portanto",de:"deshalb / daher",fr:"donc / par conséquent",it:"quindi / perciò",en:"so / therefore"},
+      {es:"por eso",pt:"por isso",de:"deswegen",fr:"c'est pourquoi",it:"per questo",en:"that's why"},
+      {es:"dado que",pt:"dado que",de:"da / angesichts",fr:"étant donné que",it:"dato che",en:"given that"},
+      {es:"puesto que",pt:"já que / visto que",de:"da ja",fr:"puisque",it:"poiché",en:"since"},
+      {es:"gracias a",pt:"graças a",de:"dank",fr:"grâce à",it:"grazie a",en:"thanks to"},
+      {es:"debido a",pt:"devido a",de:"aufgrund",fr:"en raison de",it:"a causa di",en:"due to"},
+      {es:"si",pt:"se",de:"wenn",fr:"si",it:"se",en:"if"},
+      {es:"aunque",pt:"embora / mesmo que",de:"obwohl",fr:"bien que / même si",it:"sebbene / anche se",en:"although"},
+      {es:"a pesar de",pt:"apesar de",de:"trotz",fr:"malgré",it:"nonostante",en:"despite"},
+      {es:"con tal de que",pt:"desde que / com a condição de",de:"sofern",fr:"à condition que",it:"a condizione che",en:"as long as"},
+      {es:"a menos que / salvo que",pt:"a menos que / salvo se",de:"es sei denn",fr:"à moins que",it:"a meno che",en:"unless"},
+      {es:"en caso de que",pt:"caso / no caso de",de:"falls",fr:"au cas où",it:"nel caso in cui",en:"in case"},
+      {es:"siempre que",pt:"sempre que",de:"solange / sofern",fr:"pourvu que",it:"purché",en:"provided that"},
+      {es:"cuando",pt:"quando",de:"wenn / als",fr:"quand / lorsque",it:"quando",en:"when"},
+      {es:"mientras",pt:"enquanto",de:"während",fr:"pendant que",it:"mentre",en:"while"},
+      {es:"antes de que",pt:"antes que",de:"bevor",fr:"avant que",it:"prima che",en:"before"},
+      {es:"después de que",pt:"depois que",de:"nachdem",fr:"après que",it:"dopo che",en:"after"},
+      {es:"hasta que",pt:"até que",de:"bis",fr:"jusqu'à ce que",it:"finché",en:"until"},
+      {es:"tan pronto como",pt:"assim que",de:"sobald",fr:"dès que",it:"appena",en:"as soon as"},
+      {es:"primero",pt:"primeiro",de:"zuerst",fr:"d'abord",it:"prima",en:"first"},
+      {es:"luego / después",pt:"depois / em seguida",de:"dann / danach",fr:"ensuite / puis",it:"poi / dopo",en:"then / afterwards"},
+      {es:"entonces",pt:"então",de:"dann",fr:"alors",it:"allora",en:"then"},
+      {es:"finalmente / por último",pt:"finalmente / por fim",de:"schließlich",fr:"enfin / finalement",it:"finalmente",en:"finally"},
+      {es:"además",pt:"além disso",de:"außerdem",fr:"en plus / de plus",it:"inoltre",en:"moreover"},
+      {es:"también",pt:"também",de:"auch",fr:"aussi",it:"anche",en:"also"},
+      {es:"tampoco",pt:"também não",de:"auch nicht",fr:"non plus",it:"neanche",en:"neither"},
+      {es:"incluso",pt:"até / inclusive",de:"sogar",fr:"même",it:"addirittura",en:"even"},
+      {es:"es decir / o sea",pt:"ou seja / isto é",de:"das heißt",fr:"c'est-à-dire",it:"cioè",en:"that is"},
+      {es:"por ejemplo",pt:"por exemplo",de:"zum Beispiel",fr:"par exemple",it:"per esempio",en:"for example"},
+      {es:"en resumen",pt:"em resumo",de:"zusammenfassend",fr:"en résumé",it:"in sintesi",en:"in summary"},
+      {es:"de hecho",pt:"de facto / na verdade",de:"tatsächlich",fr:"en fait",it:"infatti",en:"in fact"},
+      {es:"sin embargo",pt:"no entanto / contudo",de:"jedoch",fr:"cependant",it:"tuttavia",en:"however"},
+      {es:"no obstante",pt:"não obstante",de:"nichtsdestotrotz",fr:"néanmoins",it:"nondimeno",en:"nevertheless"},
+      {es:"por un lado",pt:"por um lado",de:"einerseits",fr:"d'une part",it:"da un lato",en:"on the one hand"},
+      {es:"por otro lado",pt:"por outro lado",de:"andererseits",fr:"d'autre part",it:"dall'altro lato",en:"on the other hand"},
+      {es:"en vez de / en lugar de",pt:"em vez de",de:"statt",fr:"au lieu de",it:"invece di",en:"instead of"}
+    ],
+    sentences: [
+      {es:"Juan y María estudian o trabajan, pero no descansan, sino que deben seguir porque la prueba es dura, así que estudiaremos y por eso aprobaremos.",
+       pt:"O João e a Maria estudam ou trabalham, mas não descansam, senão devem continuar porque o teste é duro, por isso estudaremos e por isso passaremos.",
+       de:"Juan und María studieren oder arbeiten, aber sie ruhen nicht, sondern müssen weitermachen, weil die Prüfung hart ist, deshalb werden wir lernen und deshalb bestehen.",
+       fr:"Juan et María étudient ou travaillent, mais ils ne se reposent pas, mais doivent continuer parce que l'épreuve est dure, donc nous étudierons et c'est pourquoi nous réussirons.",
+       it:"Juan e María studiano o lavorano, ma non riposano, bensì devono continuare perché la prova è dura, quindi studieremo e per questo passeremo.",
+       en:"Juan and María study or work, but they don't rest, rather they must continue because the test is hard, so we will study and that's why we will pass."},
+      {es:"Si vienes, cenaremos, aunque esté lloviendo y a pesar de la distancia, con tal de que confirmes, a menos que haya tráfico.",
+       pt:"Se vieres, jantaremos, embora esteja a chover e apesar da distância, desde que confirmes, a menos que haja trânsito.",
+       de:"Wenn du kommst, werden wir zu Abend essen, obwohl es regnet und trotz der Entfernung, sofern du bestätigst, es sei denn, es gibt Verkehr.",
+       fr:"Si tu viens, nous dînerons, même s'il pleut et malgré la distance, à condition que tu confirmes, à moins qu'il y ait du trafic.",
+       it:"Se vieni, ceneremo, anche se piove e nonostante la distanza, a condizione che confermi, a meno che non ci sia traffico.",
+       en:"If you come, we will have dinner, even if it's raining and despite the distance, as long as you confirm, unless there is traffic."},
+      {es:"Cuando llegues, avisa mientras preparo el café, antes de que anochezca y después de que termines de comer, hasta que amanezca.",
+       pt:"Quando chegares, avisa enquanto preparo o café, antes que anoiteça e depois que terminares de comer, até que amanheça.",
+       de:"Wenn du ankommst, sag Bescheid, während ich den Kaffee zubereite, bevor es dunkel wird und nachdem du fertig gegessen hast, bis es hell wird.",
+       fr:"Quand tu arriveras, préviens pendant que je prépare le café, avant qu'il fasse nuit et après que tu auras fini de manger, jusqu'à ce qu'il fasse jour.",
+       it:"Quando arrivi, avvisa mentre preparo il caffè, prima che faccia buio e dopo che hai finito di mangiare, finché non albeggia.",
+       en:"When you arrive, let me know while I prepare the coffee, before it gets dark and after you finish eating, until dawn."}
+    ]
+  },
+  {
+    id: 5,
+    title: "Adjetivos Universales",
+    help: "Adjetivos de calidad, tamaño, temperatura, emoción y evaluación. Aprende los pares opuestos: son los más frecuentes en cualquier conversación.",
+    vocabulary: [
+      {es:"bueno",pt:"bom",de:"gut",fr:"bon",it:"buono",en:"good"},
+      {es:"malo",pt:"mau",de:"schlecht",fr:"mauvais",it:"cattivo",en:"bad"},
+      {es:"mejor",pt:"melhor",de:"besser",fr:"meilleur",it:"migliore",en:"better"},
+      {es:"peor",pt:"pior",de:"schlechter",fr:"pire",it:"peggiore",en:"worse"},
+      {es:"excelente",pt:"excelente",de:"ausgezeichnet",fr:"excellent",it:"eccellente",en:"excellent"},
+      {es:"horrible / terrible",pt:"horrível / terrível",de:"schrecklich",fr:"horrible / terrible",it:"orribile / terribile",en:"horrible / terrible"},
+      {es:"correcto",pt:"correto",de:"richtig / korrekt",fr:"correct",it:"corretto",en:"correct"},
+      {es:"incorrecto / equivocado",pt:"incorreto / errado",de:"falsch",fr:"incorrect",it:"sbagliato",en:"incorrect"},
+      {es:"útil",pt:"útil",de:"nützlich",fr:"utile",it:"utile",en:"useful"},
+      {es:"inútil",pt:"inútil",de:"nutzlos",fr:"inutile",it:"inutile",en:"useless"},
+      {es:"fácil",pt:"fácil",de:"einfach / leicht",fr:"facile",it:"facile",en:"easy"},
+      {es:"difícil",pt:"difícil",de:"schwierig / schwer",fr:"difficile",it:"difficile",en:"difficult"},
+      {es:"simple / sencillo",pt:"simples / simples",de:"einfach",fr:"simple",it:"semplice",en:"simple"},
+      {es:"complejo / complicado",pt:"complexo / complicado",de:"komplex / kompliziert",fr:"complexe / compliqué",it:"complesso / complicato",en:"complex / complicated"},
+      {es:"importante",pt:"importante",de:"wichtig",fr:"important",it:"importante",en:"important"},
+      {es:"insignificante",pt:"insignificante",de:"unbedeutend",fr:"insignifiant",it:"insignificante",en:"insignificant"},
+      {es:"principal",pt:"principal",de:"hauptsächlich",fr:"principal",it:"principale",en:"main"},
+      {es:"secundario",pt:"secundário",de:"sekundär",fr:"secondaire",it:"secondario",en:"secondary"},
+      {es:"grande",pt:"grande",de:"groß",fr:"grand",it:"grande",en:"big"},
+      {es:"pequeño",pt:"pequeno",de:"klein",fr:"petit",it:"piccolo",en:"small"},
+      {es:"alto",pt:"alto",de:"hoch / groß",fr:"haut / grand",it:"alto",en:"tall / high"},
+      {es:"bajo",pt:"baixo",de:"niedrig / klein",fr:"bas",it:"basso",en:"low / short"},
+      {es:"largo",pt:"longo",de:"lang",fr:"long",it:"lungo",en:"long"},
+      {es:"corto",pt:"curto",de:"kurz",fr:"court",it:"corto",en:"short"},
+      {es:"ancho",pt:"largo",de:"breit",fr:"large",it:"largo",en:"wide"},
+      {es:"estrecho",pt:"estreito",de:"eng",fr:"étroit",it:"stretto",en:"narrow"},
+      {es:"pesado",pt:"pesado",de:"schwer",fr:"lourd",it:"pesante",en:"heavy"},
+      {es:"ligero",pt:"leve",de:"leicht",fr:"léger",it:"leggero",en:"light"},
+      {es:"profundo",pt:"profundo",de:"tief",fr:"profond",it:"profondo",en:"deep"},
+      {es:"superficial",pt:"superficial",de:"oberflächlich",fr:"superficiel",it:"superficiale",en:"shallow / superficial"},
+      {es:"gordo",pt:"gordo",de:"dick / fett",fr:"gros",it:"grasso",en:"fat"},
+      {es:"delgado",pt:"magro / fino",de:"dünn / schlank",fr:"mince",it:"magro",en:"thin"},
+      {es:"redondo",pt:"redondo",de:"rund",fr:"rond",it:"rotondo",en:"round"},
+      {es:"cuadrado",pt:"quadrado",de:"quadratisch",fr:"carré",it:"quadrato",en:"square"},
+      {es:"caliente",pt:"quente",de:"heiß / warm",fr:"chaud",it:"caldo",en:"hot"},
+      {es:"frío",pt:"frio",de:"kalt",fr:"froid",it:"freddo",en:"cold"},
+      {es:"tibio",pt:"morno",de:"lauwarm",fr:"tiède",it:"tiepido",en:"lukewarm"},
+      {es:"lleno",pt:"cheio",de:"voll",fr:"plein",it:"pieno",en:"full"},
+      {es:"vacío",pt:"vazio",de:"leer",fr:"vide",it:"vuoto",en:"empty"},
+      {es:"limpio",pt:"limpo",de:"sauber",fr:"propre",it:"pulito",en:"clean"},
+      {es:"sucio",pt:"sujo",de:"schmutzig",fr:"sale",it:"sporco",en:"dirty"},
+      {es:"seco",pt:"seco",de:"trocken",fr:"sec",it:"secco",en:"dry"},
+      {es:"mojado",pt:"molhado",de:"nass",fr:"mouillé",it:"bagnato",en:"wet"},
+      {es:"duro",pt:"duro",de:"hart",fr:"dur",it:"duro",en:"hard"},
+      {es:"suave / blando",pt:"macio / suave",de:"weich",fr:"doux / mou",it:"morbido / soffice",en:"soft"},
+      {es:"fuerte",pt:"forte",de:"stark",fr:"fort",it:"forte",en:"strong"},
+      {es:"débil",pt:"fraco",de:"schwach",fr:"faible",it:"debole",en:"weak"},
+      {es:"nuevo",pt:"novo",de:"neu",fr:"nouveau",it:"nuovo",en:"new"},
+      {es:"viejo",pt:"velho",de:"alt",fr:"vieux",it:"vecchio",en:"old"},
+      {es:"joven",pt:"jovem",de:"jung",fr:"jeune",it:"giovane",en:"young"},
+      {es:"rápido",pt:"rápido",de:"schnell",fr:"rapide",it:"veloce",en:"fast"},
+      {es:"lento",pt:"lento",de:"langsam",fr:"lent",it:"lento",en:"slow"},
+      {es:"silencioso",pt:"silencioso",de:"leise / still",fr:"silencieux",it:"silenzioso",en:"quiet"},
+      {es:"ruidoso",pt:"barulhento",de:"laut",fr:"bruyant",it:"rumoroso",en:"noisy"},
+      {es:"oscuro",pt:"escuro",de:"dunkel",fr:"sombre",it:"scuro",en:"dark"},
+      {es:"claro / brillante",pt:"claro / brilhante",de:"hell / klar",fr:"clair / brillant",it:"chiaro / luminoso",en:"bright / clear"},
+      {es:"caro",pt:"caro",de:"teuer",fr:"cher",it:"caro",en:"expensive"},
+      {es:"barato",pt:"barato",de:"billig",fr:"bon marché",it:"economico",en:"cheap"},
+      {es:"rico / sabroso",pt:"gostoso / saboroso",de:"lecker / reich",fr:"délicieux / riche",it:"saporito / ricco",en:"tasty / rich"},
+      {es:"amargo",pt:"amargo",de:"bitter",fr:"amer",it:"amaro",en:"bitter"},
+      {es:"dulce",pt:"doce",de:"süß",fr:"doux / sucré",it:"dolce",en:"sweet"},
+      {es:"feliz / contento",pt:"feliz / contente",de:"glücklich / zufrieden",fr:"heureux / content",it:"felice / contento",en:"happy"},
+      {es:"triste",pt:"triste",de:"traurig",fr:"triste",it:"triste",en:"sad"},
+      {es:"enojado / enfadado",pt:"zangado / irritado",de:"wütend / verärgert",fr:"en colère",it:"arrabbiato",en:"angry"},
+      {es:"calmado / tranquilo",pt:"calmo / tranquilo",de:"ruhig",fr:"calme",it:"calmo / tranquillo",en:"calm"},
+      {es:"nervioso / ansioso",pt:"nervoso / ansioso",de:"nervös / ängstlich",fr:"nerveux / anxieux",it:"nervoso / ansioso",en:"nervous / anxious"},
+      {es:"cansado",pt:"cansado",de:"müde",fr:"fatigué",it:"stanco",en:"tired"},
+      {es:"aburrido",pt:"aborrecido / entediado",de:"gelangweilt",fr:"ennuyé",it:"annoiato",en:"bored"},
+      {es:"interesante",pt:"interessante",de:"interessant",fr:"intéressant",it:"interessante",en:"interesting"},
+      {es:"inteligente",pt:"inteligente",de:"intelligent",fr:"intelligent",it:"intelligente",en:"intelligent"},
+      {es:"tonto",pt:"tolo / burro",de:"dumm",fr:"bête / stupide",it:"stupido",en:"silly / stupid"},
+      {es:"loco",pt:"louco",de:"verrückt",fr:"fou",it:"pazzo",en:"crazy"},
+      {es:"cierto / verdadero",pt:"certo / verdadeiro",de:"wahr / richtig",fr:"vrai",it:"vero",en:"true"},
+      {es:"falso",pt:"falso",de:"falsch",fr:"faux",it:"falso",en:"false"},
+      {es:"posible",pt:"possível",de:"möglich",fr:"possible",it:"possibile",en:"possible"},
+      {es:"imposible",pt:"impossível",de:"unmöglich",fr:"impossible",it:"impossibile",en:"impossible"},
+      {es:"seguro",pt:"seguro",de:"sicher",fr:"sûr",it:"sicuro",en:"sure / safe"},
+      {es:"peligroso",pt:"perigoso",de:"gefährlich",fr:"dangereux",it:"pericoloso",en:"dangerous"},
+      {es:"libre",pt:"livre",de:"frei",fr:"libre",it:"libero",en:"free"},
+      {es:"ocupado",pt:"ocupado",de:"beschäftigt",fr:"occupé",it:"occupato",en:"busy"},
+      {es:"listo / preparado",pt:"pronto / preparado",de:"fertig / bereit",fr:"prêt",it:"pronto",en:"ready"},
+      {es:"igual",pt:"igual",de:"gleich",fr:"égal / pareil",it:"uguale",en:"equal / same"},
+      {es:"diferente",pt:"diferente",de:"verschieden / anders",fr:"différent",it:"diverso",en:"different"},
+      {es:"similar",pt:"similar",de:"ähnlich",fr:"similaire",it:"simile",en:"similar"},
+      {es:"único",pt:"único",de:"einzigartig",fr:"unique",it:"unico",en:"unique"},
+      {es:"común",pt:"comum",de:"gewöhnlich / üblich",fr:"commun",it:"comune",en:"common"},
+      {es:"raro / extraño",pt:"raro / estranho",de:"selten / seltsam",fr:"rare / étrange",it:"raro / strano",en:"rare / strange"},
+      {es:"público",pt:"público",de:"öffentlich",fr:"public",it:"pubblico",en:"public"},
+      {es:"privado",pt:"privado",de:"privat",fr:"privé",it:"privato",en:"private"},
+      {es:"hermoso / bonito",pt:"bonito / belo",de:"schön",fr:"beau",it:"bello",en:"beautiful"},
+      {es:"feo",pt:"feio",de:"hässlich",fr:"laid",it:"brutto",en:"ugly"},
+      {es:"amable",pt:"amável / simpático",de:"freundlich",fr:"gentil",it:"gentile",en:"kind"},
+      {es:"cruel",pt:"cruel",de:"grausam",fr:"cruel",it:"crudele",en:"cruel"},
+      {es:"justo",pt:"justo",de:"gerecht",fr:"juste",it:"giusto",en:"fair / just"},
+      {es:"injusto",pt:"injusto",de:"ungerecht",fr:"injuste",it:"ingiusto",en:"unfair"},
+      {es:"fresco",pt:"fresco",de:"frisch",fr:"frais",it:"fresco",en:"fresh"},
+      {es:"cercano",pt:"próximo / perto",de:"nah",fr:"proche",it:"vicino",en:"near"},
+      {es:"lejano",pt:"distante / longe",de:"fern",fr:"lointain",it:"lontano",en:"far"},
+      {es:"abierto",pt:"aberto",de:"offen",fr:"ouvert",it:"aperto",en:"open"},
+      {es:"cerrado",pt:"fechado",de:"geschlossen",fr:"fermé",it:"chiuso",en:"closed"},
+      {es:"culpable",pt:"culpado",de:"schuldig",fr:"coupable",it:"colpevole",en:"guilty"},
+      {es:"inocente",pt:"inocente",de:"unschuldig",fr:"innocent",it:"innocente",en:"innocent"},
+      {es:"pobre",pt:"pobre",de:"arm",fr:"pauvre",it:"povero",en:"poor"},
+      {es:"rico (dinero)",pt:"rico",de:"reich",fr:"riche",it:"ricco",en:"rich"},
+      {es:"saludable",pt:"saudável",de:"gesund",fr:"sain",it:"salutare",en:"healthy"},
+      {es:"enfermo",pt:"doente",de:"krank",fr:"malade",it:"malato",en:"sick"},
+      {es:"vivo",pt:"vivo",de:"lebendig / lebend",fr:"vivant",it:"vivo",en:"alive"},
+      {es:"muerto",pt:"morto",de:"tot",fr:"mort",it:"morto",en:"dead"},
+      {es:"solo",pt:"sozinho",de:"allein",fr:"seul",it:"solo",en:"alone"},
+      {es:"junto",pt:"junto",de:"zusammen",fr:"ensemble",it:"insieme",en:"together"},
+      {es:"perfecto",pt:"perfeito",de:"perfekt",fr:"parfait",it:"perfetto",en:"perfect"},
+      {es:"típico",pt:"típico",de:"typisch",fr:"typique",it:"tipico",en:"typical"},
+      {es:"especial",pt:"especial",de:"besonders",fr:"spécial",it:"speciale",en:"special"},
+      {es:"general",pt:"geral",de:"allgemein",fr:"général",it:"generale",en:"general"},
+      {es:"específico",pt:"específico",de:"spezifisch",fr:"spécifique",it:"specifico",en:"specific"}
+    ],
+    sentences: [
+      {es:"Un buen resultado es mejor que uno malo, siendo excelente y no horrible tener un dato correcto en lugar de uno incorrecto.",
+       pt:"Um bom resultado é melhor do que um mau, sendo excelente e não horrível ter um dado correto em vez de um incorreto.",
+       de:"Ein gutes Ergebnis ist besser als ein schlechtes, es ist ausgezeichnet und nicht schrecklich, einen richtigen Wert statt eines falschen zu haben.",
+       fr:"Un bon résultat est meilleur qu'un mauvais, il est excellent et non horrible d'avoir une donnée correcte au lieu d'une incorrecte.",
+       it:"Un buon risultato è meglio di uno cattivo, è eccellente e non orribile avere un dato corretto invece di uno sbagliato.",
+       en:"A good result is better than a bad one, it being excellent and not horrible to have a correct piece of data instead of an incorrect one."},
+      {es:"El edificio es grande y el carro pequeño, el árbol alto y el muro bajo, el camino largo y el texto corto.",
+       pt:"O edifício é grande e o carro pequeno, a árvore alta e o muro baixo, o caminho longo e o texto curto.",
+       de:"Das Gebäude ist groß und das Auto klein, der Baum hoch und die Mauer niedrig, der Weg lang und der Text kurz.",
+       fr:"Le bâtiment est grand et la voiture petite, l'arbre haut et le mur bas, le chemin long et le texte court.",
+       it:"L'edificio è grande e la macchina piccola, l'albero alto e il muro basso, la strada lunga e il testo corto.",
+       en:"The building is big and the car small, the tree tall and the wall low, the path long and the text short."}
+    ]
+  },
+  {
+    id: 6,
+    title: "Sustantivos · Tiempo, Personas & Lugares",
+    help: "Nombres de tiempo, familia, profesiones, espacios y objetos cotidianos. Son el vocabulario concreto que usas todos los días.",
+    vocabulary: [
+      {es:"tiempo",pt:"tempo",de:"Zeit",fr:"temps",it:"tempo",en:"time"},
+      {es:"año",pt:"ano",de:"Jahr",fr:"année",it:"anno",en:"year"},
+      {es:"mes",pt:"mês",de:"Monat",fr:"mois",it:"mese",en:"month"},
+      {es:"semana",pt:"semana",de:"Woche",fr:"semaine",it:"settimana",en:"week"},
+      {es:"día",pt:"dia",de:"Tag",fr:"jour",it:"giorno",en:"day"},
+      {es:"hora",pt:"hora",de:"Stunde",fr:"heure",it:"ora",en:"hour"},
+      {es:"minuto",pt:"minuto",de:"Minute",fr:"minute",it:"minuto",en:"minute"},
+      {es:"segundo",pt:"segundo",de:"Sekunde",fr:"seconde",it:"secondo",en:"second"},
+      {es:"hoy",pt:"hoje",de:"heute",fr:"aujourd'hui",it:"oggi",en:"today"},
+      {es:"mañana",pt:"amanhã",de:"morgen",fr:"demain",it:"domani",en:"tomorrow"},
+      {es:"ayer",pt:"ontem",de:"gestern",fr:"hier",it:"ieri",en:"yesterday"},
+      {es:"noche",pt:"noite",de:"Nacht",fr:"nuit",it:"notte",en:"night"},
+      {es:"tarde",pt:"tarde",de:"Nachmittag / Abend",fr:"après-midi",it:"pomeriggio",en:"afternoon"},
+      {es:"mañana (temprano)",pt:"manhã",de:"Morgen",fr:"matin",it:"mattina",en:"morning"},
+      {es:"persona",pt:"pessoa",de:"Person",fr:"personne",it:"persona",en:"person"},
+      {es:"hombre",pt:"homem",de:"Mann",fr:"homme",it:"uomo",en:"man"},
+      {es:"mujer",pt:"mulher",de:"Frau",fr:"femme",it:"donna",en:"woman"},
+      {es:"niño / niña",pt:"criança / menino / menina",de:"Kind / Junge / Mädchen",fr:"enfant / garçon / fille",it:"bambino / bambina",en:"child / boy / girl"},
+      {es:"padre",pt:"pai",de:"Vater",fr:"père",it:"padre",en:"father"},
+      {es:"madre",pt:"mãe",de:"Mutter",fr:"mère",it:"madre",en:"mother"},
+      {es:"hijo / hija",pt:"filho / filha",de:"Sohn / Tochter",fr:"fils / fille",it:"figlio / figlia",en:"son / daughter"},
+      {es:"hermano / hermana",pt:"irmão / irmã",de:"Bruder / Schwester",fr:"frère / sœur",it:"fratello / sorella",en:"brother / sister"},
+      {es:"amigo / amiga",pt:"amigo / amiga",de:"Freund / Freundin",fr:"ami / amie",it:"amico / amica",en:"friend"},
+      {es:"familia",pt:"família",de:"Familie",fr:"famille",it:"famiglia",en:"family"},
+      {es:"casa",pt:"casa",de:"Haus",fr:"maison",it:"casa",en:"house"},
+      {es:"ciudad",pt:"cidade",de:"Stadt",fr:"ville",it:"città",en:"city"},
+      {es:"país",pt:"país",de:"Land",fr:"pays",it:"paese",en:"country"},
+      {es:"mundo",pt:"mundo",de:"Welt",fr:"monde",it:"mondo",en:"world"},
+      {es:"calle",pt:"rua",de:"Straße",fr:"rue",it:"strada",en:"street"},
+      {es:"escuela / colegio",pt:"escola",de:"Schule",fr:"école",it:"scuola",en:"school"},
+      {es:"trabajo / empleo",pt:"trabalho / emprego",de:"Arbeit / Job",fr:"travail / emploi",it:"lavoro",en:"work / job"},
+      {es:"dinero",pt:"dinheiro",de:"Geld",fr:"argent",it:"denaro / soldi",en:"money"},
+      {es:"comida",pt:"comida",de:"Essen / Nahrung",fr:"nourriture",it:"cibo",en:"food"},
+      {es:"agua",pt:"água",de:"Wasser",fr:"eau",it:"acqua",en:"water"},
+      {es:"libro",pt:"livro",de:"Buch",fr:"livre",it:"libro",en:"book"},
+      {es:"teléfono",pt:"telefone",de:"Telefon",fr:"téléphone",it:"telefono",en:"phone"},
+      {es:"coche / carro",pt:"carro",de:"Auto / Wagen",fr:"voiture",it:"macchina / auto",en:"car"}
+    ],
+    sentences: [
+      {es:"El tiempo pasa rápido en un año, un mes, una semana, un día, una hora, un minuto o un segundo.",
+       pt:"O tempo passa rápido num ano, um mês, uma semana, um dia, uma hora, um minuto ou um segundo.",
+       de:"Die Zeit vergeht schnell in einem Jahr, einem Monat, einer Woche, einem Tag, einer Stunde, einer Minute oder einer Sekunde.",
+       fr:"Le temps passe vite en une année, un mois, une semaine, un jour, une heure, une minute ou une seconde.",
+       it:"Il tempo passa in fretta in un anno, un mese, una settimana, un giorno, un'ora, un minuto o un secondo.",
+       en:"Time passes quickly in a year, a month, a week, a day, an hour, a minute or a second."},
+      {es:"Cada persona ama a su padre, madre, hijo, hermana, abuelo y familia.",
+       pt:"Cada pessoa ama o seu pai, mãe, filho, irmã, avô e família.",
+       de:"Jede Person liebt ihren Vater, ihre Mutter, ihren Sohn, ihre Schwester, ihren Großvater und ihre Familie.",
+       fr:"Chaque personne aime son père, sa mère, son fils, sa sœur, son grand-père et sa famille.",
+       it:"Ogni persona ama suo padre, sua madre, suo figlio, sua sorella, suo nonno e la sua famiglia.",
+       en:"Every person loves their father, mother, son, sister, grandfather and family."}
+    ]
+  },
+  {
+    id: 7,
+    title: "Adverbios, Preposiciones & Números",
+    help: "Adverbios de lugar, tiempo y modo + preposiciones + números básicos. Cierran el círculo: con esto puedes situar cualquier acción en el espacio y el tiempo.",
+    vocabulary: [
+      {es:"aquí",pt:"aqui",de:"hier",fr:"ici",it:"qui",en:"here"},
+      {es:"allí / allá",pt:"ali / lá",de:"dort",fr:"là / là-bas",it:"lì / là",en:"there"},
+      {es:"cerca",pt:"perto",de:"nah / in der Nähe",fr:"près",it:"vicino",en:"near"},
+      {es:"lejos",pt:"longe",de:"weit",fr:"loin",it:"lontano",en:"far"},
+      {es:"arriba",pt:"acima / em cima",de:"oben",fr:"en haut",it:"sopra",en:"up / above"},
+      {es:"abajo",pt:"abaixo / em baixo",de:"unten",fr:"en bas",it:"sotto",en:"down / below"},
+      {es:"delante / enfrente",pt:"à frente / em frente",de:"vorne / gegenüber",fr:"devant",it:"davanti",en:"in front"},
+      {es:"detrás",pt:"atrás",de:"hinten",fr:"derrière",it:"dietro",en:"behind"},
+      {es:"dentro",pt:"dentro",de:"innen / drinnen",fr:"dedans / à l'intérieur",it:"dentro",en:"inside"},
+      {es:"fuera",pt:"fora",de:"draußen / außen",fr:"dehors",it:"fuori",en:"outside"},
+      {es:"ahora",pt:"agora",de:"jetzt",fr:"maintenant",it:"adesso / ora",en:"now"},
+      {es:"ya",pt:"já",de:"schon / bereits",fr:"déjà",it:"già",en:"already"},
+      {es:"todavía / aún",pt:"ainda",de:"noch",fr:"encore",it:"ancora",en:"still / yet"},
+      {es:"pronto",pt:"em breve / cedo",de:"bald",fr:"bientôt",it:"presto",en:"soon"},
+      {es:"tarde",pt:"tarde",de:"spät",fr:"tard",it:"tardi",en:"late"},
+      {es:"temprano",pt:"cedo",de:"früh",fr:"tôt",it:"presto",en:"early"},
+      {es:"siempre",pt:"sempre",de:"immer",fr:"toujours",it:"sempre",en:"always"},
+      {es:"nunca / jamás",pt:"nunca / jamais",de:"nie / niemals",fr:"jamais",it:"mai",en:"never"},
+      {es:"a veces",pt:"às vezes",de:"manchmal",fr:"parfois",it:"a volte",en:"sometimes"},
+      {es:"a menudo",pt:"muitas vezes / frequentemente",de:"oft",fr:"souvent",it:"spesso",en:"often"},
+      {es:"bien",pt:"bem",de:"gut",fr:"bien",it:"bene",en:"well"},
+      {es:"mal",pt:"mal",de:"schlecht",fr:"mal",it:"male",en:"badly"},
+      {es:"rápido",pt:"rápido",de:"schnell",fr:"vite",it:"velocemente",en:"quickly"},
+      {es:"despacio / lento",pt:"devagar / lentamente",de:"langsam",fr:"lentement",it:"piano / lentamente",en:"slowly"},
+      {es:"muy",pt:"muito",de:"sehr",fr:"très",it:"molto",en:"very"},
+      {es:"mucho",pt:"muito",de:"viel",fr:"beaucoup",it:"molto",en:"a lot"},
+      {es:"poco",pt:"pouco",de:"wenig",fr:"peu",it:"poco",en:"a little"},
+      {es:"más",pt:"mais",de:"mehr",fr:"plus",it:"più",en:"more"},
+      {es:"menos",pt:"menos",de:"weniger",fr:"moins",it:"meno",en:"less"},
+      {es:"sí",pt:"sim",de:"ja",fr:"oui",it:"sì",en:"yes"},
+      {es:"no",pt:"não",de:"nein",fr:"non",it:"no",en:"no"},
+      {es:"a",pt:"a",de:"zu / nach",fr:"à",it:"a",en:"to"},
+      {es:"de",pt:"de",de:"von / aus",fr:"de",it:"di",en:"of / from"},
+      {es:"en",pt:"em",de:"in / auf",fr:"en / dans",it:"in",en:"in / on"},
+      {es:"con",pt:"com",de:"mit",fr:"avec",it:"con",en:"with"},
+      {es:"sin",pt:"sem",de:"ohne",fr:"sans",it:"senza",en:"without"},
+      {es:"por",pt:"por",de:"durch / für",fr:"par / pour",it:"per",en:"by / for"},
+      {es:"para",pt:"para",de:"für",fr:"pour",it:"per",en:"for"},
+      {es:"sobre",pt:"sobre",de:"über",fr:"sur / à propos de",it:"su / sopra",en:"on / about"},
+      {es:"bajo",pt:"sob",de:"unter",fr:"sous",it:"sotto",en:"under"},
+      {es:"entre",pt:"entre",de:"zwischen",fr:"entre",it:"tra / fra",en:"between"},
+      {es:"desde",pt:"desde",de:"seit / von",fr:"depuis",it:"da",en:"from / since"},
+      {es:"hasta",pt:"até",de:"bis",fr:"jusqu'à",it:"fino a",en:"until / up to"},
+      {es:"cero",pt:"zero",de:"null",fr:"zéro",it:"zero",en:"zero"},
+      {es:"uno",pt:"um",de:"eins",fr:"un",it:"uno",en:"one"},
+      {es:"dos",pt:"dois",de:"zwei",fr:"deux",it:"due",en:"two"},
+      {es:"tres",pt:"três",de:"drei",fr:"trois",it:"tre",en:"three"},
+      {es:"cuatro",pt:"quatro",de:"vier",fr:"quatre",it:"quattro",en:"four"},
+      {es:"cinco",pt:"cinco",de:"fünf",fr:"cinq",it:"cinque",en:"five"},
+      {es:"seis",pt:"seis",de:"sechs",fr:"six",it:"sei",en:"six"},
+      {es:"siete",pt:"sete",de:"sieben",fr:"sept",it:"sette",en:"seven"},
+      {es:"ocho",pt:"oito",de:"acht",fr:"huit",it:"otto",en:"eight"},
+      {es:"nueve",pt:"nove",de:"neun",fr:"neuf",it:"nove",en:"nine"},
+      {es:"diez",pt:"dez",de:"zehn",fr:"dix",it:"dieci",en:"ten"},
+      {es:"cien",pt:"cem",de:"hundert",fr:"cent",it:"cento",en:"hundred"},
+      {es:"mil",pt:"mil",de:"tausend",fr:"mille",it:"mille",en:"thousand"},
+      {es:"primero",pt:"primeiro",de:"erste",fr:"premier",it:"primo",en:"first"},
+      {es:"último",pt:"último",de:"letzte",fr:"dernier",it:"ultimo",en:"last"},
+      {es:"todo",pt:"tudo",de:"alles",fr:"tout",it:"tutto",en:"all / everything"},
+      {es:"nada",pt:"nada",de:"nichts",fr:"rien",it:"niente",en:"nothing"},
+      {es:"mucho",pt:"muito",de:"viel",fr:"beaucoup",it:"molto",en:"much / many"},
+      {es:"poco",pt:"pouco",de:"wenig",fr:"peu",it:"poco",en:"little / few"}
+    ],
+    sentences: [
+      {es:"Ven aquí, no te quedes allí, si estás cerca o lejos, arriba o abajo, delante o detrás, dentro o fuera.",
+       pt:"Vem aqui, não fiques ali, se estás perto ou longe, acima ou abaixo, à frente ou atrás, dentro ou fora.",
+       de:"Komm her, bleib nicht dort, ob du nah oder weit bist, oben oder unten, vorne oder hinten, drinnen oder draußen.",
+       fr:"Viens ici, ne reste pas là, si tu es près ou loin, en haut ou en bas, devant ou derrière, dedans ou dehors.",
+       it:"Vieni qui, non restare lì, se sei vicino o lontano, sopra o sotto, davanti o dietro, dentro o fuori.",
+       en:"Come here, don't stay there, whether you are near or far, up or down, in front or behind, inside or outside."},
+      {es:"Hazlo ahora, ya, si todavía hay tiempo, vendré pronto, no llegues tarde, levántate temprano, siempre estudia y nunca te rindas.",
+       pt:"Faz isso agora, já, se ainda há tempo, virei em breve, não chegues tarde, levanta-te cedo, estuda sempre e nunca desistas.",
+       de:"Mach es jetzt, schon, wenn noch Zeit ist, ich komme bald, komm nicht spät, steh früh auf, lerne immer und gib nie auf.",
+       fr:"Fais-le maintenant, déjà, s'il y a encore du temps, je viendrai bientôt, n'arrive pas en retard, lève-toi tôt, étudie toujours et n'abandonne jamais.",
+       it:"Fallo adesso, già, se c'è ancora tempo, verrò presto, non arrivare tardi, alzati presto, studia sempre e non arrenderti mai.",
+       en:"Do it now, already, if there is still time, I will come soon, don't arrive late, get up early, always study and never give up."}
+    ]
+  }
+];
+
+/* ============================================================
+   STATE & PROGRESS (localStorage)
+============================================================ */
+const LANGS = ["es","pt","de","fr","it","en"];
+const LANG_LABEL = {es:"ES",pt:"PT",de:"DE",fr:"FR",it:"IT",en:"EN"};
+const LANG_FULL  = {es:"Español",pt:"Portugués",de:"Alemán",fr:"Francés",it:"Italiano",en:"Inglés"};
+
+let playerName = "Estudiante";
+let langQ = "es", langA = "de", langH = "en";
+let currentTheme = null;
+let mode = "vocab"; // vocab | sentences
+let vocabMode = "learn"; // learn | quiz
+let vocabIndex = 0;
+let vocabPool = [], vocabActive = [], vocabForced = null, vocabLast = null;
+let vocabStreaks = {};
+let sentPool = [], sentActive = [], sentForced = null, sentLast = null;
+let sentStreaks = {};
+let completedVocab = 0, completedSent = 0;
+let gameState = "QUESTION";
+let startTime = 0, totalAttempts = 0, totalErrors = 0;
+
+function loadProgress() {
+  try {
+    return JSON.parse(localStorage.getItem("polylex_progress_v2") || "{}");
+  } catch(e) { return {}; }
+}
+function saveProgress(data) {
+  localStorage.setItem("polylex_progress_v2", JSON.stringify(data));
+}
+function getThemeProgress(themeId) {
+  const p = loadProgress();
+  if (!p[themeId]) p[themeId] = { vocab:{}, sent:{}, byLang:{} };
+  LANGS.forEach(l => {
+    if (!p[themeId].byLang[l]) p[themeId].byLang[l] = { masteredVocab:0, masteredSent:0 };
+  });
+  return p[themeId];
+}
+function updateLangProgressUI() {
+  const row = document.getElementById("lang-progress-row");
+  row.innerHTML = "";
+  const global = {};
+  LANGS.forEach(l => global[l] = { total:0, done:0 });
+
+  THEMES.forEach(th => {
+    const prog = getThemeProgress(th.id);
+    const vTotal = th.vocabulary.length;
+    const sTotal = th.sentences.length;
+    LANGS.forEach(l => {
+      global[l].total += vTotal + sTotal;
+      global[l].done  += (prog.byLang[l]?.masteredVocab || 0) + (prog.byLang[l]?.masteredSent || 0);
+    });
+  });
+
+  LANGS.forEach(l => {
+    const pct = global[l].total === 0 ? 0 : Math.round((global[l].done / global[l].total) * 100);
+    const pill = document.createElement("div");
+    pill.className = "lang-pill" + (l === langA ? " active-write" : "");
+    pill.innerHTML = `
+      <div class="code">${LANG_LABEL[l]}</div>
+      <div class="pct">${pct}%</div>
+      <div class="fill" style="width:${pct}%"></div>
+    `;
+    row.appendChild(pill);
+  });
+}
+
+/* ============================================================
+   UI HELPERS
+============================================================ */
+function switchScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  updateLangProgressUI();
+}
+function syncLangs() {
+  langQ = document.getElementById("cfg-q").value;
+  langA = document.getElementById("cfg-a").value;
+  langH = document.getElementById("cfg-h").value;
+  updateLangProgressUI();
+}
+function goThemes() {
+  const name = document.getElementById("input-name").value.trim();
+  playerName = name || "Estudiante";
+  syncLangs();
+  renderThemes();
+  switchScreen("screen-themes");
+}
+function renderThemes() {
+  const grid = document.getElementById("theme-grid");
+  grid.innerHTML = "";
+  THEMES.forEach(th => {
+    const prog = getThemeProgress(th.id);
+    const vDone = Object.values(prog.vocab || {}).filter(x => x >= 3).length;
+    const sDone = Object.values(prog.sent || {}).filter(x => x >= 3).length;
+    const total = th.vocabulary.length + th.sentences.length;
+    const done  = vDone + sDone;
+    const pct   = total ? Math.round(done / total * 100) : 0;
+    const card = document.createElement("div");
+    card.className = "theme-card";
+    card.onclick = () => startTheme(th.id);
+    card.innerHTML = `
+      <div class="num">TEMA ${th.id + 1}</div>
+      <div class="title">${th.title}</div>
+      <div class="meta">${pct}% · ${th.vocabulary.length} pal. · ${th.sentences.length} orac.</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+function startTheme(id) {
+  currentTheme = THEMES.find(t => t.id === id);
+  if (!currentTheme) return;
+  startTime = Date.now();
+  totalAttempts = 0;
+  totalErrors = 0;
+  completedVocab = 0;
+  completedSent = 0;
+
+  // restore streaks from storage
+  const prog = getThemeProgress(id);
+  vocabStreaks = {};
+  currentTheme.vocabulary.forEach((_, i) => {
+    vocabStreaks[i] = prog.vocab[i] || 0;
+    if (vocabStreaks[i] >= 3) completedVocab++;
+  });
+  sentStreaks = {};
+  currentTheme.sentences.forEach((_, i) => {
+    sentStreaks[i] = prog.sent[i] || 0;
+    if (sentStreaks[i] >= 3) completedSent++;
+  });
+
+  // fill live selects
+  const liveQ = document.getElementById("live-q");
+  const liveA = document.getElementById("live-a");
+  liveQ.innerHTML = liveA.innerHTML = "";
+  LANGS.forEach(l => {
+    liveQ.innerHTML += `<option value="${l}" ${l===langQ?"selected":""}>${LANG_LABEL[l]}</option>`;
+    liveA.innerHTML += `<option value="${l}" ${l===langA?"selected":""}>${LANG_LABEL[l]}</option>`;
+  });
+
+  // start with vocab
+  vocabIndex = 0;
+  vocabMode = "learn";
+  document.getElementById("tab-learn").classList.add("active");
+  document.getElementById("tab-quiz").classList.remove("active");
+  document.getElementById("vocab-input").style.display = "none";
+  document.getElementById("vocab-btn").textContent = "Ya la aprendí ➔";
+  document.getElementById("vocab-btn").className = "btn";
+  switchScreen("screen-vocab");
+  showVocabulary();
+}
+
+/* ============================================================
+   VOCABULARY PHASE
+============================================================ */
+function setVocabMode(m) {
+  vocabMode = m;
+  document.getElementById("tab-learn").classList.toggle("active", m === "learn");
+  document.getElementById("tab-quiz").classList.toggle("active", m === "quiz");
+  document.getElementById("vocab-feedback").className = "feedback";
+  document.getElementById("vocab-feedback").style.display = "none";
+
+  if (m === "learn") {
+    document.getElementById("vocab-input").style.display = "none";
+    document.getElementById("vocab-btn").textContent = "Ya la aprendí ➔";
+    document.getElementById("vocab-btn").className = "btn";
+    vocabIndex = 0;
+    showVocabulary();
+  } else {
+    // quiz mode with 3-in-3
+    vocabPool = currentTheme.vocabulary
+      .map((item, idx) => ({item, idx}))
+      .filter(x => (vocabStreaks[x.idx] || 0) < 3);
+    vocabActive = [];
+    vocabForced = null;
+    vocabLast = null;
+    document.getElementById("vocab-input").style.display = "block";
+    document.getElementById("vocab-btn").textContent = "Comprobar";
+    document.getElementById("vocab-btn").className = "btn";
+    loadVocabQuiz();
+  }
+}
+function showVocabulary() {
+  const list = currentTheme.vocabulary;
+  if (vocabIndex >= list.length) {
+    // auto switch to quiz
+    setVocabMode("quiz");
+    return;
+  }
+  const item = list[vocabIndex];
+  document.getElementById("vocab-tag").textContent = `Aprende (${LANG_FULL[langQ]} → ${LANG_FULL[langA]})`;
+  document.getElementById("vocab-main").textContent = item[langQ] || item.es;
+  document.getElementById("vocab-sub").textContent  = item[langA] || item.es;
+  document.getElementById("vocab-counter").textContent = `${vocabIndex + 1}/${list.length}`;
+  document.getElementById("vocab-help").textContent = currentTheme.help;
+  document.getElementById("vocab-help").classList.add("visible");
+  document.getElementById("vocab-title").textContent = `Fase 1 · ${currentTheme.title}`;
+}
+function loadVocabQuiz() {
+  while (vocabActive.length < 3 && vocabPool.length > 0) {
+    vocabActive.push(vocabPool.shift());
+  }
+  if (vocabActive.length === 0) {
+    // all mastered → sentences
+    startSentencePhase();
+    return;
+  }
+  let candidates = vocabActive.filter(x => x !== vocabLast);
+  if (candidates.length === 0) candidates = [...vocabActive];
+  if (vocabForced && vocabActive.includes(vocabForced)) {
+    currentVocab = vocabForced;
+    vocabForced = null;
+  } else {
+    currentVocab = candidates[Math.floor(Math.random() * candidates.length)];
+  }
+  const item = currentVocab.item;
+  document.getElementById("vocab-tag").textContent = `Traduce al ${LANG_FULL[langA]}:`;
+  document.getElementById("vocab-main").textContent = item[langQ] || item.es;
+  document.getElementById("vocab-sub").textContent  = "";
+  document.getElementById("vocab-counter").textContent = `Dominadas: ${completedVocab}/${currentTheme.vocabulary.length}`;
+  document.getElementById("vocab-help").classList.remove("visible");
+  document.getElementById("vocab-input").value = "";
+  document.getElementById("vocab-input").disabled = false;
+  document.getElementById("vocab-feedback").style.display = "none";
+  setTimeout(() => document.getElementById("vocab-input").focus(), 40);
+}
+function handleVocab() {
+  if (vocabMode === "learn") {
+    vocabIndex++;
+    showVocabulary();
+    return;
+  }
+  // quiz
+  if (gameState === "VOCAB_WAIT") {
+    gameState = "QUESTION";
+    loadVocabQuiz();
+    return;
+  }
+  const userVal = document.getElementById("vocab-input").value;
+  const correct = currentVocab.item[langA] || currentVocab.item.es;
+  const idx = currentVocab.idx;
+  const fb = document.getElementById("vocab-feedback");
+  const btn = document.getElementById("vocab-btn");
+  const inp = document.getElementById("vocab-input");
+  totalAttempts++;
+  inp.disabled = true;
+
+  if (normalize(userVal) === normalize(correct)) {
+    vocabStreaks[idx] = (vocabStreaks[idx] || 0) + 1;
+    saveThemeProgress();
+    vocabLast = currentVocab;
+    if (vocabStreaks[idx] >= 3) {
+      fb.innerHTML = `<strong>¡Dominada!</strong><br>Palabra retirada del grupo.`;
+      vocabActive = vocabActive.filter(x => x !== currentVocab);
+      completedVocab++;
+      // update byLang
+      const prog = getThemeProgress(currentTheme.id);
+      prog.byLang[langA].masteredVocab = Math.min(
+        (prog.byLang[langA].masteredVocab || 0) + 1,
+        currentTheme.vocabulary.length
+      );
+      saveProgressFull(prog);
+    } else {
+      fb.innerHTML = `<strong>¡Correcto!</strong> Racha ${vocabStreaks[idx]}/3`;
+    }
+    fb.className = "feedback ok";
+    fb.style.display = "block";
+    gameState = "VOCAB_WAIT";
+    btn.textContent = "Siguiente ➔";
+    btn.className = "btn success-btn";
+    setTimeout(() => { if (gameState === "VOCAB_WAIT") handleVocab(); }, 1100);
+  } else {
+    vocabStreaks[idx] = 0;
+    totalErrors++;
+    vocabForced = currentVocab;
+    saveThemeProgress();
+    fb.innerHTML = `Incorrecto<br><span class="correct-txt">${correct}</span>
+      <span style="font-size:.62rem;color:var(--muted)">Repite esta misma palabra ahora.</span>`;
+    fb.className = "feedback ko";
+    fb.style.display = "block";
+    gameState = "VOCAB_WAIT";
+    btn.textContent = "Repetir ➔";
+    btn.className = "btn error-btn";
+  }
+  updateLangProgressUI();
+}
+
+/* ============================================================
+   SENTENCE PHASE
+============================================================ */
+function startSentencePhase() {
+  mode = "sentences";
+  sentPool = currentTheme.sentences
+    .map((item, idx) => ({item, idx}))
+    .filter(x => (sentStreaks[x.idx] || 0) < 3);
+  sentActive = [];
+  sentForced = null;
+  sentLast = null;
+  switchScreen("screen-game");
+  document.getElementById("game-title").textContent = `Fase 2 · ${currentTheme.title}`;
+  document.getElementById("sent-help").textContent = currentTheme.help;
+  document.getElementById("sent-help").classList.add("visible");
+  loadNextSentence();
+}
+function changeLive() {
+  langQ = document.getElementById("live-q").value;
+  langA = document.getElementById("live-a").value;
+  updateLangProgressUI();
+  if (gameState === "QUESTION") loadNextSentence();
+}
+function loadNextSentence() {
+  gameState = "QUESTION";
+  const btn = document.getElementById("action-btn");
+  btn.textContent = "Comprobar";
+  btn.className = "btn";
+  const fb = document.getElementById("feedback-box");
+  fb.className = "feedback";
+  fb.style.display = "none";
+  document.getElementById("display-hint").style.display = "none";
+
+  while (sentActive.length < 3 && sentPool.length > 0) {
+    sentActive.push(sentPool.shift());
+  }
+  if (sentActive.length === 0) {
+    finishTheme();
+    return;
+  }
+  let candidates = sentActive.filter(x => x !== sentLast);
+  if (candidates.length === 0) candidates = [...sentActive];
+  if (sentForced && sentActive.includes(sentForced)) {
+    currentSent = sentForced;
+    sentForced = null;
+  } else {
+    currentSent = candidates[Math.floor(Math.random() * candidates.length)];
+  }
+  const item = currentSent.item;
+  const idx  = currentSent.idx;
+  document.getElementById("label-instr").textContent = `Traduce al ${LANG_FULL[langA]}:`;
+  document.getElementById("display-target").textContent = item[langQ] || item.es;
+  document.getElementById("display-hint").textContent = `Pista (${LANG_FULL[langH]}): ${item[langH] || item.en}`;
+  document.getElementById("hud-streak").textContent = `Racha: ${sentStreaks[idx] || 0}/3`;
+  document.getElementById("hud-progress").textContent = `Progreso: ${completedSent}/${currentTheme.sentences.length}`;
+  const inp = document.getElementById("user-input");
+  inp.value = "";
+  inp.disabled = false;
+  setTimeout(() => inp.focus(), 40);
+}
+function handleAction() {
+  if (gameState === "SENT_WAIT") {
+    loadNextSentence();
+    return;
+  }
+  evaluateSentence();
+}
+function evaluateSentence() {
+  if (!currentSent) return;
+  const userVal = document.getElementById("user-input").value;
+  const correct = currentSent.item[langA] || currentSent.item.es;
+  const idx = currentSent.idx;
+  const fb = document.getElementById("feedback-box");
+  const btn = document.getElementById("action-btn");
+  const inp = document.getElementById("user-input");
+  totalAttempts++;
+  inp.disabled = true;
+
+  if (normalize(userVal) === normalize(correct)) {
+    sentStreaks[idx] = (sentStreaks[idx] || 0) + 1;
+    saveThemeProgress();
+    sentLast = currentSent;
+    if (sentStreaks[idx] >= 3) {
+      fb.innerHTML = `<strong>¡Excelente!</strong><br>Oración dominada y retirada.`;
+      sentActive = sentActive.filter(x => x !== currentSent);
+      completedSent++;
+      const prog = getThemeProgress(currentTheme.id);
+      prog.byLang[langA].masteredSent = Math.min(
+        (prog.byLang[langA].masteredSent || 0) + 1,
+        currentTheme.sentences.length
+      );
+      saveProgressFull(prog);
+    } else {
+      fb.innerHTML = `<strong>¡Correcto!</strong><br>Racha ${sentStreaks[idx]}/3`;
+    }
+    fb.className = "feedback ok";
+    fb.style.display = "block";
+    gameState = "SENT_WAIT";
+    btn.textContent = "Siguiente ➔";
+    btn.className = "btn success-btn";
+    setTimeout(() => { if (gameState === "SENT_WAIT") handleAction(); }, 1200);
+  } else {
+    sentStreaks[idx] = 0;
+    totalErrors++;
+    sentForced = currentSent;
+    saveThemeProgress();
+    document.getElementById("display-hint").style.display = "block";
+    fb.innerHTML = `
+      <div style="font-weight:700">INCORRECTO</div>
+      La respuesta exacta en ${LANG_FULL[langA]}:
+      <span class="correct-txt">${correct}</span>
+      <span style="font-size:.62rem;color:var(--muted);display:block;margin-top:2px">Repite esta misma oración ahora.</span>
+    `;
+    fb.className = "feedback ko";
+    fb.style.display = "block";
+    gameState = "SENT_WAIT";
+    btn.textContent = "Repetir la misma ➔";
+    btn.className = "btn error-btn";
+  }
+  updateLangProgressUI();
+}
+
+/* ============================================================
+   SAVE / FINISH
+============================================================ */
+function saveThemeProgress() {
+  const prog = getThemeProgress(currentTheme.id);
+  prog.vocab = {...vocabStreaks};
+  prog.sent  = {...sentStreaks};
+  saveProgressFull(prog);
+}
+function saveProgressFull(prog) {
+  const all = loadProgress();
+  all[currentTheme.id] = prog;
+  saveProgress(all);
+}
+function finishTheme() {
+  switchScreen("screen-stats");
+  fireConfetti();
+  document.getElementById("final-greeting").textContent = `¡Excelente trabajo, ${playerName}! Tema «${currentTheme.title}» completado.`;
+  const secs = Math.floor((Date.now() - startTime) / 1000);
+  const m = Math.floor(secs / 60), s = secs % 60;
+  document.getElementById("stat-time").textContent = `${m < 10 ? "0" : ""}${m}:${s < 10 ? "0" : ""}${s}`;
+  const acc = totalAttempts === 0 ? 100 : ((totalAttempts - totalErrors) / totalAttempts) * 100;
+  document.getElementById("stat-acc").textContent = acc.toFixed(1) + "%";
+  document.getElementById("stat-err").textContent = totalErrors;
+  updateLangProgressUI();
+}
+function fireConfetti() {
+  if (typeof confetti !== "function") return;
+  const end = Date.now() + 2800;
+  (function frame() {
+    confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 } });
+    confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 } });
+    if (Date.now() < end) requestAnimationFrame(frame);
+  })();
+}
+function normalize(t) {
+  return (t || "").trim().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()¿?¡!«»""'']/g, "")
+    .replace(/\s+/g, " ");
+}
+
+/* keyboard */
+document.getElementById("user-input").addEventListener("keypress", e => {
+  if (e.key === "Enter") handleAction();
+});
+document.getElementById("vocab-input").addEventListener("keypress", e => {
+  if (e.key === "Enter") handleVocab();
+});
+
+/* init */
+updateLangProgressUI();
+</script>
+</body>
+</html>
