@@ -1,27 +1,28 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#03050b">
 <title>PolyGlot Matrix — Infinite Master</title>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-    --bg-base: #03050b;
-    --card-surface: rgba(13, 19, 32, 0.99);
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent: #00f0ff;
+    --bg: #03050b;
+    --surface: #0d1320;
+    --surface2: #080c14;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --accent: #00eaff;
     --success: #00ff88;
-    --error: #ff0055;
-    --border: rgba(255, 255, 255, 0.1);
-    --glow: 0 0 12px rgba(0, 240, 255, 0.2);
-    
-    --fs-scale: 1rem;
-    --fs-target: 1.02rem;
-    --fs-sub: 0.72rem;
+    --error: #ff426d;
+    --border: rgba(255,255,255,.12);
+    --scale: 1;
+    --gap: 8px;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 * {
@@ -31,1038 +32,1410 @@
     -webkit-tap-highlight-color: transparent;
 }
 
+html {
+    width: 100%;
+    height: 100%;
+    font-size: 16px;
+}
+
 body {
-    font-family: 'Inter', sans-serif;
-    background: 
-        radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.08), transparent 60%),
-        radial-gradient(circle at 50% 100%, rgba(255, 0, 85, 0.05), transparent 60%),
-        var(--bg-base);
-    color: var(--text-main);
+    width: 100%;
+    min-height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 50% 0%, rgba(0,234,255,.09), transparent 55%),
+        var(--bg);
+    color: var(--text);
+    font-family: Inter, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100dvh;
-    width: 100vw;
-    padding: 6px;
+    align-items: stretch;
+}
+
+button, input, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+.app {
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    max-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    padding-bottom: calc(8px + var(--safe-bottom));
+    gap: 8px;
+    background: rgba(13,19,32,.98);
+    border: 1px solid var(--border);
     overflow: hidden;
-    font-size: var(--fs-scale);
 }
 
-.app-container {
-    width: 100%;
-    max-width: 420px;
-    height: 98dvh;
-    background: var(--card-surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 6px;
-    padding: 10px;
-    position: relative;
-}
-
-/* BARRA GLOBAL SUPERIOR STICKY */
-.global-progress-container {
-    width: 100%;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 6px 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+.global-progress {
     flex-shrink: 0;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 7px 10px;
 }
 
-.global-info-row {
+.global-info {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    font-size: calc(var(--fs-scale) * 0.85);
-    color: var(--text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
+    gap: 8px;
+    color: var(--muted);
+    font-size: calc(.72rem * var(--scale));
+    font-weight: 700;
+    margin-bottom: 5px;
 }
 
-.global-info-row span b {
+.global-info b {
     color: var(--accent);
 }
 
-.global-progress-bar {
+.progress-track {
     width: 100%;
     height: 5px;
-    background: rgba(255, 255, 255, 0.06);
-    border-radius: 10px;
+    background: #202b3a;
+    border-radius: 20px;
     overflow: hidden;
 }
 
-.global-progress-fill {
-    height: 100%;
+.progress-fill {
     width: 0%;
-    background: linear-gradient(90deg, var(--accent), #0077ff);
-    box-shadow: var(--glow);
-    border-radius: 10px;
-    transition: width 0.4s ease-out;
+    height: 100%;
+    background: linear-gradient(90deg,var(--accent),#0077ff);
+    transition: width .25s;
 }
 
 .screen {
     display: none;
-    flex-direction: column;
-    width: 100%;
     flex: 1;
-    gap: 6px;
-    animation: fadeIn 0.2s ease;
     min-height: 0;
+    flex-direction: column;
+    gap: var(--gap);
 }
 
 .screen.active {
     display: flex;
 }
 
-h1, h2 {
-    font-family: 'Rajdhani', sans-serif;
+.scroll-area {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    padding-bottom: 4px;
+}
+
+h1,h2 {
+    font-family: Rajdhani,sans-serif;
     text-transform: uppercase;
     letter-spacing: 1px;
-    text-align: center;
 }
 
-.intro-screen {
-    align-items: center;
-    text-align: center;
-    gap: 6px;
-    justify-content: flex-start;
-    overflow-y: auto;
-}
-
-.intro-header-area {
+.intro-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    gap: 8px;
+}
+
+.intro-header h1 {
+    color: var(--accent);
+    font-size: calc(1.5rem * var(--scale));
+}
+
+.intro-header p {
+    color: var(--muted);
+    font-size: calc(.7rem * var(--scale));
+    line-height: 1.4;
+}
+
+.btn-index,.secondary,.a11y {
+    background: var(--surface2);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: calc(.75rem * var(--scale));
+    font-weight: 700;
     flex-shrink: 0;
 }
 
-.intro-screen h1 {
-    color: var(--accent);
-    font-size: calc(var(--fs-scale) * 1.4);
-    text-shadow: var(--glow);
-}
-
-.intro-screen p {
-    color: var(--text-muted);
-    font-size: var(--fs-sub);
-    line-height: 1.35;
-    max-width: 280px;
-    text-align: left;
-}
-
-/* BOTÓN DE ÍNDICE ESTRATÉGICO */
 .btn-index {
-    background: rgba(0, 240, 255, 0.1);
     color: var(--accent);
-    border: 1px solid rgba(0, 240, 255, 0.3);
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: calc(var(--fs-scale) * 0.72);
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
+    text-decoration: none;
+}
+
+.accessibility,.config {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 8px;
     display: flex;
     align-items: center;
-    gap: 4px;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    font-family: 'Rajdhani', sans-serif;
+    justify-content: space-between;
+    gap: 8px;
     flex-shrink: 0;
+    font-size: calc(.75rem * var(--scale));
 }
 
-.btn-index:hover {
-    background: rgba(0, 240, 255, 0.2);
-    box-shadow: var(--glow);
-}
-
-.config-box {
-    background: #080c14;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 8px 10px;
+.controls {
     display: flex;
+    gap: 4px;
+}
+
+.a11y.active {
+    color: #000;
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.config {
     flex-direction: column;
-    gap: 6px;
-    width: 100%;
-    font-size: var(--fs-sub);
-    flex-shrink: 0;
+    align-items: stretch;
 }
 
 .lang-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
 }
 
-.lang-row select {
-    background: #101726;
-    color: #fff;
-    border: 1px solid var(--border);
+select {
+    max-width: 58%;
+    padding: 6px;
     border-radius: 6px;
-    padding: 3px 6px;
-    font-size: var(--fs-sub);
-    outline: none;
-}
-
-/* ACCESIBILIDAD VISUAL */
-.accessibility-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #080c14;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 6px 10px;
-    width: 100%;
-    font-size: calc(var(--fs-scale) * 0.85);
-    flex-shrink: 0;
-}
-
-.accessibility-controls {
-    display: flex;
-    gap: 4px;
-}
-
-.a11y-btn {
     background: #101726;
-    color: var(--text-muted);
+    color: white;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 2px 7px;
-    font-size: calc(var(--fs-scale) * 0.82);
-    cursor: pointer;
-    font-weight: 700;
+    font-size: calc(.78rem * var(--scale));
 }
 
-.a11y-btn.active {
-    background: var(--accent);
-    color: #000;
-    border-color: var(--accent);
+.section-title {
+    color: var(--accent);
+    font-size: calc(.9rem * var(--scale));
+    text-align: center;
 }
 
 .modules-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 6px;
-    width: 100%;
-    flex-shrink: 0;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 8px;
 }
 
 .module-card {
-    background: #080c14;
+    min-width: 0;
+    padding: 12px 10px;
+    text-align: left;
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 10px;
-    text-align: left;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    background: var(--surface2);
+    color: white;
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    pointer-events: auto !important;
+    gap: 5px;
+    transition: border-color .15s,transform .15s;
 }
 
 .module-card:active {
-    transform: scale(0.97);
+    transform: scale(.97);
     border-color: var(--accent);
-    background: rgba(0, 240, 255, 0.05);
 }
 
-.module-card .mod-num {
-    font-size: calc(var(--fs-scale) * 0.7);
+.mod-num {
     color: var(--accent);
+    font-size: calc(.7rem * var(--scale));
     font-weight: 700;
-    text-transform: uppercase;
-    font-family: 'Rajdhani', sans-serif;
 }
 
-.module-card .mod-title {
-    font-size: calc(var(--fs-scale) * 0.88);
+.mod-title {
+    font-size: calc(.9rem * var(--scale));
     font-weight: 700;
-    color: #fff;
-    line-height: 1.15;
+    overflow-wrap: anywhere;
 }
 
-.module-card .mod-prog {
-    font-size: calc(var(--fs-scale) * 0.7);
-    color: var(--text-muted);
+.mod-prog,.mod-record {
+    color: var(--muted);
+    font-size: calc(.68rem * var(--scale));
 }
 
-.module-card .mod-record {
-    font-size: calc(var(--fs-scale) * 0.64);
+.mod-record {
     color: var(--success);
-    font-weight: 600;
-}
-
-.btn-main {
-    background: linear-gradient(135deg, var(--accent), #0077ff);
-    color: #000;
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    font-size: calc(var(--fs-scale) * 0.95);
-    font-weight: 700;
-    text-transform: uppercase;
-    font-family: 'Rajdhani', sans-serif;
-    letter-spacing: 1px;
-    cursor: pointer;
-    width: 100%;
-    box-shadow: 0 4px 15px rgba(0, 240, 255, 0.2);
-    flex-shrink: 0;
-}
-
-.btn-secondary {
-    background: #080c14;
-    color: var(--text-muted);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 5px 10px;
-    font-size: var(--fs-sub);
-    cursor: pointer;
-    font-weight: 600;
 }
 
 .game-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 4px;
+    justify-content: space-between;
+    gap: 5px;
     flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 7px;
 }
 
-.hud-stats {
+.game-header h2 {
+    font-size: calc(.9rem * var(--scale));
+    color: var(--accent);
+    text-align: center;
+    flex: 1;
+}
+
+.secondary {
+    padding: 7px;
+}
+
+.hud {
     display: flex;
     justify-content: space-between;
-    font-size: calc(var(--fs-scale) * 0.8);
-    color: var(--text-muted);
-    font-weight: 600;
-    text-transform: uppercase;
+    color: var(--muted);
+    font-size: calc(.75rem * var(--scale));
+    font-weight: 700;
     flex-shrink: 0;
 }
 
-.prompt-card {
-    background: #080c14;
+.help {
+    padding: 8px;
+    background: rgba(0,234,255,.045);
+    border: 1px dashed rgba(0,234,255,.25);
+    border-radius: 8px;
+    color: #cbd5e1;
+    font-size: calc(.75rem * var(--scale));
+    line-height: 1.4;
+    flex-shrink: 0;
+}
+
+.prompt {
+    background: var(--surface2);
+    padding: 12px;
     border-radius: 10px;
-    padding: 10px;
     border-left: 3px solid var(--accent);
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    width: 100%;
+    gap: 8px;
     flex-shrink: 0;
+}
+
+.prompt-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
 }
 
 .prompt-tag {
-    font-size: calc(var(--fs-scale) * 0.7);
+    color: var(--muted);
+    font-size: calc(.68rem * var(--scale));
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-muted);
 }
 
-.target-sentence {
-    font-size: var(--fs-target);
+.badge {
+    font-size: calc(.65rem * var(--scale));
     font-weight: 700;
-    color: #fff;
-    line-height: 1.3;
-    word-break: break-word;
+    padding: 4px 6px;
+    border-radius: 5px;
+    background: rgba(0,234,255,.12);
+    color: var(--accent);
+    white-space: nowrap;
 }
 
-.human-help-box {
-    background: rgba(0, 240, 255, 0.04);
-    border: 1px dashed rgba(0, 240, 255, 0.2);
-    border-radius: 8px;
-    padding: 6px 8px;
-    font-size: calc(var(--fs-scale) * 0.76);
-    color: #cbd5e1;
-    line-height: 1.3;
-    flex-shrink: 0;
+.badge.write {
+    color: var(--error);
+    background: rgba(255,66,109,.12);
 }
 
-.anki-options-grid {
+.target {
+    font-size: calc(1.12rem * var(--scale));
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.anki-options {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    width: 100%;
-    flex-shrink: 0;
+    gap: 7px;
 }
 
-.anki-opt-btn {
-    background: #080c14;
-    border: 1px solid var(--border);
+.option {
+    padding: 12px;
     border-radius: 9px;
-    padding: 10px;
-    color: #f8fafc;
-    font-size: var(--fs-target);
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: white;
+    font-size: calc(1rem * var(--scale));
     font-weight: 600;
     text-align: left;
-    cursor: pointer;
-    transition: all 0.15s ease;
-    word-break: break-word;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
 }
 
-.anki-opt-btn:active {
-    transform: scale(0.98);
+.option:active {
     border-color: var(--accent);
 }
 
-.typing-container {
+.typing {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    width: 100%;
-    flex-shrink: 0;
+    gap: 8px;
 }
 
 .user-input {
     width: 100%;
-    padding: 10px;
-    background: #060912;
+    min-width: 0;
+    padding: 13px 10px;
     border: 2px solid var(--border);
     border-radius: 9px;
-    color: #fff;
-    font-size: var(--fs-target);
-    outline: none;
+    background: #060912;
+    color: white;
+    font-size: max(16px,calc(1rem * var(--scale)));
     text-align: center;
+    outline: none;
 }
 
 .user-input:focus {
     border-color: var(--accent);
-    box-shadow: var(--glow);
 }
 
-.feedback-box {
-    padding: 8px 10px;
-    border-radius: 8px;
-    text-align: center;
-    font-size: calc(var(--fs-scale) * 0.82);
-    display: none;
-    line-height: 1.3;
+.main-btn {
     width: 100%;
-    word-break: break-word;
+    padding: 12px;
+    border: 0;
+    border-radius: 9px;
+    background: linear-gradient(135deg,var(--accent),#0077ff);
+    color: #000;
+    font-family: Rajdhani,sans-serif;
+    font-size: calc(1rem * var(--scale));
+    font-weight: 700;
+    letter-spacing: .5px;
+}
+
+.main-btn.error-btn {
+    background: linear-gradient(135deg,#ff426d,#c90042);
+    color: white;
+}
+
+.main-btn.success-btn {
+    background: linear-gradient(135deg,#00ff88,#00a85b);
+    color: #001b10;
+}
+
+.feedback {
+    display: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: calc(.82rem * var(--scale));
+    text-align: center;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
     flex-shrink: 0;
 }
 
-.feedback-box.success {
-    background: rgba(0, 255, 136, 0.08);
+.feedback.success {
+    display: block;
     color: var(--success);
-    border: 1px solid rgba(0, 255, 136, 0.3);
-    display: block;
+    background: rgba(0,255,136,.08);
+    border: 1px solid rgba(0,255,136,.25);
 }
 
-.feedback-box.error {
-    background: rgba(255, 0, 85, 0.08);
+.feedback.error {
+    display: block;
     color: var(--error);
-    border: 1px solid rgba(255, 0, 85, 0.3);
-    display: block;
+    background: rgba(255,66,109,.08);
+    border: 1px solid rgba(255,66,109,.25);
 }
 
-.correct-answer-highlight {
+.answer {
     display: block;
-    font-size: var(--fs-target);
-    color: #fff;
-    font-weight: bold;
-    margin-top: 3px;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 5px;
-    border-radius: 4px;
-    word-break: break-word;
-}
-
-.mode-badge {
-    align-self: flex-start;
-    font-size: calc(var(--fs-scale) * 0.65);
-    padding: 2px 6px;
-    border-radius: 4px;
+    color: white;
+    font-size: calc(1rem * var(--scale));
     font-weight: 700;
-    text-transform: uppercase;
+    margin: 5px 0;
 }
 
-.badge-anki {
-    background: rgba(0, 240, 255, 0.15);
-    color: var(--accent);
-    border: 1px solid rgba(0, 240, 255, 0.3);
+.game-bottom {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
 }
 
-.badge-write {
-    background: rgba(255, 0, 85, 0.15);
-    color: var(--error);
-    border: 1px solid rgba(255, 0, 85, 0.3);
+.hidden {
+    display: none !important;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
+@media(max-height:650px) {
+    .app {
+        gap: 5px;
+        padding: 5px;
+    }
+    .screen {
+        gap: 5px;
+    }
+    .scroll-area {
+        gap: 5px;
+    }
+    .prompt {
+        padding: 8px;
+    }
+    .option {
+        padding: 9px;
+    }
+    .help {
+        padding: 6px;
+    }
 }
+
+@media(max-width:350px) {
+    .modules-grid {
+        grid-template-columns: 1fr;
+    }
+    .game-header .controls {
+        gap: 2px;
+    }
+    .game-header .a11y {
+        padding: 6px;
+    }
+}
+
+/* El teclado no debe expulsar los controles de la pantalla */
+@media(orientation:portrait) {
+    body {
+        min-height: 0;
+    }
+}
+
 </style>
 </head>
+
 <body>
 
-<div class="app-container">
+<div class="app">
 
-    <!-- BARRA DE PROGRESO GLOBAL STICKY -->
-    <div class="global-progress-container">
-        <div class="global-info-row">
-            <span>Progreso General: <b id="global-pct">0%</b></span>
-            <span id="global-lang-badge">EN • DE • ES</span>
+    <div class="global-progress">
+        <div class="global-info">
+            <span>PROGRESO GENERAL: <b id="global-pct">0%</b></span>
+            <span id="global-languages">EN · DE · ES</span>
         </div>
-        <div class="global-progress-bar">
-            <div id="global-fill" class="global-progress-fill"></div>
+        <div class="progress-track">
+            <div id="global-fill" class="progress-fill"></div>
         </div>
     </div>
 
-    <!-- PANTALLA DE INICIO Y SELECCIÓN -->
-    <div id="screen-intro" class="screen intro-screen active">
-        <div class="intro-header-area">
-            <div>
-                <h1>PolyGlot Matrix</h1>
-                <p>Modo infinito, regla de 3 estricta y récords de velocidad y precisión.</p>
+    <!-- INICIO -->
+    <section id="screen-intro" class="screen active">
+
+        <div class="scroll-area">
+
+            <header class="intro-header">
+                <div>
+                    <h1>PolyGlot Matrix</h1>
+                    <p>Memorización inteligente · Motor de tres aciertos.</p>
+                </div>
+                <a href="index.html" class="btn-index">⌂ Índice</a>
+            </header>
+
+            <div class="accessibility">
+                <span>🔍 Tamaño de letra</span>
+                <div class="controls">
+                    <button class="a11y active" data-size="1">A</button>
+                    <button class="a11y" data-size="1.15">A+</button>
+                    <button class="a11y" data-size="1.3">A++</button>
+                </div>
             </div>
-            <!-- BOTÓN AL ÍNDICE ESTRATÉGICO -->
-            <a href="index.html" class="btn-index">
-                🏠 Índice
-            </a>
+
+            <div class="config">
+                <div class="lang-row">
+                    <label for="sel-q">Preguntar en:</label>
+                    <select id="sel-q">
+                        <option value="en">Inglés (EN)</option>
+                        <option value="de">Alemán (DE)</option>
+                        <option value="es">Español (ES)</option>
+                    </select>
+                </div>
+
+                <div class="lang-row">
+                    <label for="sel-a">Responder en:</label>
+                    <select id="sel-a">
+                        <option value="de">Alemán (DE)</option>
+                        <option value="en">Inglés (EN)</option>
+                        <option value="es">Español (ES)</option>
+                    </select>
+                </div>
+            </div>
+
+            <h2 class="section-title">MÓDULOS DE APRENDIZAJE</h2>
+
+            <div id="modules-grid" class="modules-grid"></div>
+
         </div>
+    </section>
 
-        <!-- ACCESIBILIDAD VISUAL -->
-        <div class="accessibility-bar">
-            <span>🔍 Tamaño de letra:</span>
-            <div class="accessibility-controls">
-                <button class="a11y-btn active" id="btn-sz-1" onclick="setFontSize(1)">Normal</button>
-                <button class="a11y-btn" id="btn-sz-2" onclick="setFontSize(1.15)">Grande</button>
-                <button class="a11y-btn" id="btn-sz-3" onclick="setFontSize(1.3)">Extra</button>
+    <!-- ESTUDIO -->
+    <section id="screen-game" class="screen">
+
+        <header class="game-header">
+            <button class="secondary" id="menu-btn">← Menú</button>
+
+            <h2 id="game-title">Módulo</h2>
+
+            <div class="controls">
+                <button class="a11y" data-size="1">A</button>
+                <button class="a11y" data-size="1.15">A+</button>
+                <button class="a11y" data-size="1.3">A++</button>
             </div>
-        </div>
+        </header>
 
-        <div class="config-box">
-            <div class="lang-row">
-                <span>Preguntar en:</span>
-                <select id="sel-q" onchange="saveConfig()">
-                    <option value="en" selected>Inglés (EN)</option>
-                    <option value="de">Alemán (DE)</option>
-                    <option value="es">Español (ES)</option>
-                </select>
-            </div>
-            <div class="lang-row">
-                <span>Responder en:</span>
-                <select id="sel-a" onchange="saveConfig()">
-                    <option value="de" selected>Alemán (DE)</option>
-                    <option value="en">Inglés (EN)</option>
-                    <option value="es">Español (ES)</option>
-                </select>
-            </div>
-        </div>
-
-        <h2 style="font-size:calc(var(--fs-scale) * 0.85); color:var(--accent);">Módulos del Banco Exacto</h2>
-        
-        <!-- GRILLA DE MÓDULOS CON CLICS BLINDADOS -->
-        <div class="modules-grid" id="modules-grid"></div>
-    </div>
-
-    <!-- PANTALLA DE ESTUDIO / JUEGO -->
-    <div id="screen-game" class="screen">
-        <div class="game-header">
-            <button class="btn-secondary" onclick="returnToMenu()">← Menú</button>
-            <h2 id="game-title" style="font-size:calc(var(--fs-scale) * 0.85); color:var(--accent)">Módulo 1</h2>
-            
-            <div class="accessibility-controls">
-                <button class="a11y-btn active" id="g-sz-1" onclick="setFontSize(1)">1x</button>
-                <button class="a11y-btn" id="g-sz-2" onclick="setFontSize(1.15)">2x</button>
-                <button class="a11y-btn" id="g-sz-3" onclick="setFontSize(1.3)">3x</button>
-            </div>
-        </div>
-
-        <div class="hud-stats">
-            <span id="hud-progress">Ciclo: 0/0</span>
+        <div class="hud">
+            <span id="hud-progress">Dominadas: 0/0</span>
             <span id="hud-streak">Racha: 0/3</span>
         </div>
 
-        <div class="human-help-box" id="human-help-text">
-            💡 <b>Modo Infinito</b>: 2 aciertos Anki + 1 acierto tipeando. Al terminar el ciclo se reinicia para superar tus récords.
-        </div>
+        <div class="scroll-area" id="game-scroll">
 
-        <div class="prompt-card">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <div class="prompt-tag" id="label-instruction">Traduce la expresión:</div>
-                <div id="mode-badge" class="mode-badge badge-anki">FASE ANKI</div>
+            <div class="help" id="human-help">
+                Cada frase necesita tres respuestas correctas consecutivas. Un error reinicia su racha.
             </div>
-            <div class="target-sentence" id="display-target">Cargando...</div>
+
+            <div class="prompt">
+                <div class="prompt-top">
+                    <span class="prompt-tag" id="label-instruction">Traduce:</span>
+                    <span class="badge" id="mode-badge">FASE 1/3</span>
+                </div>
+                <div class="target" id="display-target">Cargando...</div>
+            </div>
+
+            <div id="anki-container" class="anki-options"></div>
+
+            <div id="typing-container" class="typing hidden">
+                <input
+                    id="user-input"
+                    class="user-input"
+                    type="text"
+                    placeholder="Escribe la traducción..."
+                    autocomplete="off"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    enterkeyhint="done"
+                >
+            </div>
+
+            <div id="feedback-box" class="feedback" aria-live="polite"></div>
+
         </div>
 
-        <!-- MODO OPCIÓN MÚLTIPLE (ANKI) -->
-        <div id="anki-container" class="anki-options-grid"></div>
-
-        <!-- MODO TIPEADO (FASE FINAL) -->
-        <div id="typing-container" class="typing-container" style="display:none;">
-            <input type="text" id="user-input" class="user-input" placeholder="Escribe la frase completa..." autocomplete="off" autocorrect="off" autocapitalize="off">
-            <button class="btn-main" id="action-btn" onclick="handleAction()">Comprobar Respuesta</button>
+        <div class="game-bottom">
+            <button id="action-btn" class="main-btn hidden">Comprobar respuesta</button>
         </div>
 
-        <div id="feedback-box" class="feedback-box"></div>
-    </div>
+    </section>
 
 </div>
 
 <script>
-/* =========================================================
-   BANCO DE DATOS EXACTO (ADAPTABLE A FUTURO CONTENIDO)[span_0](start_span)[span_0](end_span)
-========================================================= */
+"use strict";
+
+/* =====================================================
+   BANCO DE DATOS
+===================================================== */
+
 const partsData = [
-    {
-        id: 1,
-        title: "1. Necesidades Básicas",
-        help: "💡 Módulo 1: Estructuras básicas 'I have...' / 'Ich habe...'",
-        items: [
-            { en: "I have time.", de: "Ich habe Zeit.", es: "Tengo tiempo." },
-            { en: "I have money.", de: "Ich habe Geld.", es: "Tengo dinero." },
-            { en: "I have food.", de: "Ich habe Essen.", es: "Tengo comida." },
-            { en: "I have water.", de: "Ich habe Wasser.", es: "Tengo agua." },
-            { en: "I have friends.", de: "Ich habe Freunde.", es: "Tengo amigos." },
-            { en: "I have a car.", de: "Ich habe ein Auto.", es: "Tengo un auto." },
-            { en: "I have a house.", de: "Ich habe ein Haus.", es: "Tengo una casa." },
-            { en: "I have a problem.", de: "Ich habe ein Problem.", es: "Tengo un problema." }
-        ]
-    },
-    {
-        id: 2,
-        title: "2. Mente y Emociones",
-        help: "💡 Módulo 2: Conceptos e ideas abstractas 'I have...'",
-        items: [
-            { en: "I have an idea.", de: "Ich habe eine Idee.", es: "Tengo una idea." },
-            { en: "I have a question.", de: "Ich habe eine Frage.", es: "Tengo una pregunta." },
-            { en: "I have energy.", de: "Ich habe Energie.", es: "Tengo energía." },
-            { en: "I have luck.", de: "Ich habe Glück.", es: "Tengo suerte." },
-            { en: "I have courage.", de: "Ich habe Mut.", es: "Tengo valor." },
-            { en: "I have faith.", de: "Ich habe Vertrauen.", es: "Tengo fe/confianza." },
-            { en: "I have hope.", de: "Ich habe Hoffnung.", es: "Tengo esperanza." }
-        ]
-    },
-    {
-        id: 3,
-        title: "3. Fortaleza y Propósito",
-        help: "💡 Módulo 3: Estados internos y conclusiones 'I have...'",
-        items: [
-            { en: "I have strength.", de: "Ich habe Kraft.", es: "Tengo fuerza." },
-            { en: "I have patience.", de: "Ich habe Geduld.", es: "Tengo paciencia." },
-            { en: "I have time today.", de: "Ich habe heute Zeit.", es: "Tengo tiempo hoy." },
-            { en: "I have a reason.", de: "Ich habe einen Grund.", es: "Tengo una razón." },
-            { en: "I have a chance.", de: "Ich habe eine Chance.", es: "Tengo una oportunidad." },
-            { en: "I have a dream.", de: "Ich habe einen Traum.", es: "Tengo un sueño." },
-            { en: "I have everything.", de: "Ich habe alles.", es: "Tengo todo." }
-        ]
-    }
+{
+    id:1,
+    title:"1. Necesidades Básicas",
+    help:"Estructuras fundamentales: tener, poseer y expresar necesidades.",
+    items:[
+        {en:"I have time.",de:"Ich habe Zeit.",es:"Tengo tiempo."},
+        {en:"I have money.",de:"Ich habe Geld.",es:"Tengo dinero."},
+        {en:"I have food.",de:"Ich habe Essen.",es:"Tengo comida."},
+        {en:"I have water.",de:"Ich habe Wasser.",es:"Tengo agua."},
+        {en:"I have friends.",de:"Ich habe Freunde.",es:"Tengo amigos."},
+        {en:"I have a car.",de:"Ich habe ein Auto.",es:"Tengo un auto."},
+        {en:"I have a house.",de:"Ich habe ein Haus.",es:"Tengo una casa."},
+        {en:"I have a problem.",de:"Ich habe ein Problem.",es:"Tengo un problema."}
+    ]
+},
+{
+    id:2,
+    title:"2. Mente y Emociones",
+    help:"Conceptos abstractos, sentimientos y estados mentales.",
+    items:[
+        {en:"I have an idea.",de:"Ich habe eine Idee.",es:"Tengo una idea."},
+        {en:"I have a question.",de:"Ich habe eine Frage.",es:"Tengo una pregunta."},
+        {en:"I have energy.",de:"Ich habe Energie.",es:"Tengo energía."},
+        {en:"I have luck.",de:"Ich habe Glück.",es:"Tengo suerte."},
+        {en:"I have courage.",de:"Ich habe Mut.",es:"Tengo valor."},
+        {en:"I have faith.",de:"Ich habe Vertrauen.",es:"Tengo fe/confianza."},
+        {en:"I have hope.",de:"Ich habe Hoffnung.",es:"Tengo esperanza."}
+    ]
+},
+{
+    id:3,
+    title:"3. Fortaleza y Propósito",
+    help:"Estados internos, decisiones y expresiones de propósito.",
+    items:[
+        {en:"I have strength.",de:"Ich habe Kraft.",es:"Tengo fuerza."},
+        {en:"I have patience.",de:"Ich habe Geduld.",es:"Tengo paciencia."},
+        {en:"I have time today.",de:"Ich habe heute Zeit.",es:"Tengo tiempo hoy."},
+        {en:"I have a reason.",de:"Ich habe einen Grund.",es:"Tengo una razón."},
+        {en:"I have a chance.",de:"Ich habe eine Chance.",es:"Tengo una oportunidad."},
+        {en:"I have a dream.",de:"Ich habe einen Traum.",es:"Tengo un sueño."},
+        {en:"I have everything.",de:"Ich habe alles.",es:"Tengo todo."}
+    ]
+}
 ];
 
-/* =========================================================
-   ESTADO Y CONTROL DEL MOTOR INFINITO BLINDADO
-========================================================= */
-let currentPartIdx = 0;
-let langQ = "en";
-let langA = "de";
+/* =====================================================
+   ALMACENAMIENTO SEGURO
+===================================================== */
 
-let activeGroup = [];
-let pool = [];
-let currentItem = null;
-let forcedItem = null;
-let lastItem = null;
-let streaks = {};
-let completedCount = 0;
-let totalItemsInPart = 0;
-let gameState = "QUESTION";
+const STORAGE = {
+    config:"polyglot_matrix_config",
+    progress:"polyglot_matrix_progress",
+    records:"polyglot_matrix_records",
+    font:"polyglot_matrix_fontsize"
+};
 
-let startTime = 0;
-let errorCount = 0;
-let userRecords = JSON.parse(localStorage.getItem("polyglot_matrix_records") || "{}");
-let userProgress = JSON.parse(localStorage.getItem("polyglot_matrix_progress") || "{}");
-
-function initApp() {
-    loadConfig();
-    loadFontSizePreference();
-    renderModules();
-    updateGlobalProgress();
-}
-
-function loadConfig() {
-    const savedConfig = JSON.parse(localStorage.getItem("polyglot_matrix_config") || "{}");
-    if (savedConfig.q) { langQ = savedConfig.q; document.getElementById("sel-q").value = langQ; }
-    if (savedConfig.a) { langA = savedConfig.a; document.getElementById("sel-a").value = langA; }
-}
-
-function saveConfig() {
-    langQ = document.getElementById("sel-q").value;
-    langA = document.getElementById("sel-a").value;
-    localStorage.setItem("polyglot_matrix_config", JSON.stringify({ q: langQ, a: langA }));
-    renderModules();
-    updateGlobalProgress();
-}
-
-function setFontSize(multiplier) {
-    const root = document.documentElement;
-    root.style.setProperty('--fs-scale', multiplier + 'rem');
-    root.style.setProperty('--fs-target', (multiplier * 1.02) + 'rem');
-    root.style.setProperty('--fs-sub', (multiplier * 0.72) + 'rem');
-
-    [1, 1.15, 1.3].forEach((m, idx) => {
-        const btn1 = document.getElementById(`btn-sz-${idx + 1}`);
-        const btn2 = document.getElementById(`g-sz-${idx + 1}`);
-        if (Math.abs(m - multiplier) < 0.01) {
-            if (btn1) btn1.classList.add('active');
-            if (btn2) btn2.classList.add('active');
-        } else {
-            if (btn1) btn1.classList.remove('active');
-            if (btn2) btn2.classList.remove('active');
-        }
-    });
-
-    localStorage.setItem("polyglot_matrix_fontsize", multiplier);
-}
-
-function loadFontSizePreference() {
-    const savedSize = localStorage.getItem("polyglot_matrix_fontsize");
-    if (savedSize) {
-        setFontSize(parseFloat(savedSize));
+function readStorage(key,fallback) {
+    try {
+        const value = localStorage.getItem(key);
+        return value === null ? fallback : JSON.parse(value);
+    } catch {
+        return fallback;
     }
 }
 
-function getProgressKey(partIdx) {
-    return `p_${partIdx}_${langQ}_${langA}`;
+function writeStorage(key,value) {
+    try {
+        localStorage.setItem(key,JSON.stringify(value));
+        return true;
+    } catch(error) {
+        console.warn("No se pudo guardar:",error);
+        return false;
+    }
 }
 
-function getRecordKey(partIdx) {
-    return `rec_${partIdx}_${langQ}_${langA}`;
+let userProgress = readStorage(STORAGE.progress,{});
+let userRecords = readStorage(STORAGE.records,{});
+const savedConfig = readStorage(STORAGE.config,{});
+
+let langQ = ["en","de","es"].includes(savedConfig.q) ? savedConfig.q : "en";
+let langA = ["en","de","es"].includes(savedConfig.a) ? savedConfig.a : "de";
+
+if(langQ === langA) {
+    langA = ["en","de","es"].find(x => x !== langQ);
 }
+
+/* =====================================================
+   ESTADO DEL MOTOR
+===================================================== */
+
+let currentPartIdx = 0;
+let activeGroup = [];
+let pool = [];
+let streaks = {};
+let currentItem = null;
+let lastItem = null;
+
+let completedCount = 0;
+let errorCount = 0;
+let startTime = 0;
+
+let gameState = "QUESTION";
+let fontSize = 1;
+let questionToken = 0;
+
+const $ = id => document.getElementById(id);
+
+function shuffle(array) {
+    const result = [...array];
+
+    for(let i=result.length-1;i>0;i--) {
+        const j = Math.floor(Math.random()*(i+1));
+        [result[i],result[j]] = [result[j],result[i]];
+    }
+
+    return result;
+}
+
+function progressKey(idx) {
+    return `p_${idx}_${langQ}_${langA}`;
+}
+
+function recordKey(idx) {
+    return `rec_${idx}_${langQ}_${langA}`;
+}
+
+function getCompleted(idx) {
+    const value = userProgress[progressKey(idx)];
+    return Array.isArray(value) ? value : [];
+}
+
+/* =====================================================
+   INICIALIZACIÓN
+===================================================== */
+
+function initApp() {
+    $("sel-q").value = langQ;
+    $("sel-a").value = langA;
+
+    const savedFont = Number(localStorage.getItem(STORAGE.font));
+
+    if([1,1.15,1.3].includes(savedFont)) {
+        fontSize = savedFont;
+    }
+
+    applyFontSize();
+    renderModules();
+    updateGlobalProgress();
+    updateLanguageBadge();
+}
+
+function updateLanguageBadge() {
+    $("global-languages").textContent =
+        `${langQ.toUpperCase()} · ${langA.toUpperCase()}`;
+}
+
+/* =====================================================
+   CONFIGURACIÓN
+===================================================== */
+
+function saveConfig() {
+    const q = $("sel-q").value;
+    let a = $("sel-a").value;
+
+    if(q === a) {
+        a = ["en","de","es"].find(x => x !== q);
+        $("sel-a").value = a;
+    }
+
+    langQ = q;
+    langA = a;
+
+    writeStorage(STORAGE.config,{q:langQ,a:langA});
+
+    renderModules();
+    updateGlobalProgress();
+    updateLanguageBadge();
+}
+
+$("sel-q").addEventListener("change",saveConfig);
+$("sel-a").addEventListener("change",saveConfig);
+
+/* =====================================================
+   ACCESIBILIDAD
+===================================================== */
+
+function applyFontSize() {
+    document.documentElement.style.setProperty("--scale",fontSize);
+
+    document.querySelectorAll("[data-size]").forEach(btn => {
+        btn.classList.toggle(
+            "active",
+            Math.abs(Number(btn.dataset.size)-fontSize)<.001
+        );
+    });
+}
+
+function setFontSize(value) {
+    fontSize = Number(value);
+
+    if(![1,1.15,1.3].includes(fontSize)) return;
+
+    applyFontSize();
+
+    try {
+        localStorage.setItem(STORAGE.font,String(fontSize));
+    } catch {}
+}
+
+document.addEventListener("click",event => {
+    const btn = event.target.closest("[data-size]");
+    if(btn) setFontSize(btn.dataset.size);
+});
+
+/* =====================================================
+   PANTALLAS
+===================================================== */
+
+function switchScreen(id) {
+    document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.toggle("active",screen.id===id);
+    });
+}
+
+$("menu-btn").addEventListener("click",returnToMenu);
+
+function returnToMenu() {
+    $("user-input").blur();
+    renderModules();
+    updateGlobalProgress();
+    switchScreen("screen-intro");
+}
+
+/* =====================================================
+   MÓDULOS
+===================================================== */
 
 function renderModules() {
-    const grid = document.getElementById("modules-grid");
-    grid.innerHTML = "";
+    const grid = $("modules-grid");
+    grid.replaceChildren();
 
-    partsData.forEach((part, idx) => {
-        const progKey = getProgressKey(idx);
-        const recordKey = getRecordKey(idx);
-        const finishedSet = userProgress[progKey] || [];
+    partsData.forEach((part,idx) => {
+        const done = getCompleted(idx).length;
         const total = part.items.length;
-        const done = finishedSet.length;
-        const pct = Math.round((done / total) * 100);
-        const bestRec = userRecords[recordKey];
+        const pct = Math.round(done/total*100);
+        const record = userRecords[recordKey(idx)];
 
-        const card = document.createElement("div");
+        const card = document.createElement("button");
+        card.type = "button";
         card.className = "module-card";
-        
-        card.innerHTML = `
-            <div class="mod-num">Módulo 0${idx + 1}</div>
-            <div class="mod-title">${part.title.split(". ")[1]}</div>
-            <div class="mod-prog">Dominados: ${done}/${total} (${pct}%)</div>
-            <div class="mod-record">${bestRec ? `🏆 Récord: ${bestRec.time}s (${bestRec.errors} err)` : '🏆 Sin récord'}</div>
-        `;
-        
-        // VINCULACIÓN DIRECTA DE EVENTO TÁCTIL Y CLIC
-        card.onclick = () => {
-            startPart(idx);
-        };
+
+        const number = document.createElement("span");
+        number.className = "mod-num";
+        number.textContent = `MÓDULO 0${idx+1}`;
+
+        const title = document.createElement("span");
+        title.className = "mod-title";
+        title.textContent = part.title.replace(/^\d+\.\s*/,"");
+
+        const progress = document.createElement("span");
+        progress.className = "mod-prog";
+        progress.textContent = `Dominadas: ${done}/${total} · ${pct}%`;
+
+        const best = document.createElement("span");
+        best.className = "mod-record";
+        best.textContent = record
+            ? `🏆 ${record.time}s · ${record.errors} errores`
+            : "🏆 Sin récord";
+
+        card.append(number,title,progress,best);
+
+        card.addEventListener("click",() => startPart(idx));
 
         grid.appendChild(card);
     });
 }
 
 function updateGlobalProgress() {
-    let totalItemsAll = 0;
-    let totalCompletedAll = 0;
+    let total = 0;
+    let completed = 0;
 
-    partsData.forEach((part, idx) => {
-        totalItemsAll += part.items.length;
-        const progKey = getProgressKey(idx);
-        const finishedSet = userProgress[progKey] || [];
-        totalCompletedAll += finishedSet.length;
+    partsData.forEach((part,idx) => {
+        total += part.items.length;
+        completed += getCompleted(idx).length;
     });
 
-    const globalPct = totalItemsAll > 0 ? Math.min(100, Math.round((totalCompletedAll / totalItemsAll) * 100)) : 0;
-    document.getElementById("global-pct").textContent = globalPct + "%";
-    document.getElementById("global-fill").style.width = globalPct + "%";
+    const pct = total ? Math.round(completed/total*100) : 0;
+
+    $("global-pct").textContent = pct+"%";
+    $("global-fill").style.width = pct+"%";
 }
 
-function switchScreen(id) {
-    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-}
+/* =====================================================
+   INICIO DE MÓDULO
+===================================================== */
 
-function startPart(partIdx) {
-    currentPartIdx = partIdx;
-    const part = partsData[partIdx];
-    totalItemsInPart = part.items.length;
+function startPart(idx) {
+    if(!Number.isInteger(idx) || !partsData[idx]) return;
 
-    document.getElementById("game-title").textContent = part.title;
-    document.getElementById("active-lang-indicator").textContent = `${langQ.toUpperCase()} ➔ ${langA.toUpperCase()}`;
-    document.getElementById("human-help-text").innerHTML = part.help;
+    currentPartIdx = idx;
 
-    pool = [];
-    streaks = {};
-    activeGroup = [];
-    completedCount = 0;
+    const part = partsData[idx];
+    const completed = getCompleted(idx);
+
+    completedCount = completed.length;
     errorCount = 0;
+
+    streaks = {};
+    part.items.forEach((_,i) => {
+        streaks[i] = 0;
+    });
+
+    // Los elementos ya dominados no vuelven al banco inicial.
+    pool = shuffle(
+        part.items.map((_,i)=>i).filter(i=>!completed.includes(i))
+    );
+
+    activeGroup = [];
+    currentItem = null;
+    lastItem = null;
+    gameState = "QUESTION";
+    questionToken++;
+
     startTime = Date.now();
 
-    part.items.forEach((item, idx) => {
-        pool.push(idx);
-        streaks[idx] = 0;
-    });
-
-    pool.sort(() => Math.random() - 0.5);
-    forcedItem = null;
-    lastItem = null;
+    $("game-title").textContent = part.title;
+    $("human-help").textContent = part.help+
+        " Cada frase requiere 3 aciertos consecutivos. Si fallas, vuelves a 0.";
 
     switchScreen("screen-game");
+
+    if(pool.length===0) {
+        finishCycle();
+        return;
+    }
+
     loadNextQuestion();
 }
 
-function returnToMenu() {
-    renderModules();
-    updateGlobalProgress();
-    switchScreen("screen-intro");
-}
+/* =====================================================
+   MOTOR DE GRUPOS INTELIGENTES DE TRES
+===================================================== */
 
 function refillActiveGroup() {
-    while (activeGroup.length < 3 && pool.length > 0) {
+    while(activeGroup.length<3 && pool.length>0) {
         activeGroup.push(pool.shift());
     }
 }
 
 function chooseNextItem() {
-    if (forcedItem !== null && activeGroup.includes(forcedItem)) {
-        const item = forcedItem;
-        forcedItem = null;
-        return item;
+    // Si hay una respuesta fallida, se repite obligatoriamente.
+    if(currentItem!==null && streaks[currentItem]===0 &&
+       activeGroup.includes(currentItem) &&
+       gameState==="RETRY") {
+        gameState="QUESTION";
+        return currentItem;
     }
-    
-    let candidates = activeGroup.filter(i => i !== lastItem);
-    if (candidates.length === 0) candidates = [...activeGroup];
-    
-    if (candidates.length === 0) return null;
-    return candidates[Math.floor(Math.random() * candidates.length)];
+
+    let candidates = activeGroup.filter(i=>i!==lastItem);
+
+    // Si queda una sola pregunta, puede repetirse.
+    if(candidates.length===0) candidates=[...activeGroup];
+
+    if(!candidates.length) return null;
+
+    return candidates[Math.floor(Math.random()*candidates.length)];
 }
 
+/* =====================================================
+   CARGA DE PREGUNTAS
+===================================================== */
+
 function loadNextQuestion() {
+    questionToken++;
+
     refillActiveGroup();
 
-    if (activeGroup.length === 0 && pool.length === 0) {
-        finishCycle();
-        return;
-    }
+    if(activeGroup.length===0) {
+        if(pool.length===0) {
+            finishCycle();
+            return;
+        }
 
-    if (activeGroup.length === 0) {
         refillActiveGroup();
     }
 
     currentItem = chooseNextItem();
-    if (currentItem === null) {
+
+    if(currentItem===null) {
         finishCycle();
         return;
     }
 
     gameState = "QUESTION";
-    const itemData = partsData[currentPartIdx].items[currentItem];
 
-    document.getElementById("display-target").textContent = itemData[langQ] || itemData["en"];
-    document.getElementById("hud-streak").textContent = `Racha: ${streaks[currentItem]}/3`;
-    document.getElementById("hud-progress").textContent = `Ciclo: ${completedCount}/${totalItemsInPart}`;
+    const item = partsData[currentPartIdx].items[currentItem];
 
-    const ankiContainer = document.getElementById("anki-container");
-    const typingContainer = document.getElementById("typing-container");
-    const modeBadge = document.getElementById("mode-badge");
-    const feedback = document.getElementById("feedback-box");
+    $("display-target").textContent = item[langQ];
+    $("hud-progress").textContent =
+        `Dominadas: ${completedCount}/${partsData[currentPartIdx].items.length}`;
 
-    feedback.className = "feedback-box";
-    feedback.style.display = "none";
+    $("hud-streak").textContent = `Racha: ${streaks[currentItem]}/3`;
 
-    if (streaks[currentItem] < 2) {
-        modeBadge.textContent = `FASE ANKI (${streaks[currentItem] + 1}/3)`;
-        modeBadge.className = "mode-badge badge-anki";
-        ankiContainer.style.display = "flex";
-        typingContainer.style.display = "none";
-        generateAnkiOptions(itemData[langA]);
-    } else {
-        modeBadge.textContent = "FASE FINAL: TIPEADO (3/3)";
-        modeBadge.className = "mode-badge badge-write";
-        ankiContainer.style.display = "none";
-        typingContainer.style.display = "flex";
+    $("feedback-box").className = "feedback";
+    $("feedback-box").textContent = "";
 
-        const input = document.getElementById("user-input");
-        input.value = "";
+    const isTyping = streaks[currentItem]===2;
+
+    $("mode-badge").textContent = isTyping
+        ? "FASE FINAL · 3/3"
+        : `FASE ANKI · ${streaks[currentItem]+1}/3`;
+
+    $("mode-badge").classList.toggle("write",isTyping);
+
+    $("anki-container").classList.toggle("hidden",isTyping);
+    $("typing-container").classList.toggle("hidden",!isTyping);
+
+    $("action-btn").classList.toggle("hidden",!isTyping);
+    $("action-btn").textContent = "Comprobar respuesta";
+    $("action-btn").className = "main-btn";
+
+    if(isTyping) {
+        const input = $("user-input");
         input.disabled = false;
-        
-        const btn = document.getElementById("action-btn");
-        btn.textContent = "Comprobar Respuesta";
-        btn.style.background = "";
+        input.value = "";
 
-        setTimeout(() => {
-            input.focus();
-            input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 80);
+        // El usuario puede abrir el teclado cuando lo necesite.
+        // No se fuerza el teclado, evitando que reduzca la pantalla.
+    } else {
+        generateAnkiOptions(item[langA]);
     }
 }
 
+/* =====================================================
+   OPCIONES ANKI
+===================================================== */
+
 function generateAnkiOptions(correctAnswer) {
-    const container = document.getElementById("anki-container");
-    container.innerHTML = "";
+    const container = $("anki-container");
+    container.replaceChildren();
 
-    let options = [correctAnswer];
-    let allItems = [];
-    partsData.forEach(p => p.items.forEach(i => allItems.push(i[langA])));
+    const distractors = [];
 
-    while (options.length < 3 && allItems.length > options.length) {
-        let rand = allItems[Math.floor(Math.random() * allItems.length)];
-        if (!options.includes(rand)) {
-            options.push(rand);
-        }
-    }
+    partsData.forEach(part => {
+        part.items.forEach(item => {
+            const answer = item[langA];
 
-    options.sort(() => Math.random() - 0.5);
+            if(answer!==correctAnswer && !distractors.includes(answer)) {
+                distractors.push(answer);
+            }
+        });
+    });
 
-    options.forEach(opt => {
+    const options = shuffle([
+        correctAnswer,
+        ...shuffle(distractors).slice(0,2)
+    ]);
+
+    options.forEach(option => {
         const btn = document.createElement("button");
-        btn.className = "anki-opt-btn";
-        btn.textContent = opt;
-        btn.onclick = () => processAnswer(opt);
+
+        btn.type = "button";
+        btn.className = "option";
+        btn.textContent = option;
+
+        btn.addEventListener("click",() => {
+            processAnswer(option);
+        });
+
         container.appendChild(btn);
     });
 }
 
-function normalize(text) {
-    return text.trim().toLowerCase().normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()«»?¿!¡]/g, "")
-        .replace(/\s+/g, " ");
+/* =====================================================
+   NORMALIZACIÓN DE RESPUESTAS
+===================================================== */
+
+function normalize(value) {
+    return String(value)
+        .trim()
+        .toLocaleLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g,"")
+        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()«»?¿!¡"']/g,"")
+        .replace(/\s+/g," ");
 }
+
+/* =====================================================
+   COMPROBACIÓN
+===================================================== */
 
 function handleAction() {
-    if (gameState === "ERROR_WAIT" || gameState === "SUCCESS_WAIT") {
-        loadNextQuestion();
+    if(gameState!=="QUESTION") {
+        if(gameState==="ERROR_WAIT" || gameState==="SUCCESS_WAIT") {
+            loadNextQuestion();
+        }
         return;
     }
-    const val = document.getElementById("user-input").value;
-    processAnswer(val);
+
+    const value = $("user-input").value.trim();
+
+    if(!value) {
+        $("user-input").focus();
+        return;
+    }
+
+    processAnswer(value);
 }
 
-function processAnswer(userVal) {
-    if (currentItem === null || gameState !== "QUESTION") return;
+$("action-btn").addEventListener("click",handleAction);
 
-    const itemData = partsData[currentPartIdx].items[currentItem];
-    const correctVal = itemData[langA];
-    const feedback = document.getElementById("feedback-box");
-    const input = document.getElementById("user-input");
-
-    if (document.getElementById("typing-container").style.display === "flex") {
-        input.disabled = true;
+$("user-input").addEventListener("keydown",event => {
+    if(event.key==="Enter") {
+        event.preventDefault();
+        handleAction();
     }
-
-    if (normalize(userVal) === normalize(correctVal)) {
-        streaks[currentItem]++;
-        lastItem = currentItem;
-        forcedItem = null;
-
-        if (streaks[currentItem] >= 3) {
-            feedback.innerHTML = `<strong>¡Excelente!</strong><br>Frase dominada bajo regla de 3.`;
-            activeGroup = activeGroup.filter(i => i !== currentItem);
-            completedCount++;
-            
-            const progKey = getProgressKey(currentPartIdx);
-            if (!userProgress[progKey]) userProgress[progKey] = [];
-            if (!userProgress[progKey].includes(currentItem)) {
-                userProgress[progKey].push(currentItem);
-            }
-            localStorage.setItem("polyglot_matrix_progress", JSON.stringify(userProgress));
-            updateGlobalProgress();
-        } else {
-            feedback.innerHTML = `<strong>¡Correcto!</strong><br>Avanzas a la racha: ${streaks[currentItem]}/3.`;
-        }
-
-        feedback.className = "feedback-box success";
-        feedback.style.display = "block";
-        gameState = "SUCCESS_WAIT";
-
-        const btn = document.getElementById("action-btn");
-        if (btn) {
-            btn.textContent = "Siguiente ➔";
-            btn.style.background = "linear-gradient(135deg,#00ff88,#00b35f)";
-        }
-
-        setTimeout(() => {
-            if (gameState === "SUCCESS_WAIT") {
-                loadNextQuestion();
-            }
-        }, 800);
-
-    } else {
-        errorCount++;
-        streaks[currentItem] = 0;
-        forcedItem = currentItem; 
-        document.getElementById("hud-streak").textContent = "Racha: 0/3";
-
-        feedback.innerHTML = `
-            <div style="font-weight:700;margin-bottom:2px;">INCORRECTO</div>
-            Traducción exacta en ${langA.toUpperCase()}:
-            <span class="correct-answer-highlight">${correctVal}</span>
-            <span style="font-size:calc(var(--fs-scale) * 0.72);color:var(--text-muted);display:block;margin-top:2px;">
-                Racha reiniciada. Repitiendo tarjeta.
-            </span>
-        `;
-        feedback.className = "feedback-box error";
-        feedback.style.display = "block";
-        gameState = "ERROR_WAIT";
-
-        const btn = document.getElementById("action-btn");
-        if (btn) {
-            btn.textContent = "Repetir esta frase ➔";
-            btn.style.background = "linear-gradient(135deg,#ff0055,#cc0044)";
-            btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }
-}
-
-function finishCycle() {
-    const elapsedSeconds = ((Date.now() - startTime) / 1000).toFixed(1);
-    const recordKey = getRecordKey(currentPartIdx);
-    const existingRecord = userRecords[recordKey];
-
-    let isNewRecord = false;
-    if (!existingRecord || parseFloat(elapsedSeconds) < parseFloat(existingRecord.time) || (parseFloat(elapsedSeconds) === parseFloat(existingRecord.time) && errorCount <= existingRecord.errors)) {
-        userRecords[recordKey] = { time: elapsedSeconds, errors: errorCount };
-        localStorage.setItem("polyglot_matrix_records", JSON.stringify(userRecords));
-        isNewRecord = true;
-    }
-
-    if (typeof confetti === "function") {
-        confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
-    }
-
-    let msg = `¡Ciclo completado!\n\nTiempo: ${elapsedSeconds}s\nErrores: ${errorCount}`;
-    if (isNewRecord) {
-        msg += `\n\n🏆 ¡NUEVO RÉCORD PERSONAL! 🏆`;
-    } else {
-        msg += `\n(Récord actual: ${existingRecord.time}s / ${existingRecord.errors} err)`;
-    }
-    
-    msg += `\n\nReiniciando en modo infinito...`;
-
-    alert(msg);
-    startPart(currentPartIdx);
-}
-
-document.getElementById("user-input").addEventListener("keypress", (e) => {
-    if (e.key === "Enter") handleAction();
 });
 
-window.onload = initApp;
-</script>
+function processAnswer(userValue) {
+    if(gameState!=="QUESTION" || currentItem===null) return;
 
+    const item = partsData[currentPartIdx].items[currentItem];
+    const correct = item[langA];
+    const feedback = $("feedback-box");
+    const typing = !$("typing-container").classList.contains("hidden");
+
+    // Bloqueo inmediato contra dobles clics.
+    gameState = "PROCESSING";
+
+    if(typing) {
+        $("user-input").disabled = true;
+    } else {
+        $("anki-container").querySelectorAll("button").forEach(btn=>{
+            btn.disabled = true;
+        });
+    }
+
+    if(normalize(userValue)===normalize(correct)) {
+        handleCorrect(feedback);
+    } else {
+        handleIncorrect(feedback,correct);
+    }
+}
+
+/* =====================================================
+   RESPUESTA CORRECTA
+===================================================== */
+
+function handleCorrect(feedback) {
+    streaks[currentItem]++;
+    lastItem = currentItem;
+
+    const streak = streaks[currentItem];
+
+    $("hud-streak").textContent = `Racha: ${streak}/3`;
+
+    if(streak>=3) {
+        completedCount++;
+
+        activeGroup = activeGroup.filter(i=>i!==currentItem);
+
+        const key = progressKey(currentPartIdx);
+
+        if(!Array.isArray(userProgress[key])) {
+            userProgress[key]=[];
+        }
+
+        if(!userProgress[key].includes(currentItem)) {
+            userProgress[key].push(currentItem);
+        }
+
+        writeStorage(STORAGE.progress,userProgress);
+        updateGlobalProgress();
+
+        feedback.innerHTML =
+            "<strong>¡FRASE DOMINADA!</strong><br>3 respuestas correctas consecutivas.";
+
+        feedback.className = "feedback success";
+    } else {
+        feedback.innerHTML =
+            `<strong>¡CORRECTO!</strong><br>Racha actual: ${streak}/3.`;
+
+        feedback.className = "feedback success";
+    }
+
+    gameState = "SUCCESS_WAIT";
+
+    // Continuar automáticamente, sin obligar a tocar otro botón.
+    setTimeout(()=>{
+        if(gameState==="SUCCESS_WAIT") {
+            loadNextQuestion();
+        }
+    },650);
+}
+
+/* =====================================================
+   RESPUESTA INCORRECTA
+===================================================== */
+
+function handleIncorrect(feedback,correct) {
+    errorCount++;
+
+    streaks[currentItem]=0;
+
+    $("hud-streak").textContent = "Racha: 0/3";
+
+    feedback.replaceChildren();
+
+    const title = document.createElement("strong");
+    title.textContent = "INCORRECTO";
+
+    const explanation = document.createElement("div");
+    explanation.textContent =
+        `Traducción correcta (${langA.toUpperCase()}):`;
+
+    const answer = document.createElement("span");
+    answer.className = "answer";
+    answer.textContent = correct;
+
+    const detail = document.createElement("div");
+    detail.textContent = "Racha reiniciada. Debes repetir esta misma frase.";
+
+    feedback.append(title,explanation,answer,detail);
+    feedback.className = "feedback error";
+
+    gameState = "ERROR_WAIT";
+
+    $("action-btn").classList.remove("hidden");
+    $("action-btn").textContent = "Repetir esta frase →";
+    $("action-btn").className = "main-btn error-btn";
+
+    // En Anki también existe un botón visible para repetir.
+    // No se deja al usuario atrapado sin poder continuar.
+    $("action-btn").onclick = () => {
+        if(gameState==="ERROR_WAIT") {
+            gameState="RETRY";
+            loadNextQuestion();
+        }
+    };
+
+    if(!$("typing-container").classList.contains("hidden")) {
+        $("user-input").disabled = true;
+    }
+
+    // Para Anki se mantiene el botón general visible.
+    $("action-btn").classList.remove("hidden");
+}
+
+/* =====================================================
+   CICLO COMPLETADO
+===================================================== */
+
+function finishCycle() {
+    gameState="FINISHED";
+
+    const elapsed = Math.max(0,(Date.now()-startTime)/1000);
+    const time = elapsed.toFixed(1);
+
+    const key = recordKey(currentPartIdx);
+    const previous = userRecords[key];
+
+    let isNewRecord = false;
+
+    if(!previous ||
+       elapsed < Number(previous.time) ||
+       (elapsed===Number(previous.time) &&
+        errorCount<Number(previous.errors))) {
+
+        userRecords[key]={
+            time,
+            errors:errorCount,
+            date:new Date().toISOString()
+        };
+
+        writeStorage(STORAGE.records,userRecords);
+        isNewRecord=true;
+    }
+
+    renderModules();
+    updateGlobalProgress();
+
+    const part = partsData[currentPartIdx];
+
+    const summary = [
+        "¡MÓDULO COMPLETADO!",
+        "",
+        `Módulo: ${part.title}`,
+        `Tiempo: ${time} segundos`,
+        `Errores: ${errorCount}`,
+        `Frases dominadas: ${part.items.length}/${part.items.length}`,
+        "",
+        isNewRecord ? "🏆 ¡NUEVO RÉCORD PERSONAL!" : "¡Buen trabajo!"
+    ];
+
+    const feedback = $("feedback-box");
+
+    feedback.textContent=summary.join("\n");
+    feedback.className="feedback success";
+
+    $("display-target").textContent="¡OBJETIVO CONSEGUIDO!";
+    $("anki-container").classList.add("hidden");
+    $("typing-container").classList.add("hidden");
+    $("mode-badge").textContent="COMPLETADO";
+    $("hud-streak").textContent="3/3";
+    $("hud-progress").textContent="100%";
+
+    $("action-btn").classList.remove("hidden");
+    $("action-btn").className="main-btn success-btn";
+    $("action-btn").textContent="Reiniciar módulo";
+
+    $("action-btn").onclick=()=>{
+        startPart(currentPartIdx);
+    };
+
+    // Restaurar el comportamiento normal del botón en la siguiente partida.
+    if(typeof confetti!=="undefined") {
+        try {
+            confetti({particleCount:100,spread:75,origin:{y:.65}});
+        } catch {}
+    }
+}
+
+/* =====================================================
+   RESTAURACIÓN DE EVENTOS
+===================================================== */
+
+// El botón es reutilizado en distintos estados.
+$("action-btn").onclick=handleAction;
+
+function restoreActionButton() {
+    $("action-btn").onclick=handleAction;
+}
+
+const originalLoadNextQuestion = loadNextQuestion;
+
+// El botón siempre conserva el comportamiento correcto
+// después de cambiar de pregunta.
+const actionObserver = new MutationObserver(()=>{
+    if(gameState==="QUESTION") {
+        $("action-btn").onclick=handleAction;
+    }
+});
+
+actionObserver.observe($("action-btn"),{
+    attributes:true,
+    attributeFilter:["class"]
+});
+
+/* =====================================================
+   ADAPTACIÓN AL TECLADO MÓVIL
+===================================================== */
+
+if(window.visualViewport) {
+    const viewport = window.visualViewport;
+
+    function adaptViewport() {
+        const available = viewport.height;
+
+        document.querySelector(".app").style.height =
+            Math.min(window.innerHeight,available)+"px";
+
+        if(document.activeElement===$("user-input")) {
+            $("game-scroll").scrollTop =
+                $("game-scroll").scrollHeight;
+        }
+    }
+
+    viewport.addEventListener("resize",adaptViewport);
+    viewport.addEventListener("scroll",adaptViewport);
+    window.addEventListener("resize",adaptViewport);
+}
+
+/* =====================================================
+   ARRANQUE
+===================================================== */
+
+initApp();
+
+</script>
 </body>
 </html>
