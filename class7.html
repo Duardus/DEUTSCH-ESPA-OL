@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,1436 +5,291 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#03050b">
 <title>PolyGlot Matrix — Infinite Master</title>
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700&display=swap');
-
-:root {
-    --bg: #03050b;
-    --surface: #0d1320;
-    --surface2: #080c14;
-    --text: #f8fafc;
-    --muted: #94a3b8;
-    --accent: #00eaff;
-    --success: #00ff88;
-    --error: #ff426d;
-    --border: rgba(255,255,255,.12);
-    --scale: 1;
-    --gap: 8px;
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
-}
-
-html {
-    width: 100%;
-    height: 100%;
-    font-size: 16px;
-}
-
-body {
-    width: 100%;
-    min-height: 100%;
-    height: 100dvh;
-    overflow: hidden;
-    background:
-        radial-gradient(circle at 50% 0%, rgba(0,234,255,.09), transparent 55%),
-        var(--bg);
-    color: var(--text);
-    font-family: Inter, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-}
-
-button, input, select {
-    font: inherit;
-}
-
-button {
-    cursor: pointer;
-    touch-action: manipulation;
-}
-
-button:disabled {
-    opacity: .5;
-    cursor: not-allowed;
-}
-
-.app {
-    width: 100%;
-    max-width: 480px;
-    height: 100%;
-    max-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    padding: 8px;
-    padding-bottom: calc(8px + var(--safe-bottom));
-    gap: 8px;
-    background: rgba(13,19,32,.98);
-    border: 1px solid var(--border);
-    overflow: hidden;
-}
-
-.global-progress {
-    flex-shrink: 0;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    padding: 7px 10px;
-}
-
-.global-info {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-    color: var(--muted);
-    font-size: calc(.72rem * var(--scale));
-    font-weight: 700;
-    margin-bottom: 5px;
-}
-
-.global-info b {
-    color: var(--accent);
-}
-
-.progress-track {
-    width: 100%;
-    height: 5px;
-    background: #202b3a;
-    border-radius: 20px;
-    overflow: hidden;
-}
-
-.progress-fill {
-    width: 0%;
-    height: 100%;
-    background: linear-gradient(90deg,var(--accent),#0077ff);
-    transition: width .25s;
-}
-
-.screen {
-    display: none;
-    flex: 1;
-    min-height: 0;
-    flex-direction: column;
-    gap: var(--gap);
-}
-
-.screen.active {
-    display: flex;
-}
-
-.scroll-area {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
-    display: flex;
-    flex-direction: column;
-    gap: var(--gap);
-    padding-bottom: 4px;
-}
-
-h1,h2 {
-    font-family: Rajdhani,sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.intro-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-}
-
-.intro-header h1 {
-    color: var(--accent);
-    font-size: calc(1.5rem * var(--scale));
-}
-
-.intro-header p {
-    color: var(--muted);
-    font-size: calc(.7rem * var(--scale));
-    line-height: 1.4;
-}
-
-.btn-index,.secondary,.a11y {
-    background: var(--surface2);
-    color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 10px;
-    font-size: calc(.75rem * var(--scale));
-    font-weight: 700;
-    flex-shrink: 0;
-}
-
-.btn-index {
-    color: var(--accent);
-    text-decoration: none;
-}
-
-.accessibility,.config {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 9px;
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    flex-shrink: 0;
-    font-size: calc(.75rem * var(--scale));
-}
-
-.controls {
-    display: flex;
-    gap: 4px;
-}
-
-.a11y.active {
-    color: #000;
-    background: var(--accent);
-    border-color: var(--accent);
-}
-
-.config {
-    flex-direction: column;
-    align-items: stretch;
-}
-
-.lang-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-}
-
-select {
-    max-width: 58%;
-    padding: 6px;
-    border-radius: 6px;
-    background: #101726;
-    color: white;
-    border: 1px solid var(--border);
-    font-size: calc(.78rem * var(--scale));
-}
-
-.section-title {
-    color: var(--accent);
-    font-size: calc(.9rem * var(--scale));
-    text-align: center;
-}
-
-.modules-grid {
-    display: grid;
-    grid-template-columns: repeat(2,minmax(0,1fr));
-    gap: 8px;
-}
-
-.module-card {
-    min-width: 0;
-    padding: 12px 10px;
-    text-align: left;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--surface2);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    transition: border-color .15s,transform .15s;
-}
-
-.module-card:active {
-    transform: scale(.97);
-    border-color: var(--accent);
-}
-
-.mod-num {
-    color: var(--accent);
-    font-size: calc(.7rem * var(--scale));
-    font-weight: 700;
-}
-
-.mod-title {
-    font-size: calc(.9rem * var(--scale));
-    font-weight: 700;
-    overflow-wrap: anywhere;
-}
-
-.mod-prog,.mod-record {
-    color: var(--muted);
-    font-size: calc(.68rem * var(--scale));
-}
-
-.mod-record {
-    color: var(--success);
-}
-
-.game-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 5px;
-    flex-shrink: 0;
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 7px;
-}
-
-.game-header h2 {
-    font-size: calc(.9rem * var(--scale));
-    color: var(--accent);
-    text-align: center;
-    flex: 1;
-}
-
-.secondary {
-    padding: 7px;
-}
-
-.hud {
-    display: flex;
-    justify-content: space-between;
-    color: var(--muted);
-    font-size: calc(.75rem * var(--scale));
-    font-weight: 700;
-    flex-shrink: 0;
-}
-
-.help {
-    padding: 8px;
-    background: rgba(0,234,255,.045);
-    border: 1px dashed rgba(0,234,255,.25);
-    border-radius: 8px;
-    color: #cbd5e1;
-    font-size: calc(.75rem * var(--scale));
-    line-height: 1.4;
-    flex-shrink: 0;
-}
-
-.prompt {
-    background: var(--surface2);
-    padding: 12px;
-    border-radius: 10px;
-    border-left: 3px solid var(--accent);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex-shrink: 0;
-}
-
-.prompt-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 5px;
-}
-
-.prompt-tag {
-    color: var(--muted);
-    font-size: calc(.68rem * var(--scale));
-    text-transform: uppercase;
-}
-
-.badge {
-    font-size: calc(.65rem * var(--scale));
-    font-weight: 700;
-    padding: 4px 6px;
-    border-radius: 5px;
-    background: rgba(0,234,255,.12);
-    color: var(--accent);
-    white-space: nowrap;
-}
-
-.badge.write {
-    color: var(--error);
-    background: rgba(255,66,109,.12);
-}
-
-.target {
-    font-size: calc(1.12rem * var(--scale));
-    font-weight: 700;
-    line-height: 1.4;
-    overflow-wrap: anywhere;
-}
-
-.anki-options {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-}
-
-.option {
-    padding: 12px;
-    border-radius: 9px;
-    border: 1px solid var(--border);
-    background: var(--surface2);
-    color: white;
-    font-size: calc(1rem * var(--scale));
-    font-weight: 600;
-    text-align: left;
-    line-height: 1.35;
-    overflow-wrap: anywhere;
-}
-
-.option:active {
-    border-color: var(--accent);
-}
-
-.typing {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.user-input {
-    width: 100%;
-    min-width: 0;
-    padding: 13px 10px;
-    border: 2px solid var(--border);
-    border-radius: 9px;
-    background: #060912;
-    color: white;
-    font-size: max(16px,calc(1rem * var(--scale)));
-    text-align: center;
-    outline: none;
-}
-
-.user-input:focus {
-    border-color: var(--accent);
-}
-
-.main-btn {
-    width: 100%;
-    padding: 12px;
-    border: 0;
-    border-radius: 9px;
-    background: linear-gradient(135deg,var(--accent),#0077ff);
-    color: #000;
-    font-family: Rajdhani,sans-serif;
-    font-size: calc(1rem * var(--scale));
-    font-weight: 700;
-    letter-spacing: .5px;
-}
-
-.main-btn.error-btn {
-    background: linear-gradient(135deg,#ff426d,#c90042);
-    color: white;
-}
-
-.main-btn.success-btn {
-    background: linear-gradient(135deg,#00ff88,#00a85b);
-    color: #001b10;
-}
-
-.feedback {
-    display: none;
-    padding: 10px;
-    border-radius: 8px;
-    font-size: calc(.82rem * var(--scale));
-    text-align: center;
-    line-height: 1.4;
-    overflow-wrap: anywhere;
-    flex-shrink: 0;
-}
-
-.feedback.success {
-    display: block;
-    color: var(--success);
-    background: rgba(0,255,136,.08);
-    border: 1px solid rgba(0,255,136,.25);
-}
-
-.feedback.error {
-    display: block;
-    color: var(--error);
-    background: rgba(255,66,109,.08);
-    border: 1px solid rgba(255,66,109,.25);
-}
-
-.answer {
-    display: block;
-    color: white;
-    font-size: calc(1rem * var(--scale));
-    font-weight: 700;
-    margin: 5px 0;
-}
-
-.game-bottom {
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-}
-
-.hidden {
-    display: none !important;
-}
-
-@media(max-height:650px) {
-    .app {
-        gap: 5px;
-        padding: 5px;
-    }
-    .screen {
-        gap: 5px;
-    }
-    .scroll-area {
-        gap: 5px;
-    }
-    .prompt {
-        padding: 8px;
-    }
-    .option {
-        padding: 9px;
-    }
-    .help {
-        padding: 6px;
-    }
-}
-
-@media(max-width:350px) {
-    .modules-grid {
-        grid-template-columns: 1fr;
-    }
-    .game-header .controls {
-        gap: 2px;
-    }
-    .game-header .a11y {
-        padding: 6px;
-    }
-}
-
-/* El teclado no debe expulsar los controles de la pantalla */
-@media(orientation:portrait) {
-    body {
-        min-height: 0;
-    }
-}
-
+:root{
+  --bg:#03050b; --surface:#0d1320; --surface2:#0b101c; --surface3:#111a2d;
+  --text:#f8fafc; --muted:#94a3b8; --muted2:#64748b;
+  --accent:#00eaff; --accent2:#0077ff; --success:#00ff88; --error:#ff426d;
+  --border:rgba(255,255,255,.11); --border2:rgba(255,255,255,.18);
+  --radius:14px; --radius-sm:10px;
+  --scale:1; --gap:10px; --safe-bottom:env(safe-area-inset-bottom,0px);
+  --shadow:0 20px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%;font-size:16px}
+body{
+  min-height:100%; height:100dvh; overflow:hidden;
+  background:
+    radial-gradient(800px 400px at 50% -10%, rgba(0,234,255,.14), transparent 60%),
+    radial-gradient(600px 300px at 90% 20%, rgba(0,119,255,.12), transparent 60%),
+    var(--bg);
+  color:var(--text); font-family:Inter,system-ui,sans-serif;
+  display:flex; justify-content:center; align-items:stretch;
+}
+button,input,select{font:inherit}
+button{cursor:pointer; touch-action:manipulation; user-select:none}
+button:disabled{opacity:.5; cursor:not-allowed}
+.app{
+  width:100%; max-width:480px; height:100%; max-height:100dvh;
+  display:flex; flex-direction:column; gap:10px;
+  padding:10px; padding-bottom:calc(10px + var(--safe-bottom));
+  background:linear-gradient(180deg, rgba(17,26,45,.96), rgba(13,19,32,.98));
+  border:1px solid var(--border); border-radius:0; box-shadow:var(--shadow);
+  overflow:hidden;
+}
+@media(min-width:520px){ .app{ border-radius:18px; margin:12px auto; max-height:860px; height:calc(100dvh - 24px);} }
+
+.global-progress{
+  flex-shrink:0; background:var(--surface2); border:1px solid var(--border);
+  border-radius:12px; padding:10px 12px; position:relative; overflow:hidden;
+}
+.global-progress::after{
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(90deg, transparent, rgba(0,234,255,.06), transparent);
+  animation:shimmer 3.5s infinite; pointer-events:none;
+}
+.global-info{display:flex; justify-content:space-between; gap:8px; color:var(--muted); font-size:calc(.72rem * var(--scale)); font-weight:700; letter-spacing:.04em}
+.global-info b{color:var(--accent)}
+.progress-track{width:100%; height:6px; background:#1a2333; border-radius:99px; overflow:hidden; margin-top:7px}
+.progress-fill{width:0%; height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .35s cubic-bezier(.2,.8,.2,1)}
+
+.screen{display:none; flex:1; min-height:0; flex-direction:column; gap:var(--gap)}
+.screen.active{display:flex}
+.scroll-area{flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; display:flex; flex-direction:column; gap:var(--gap); padding-bottom:6px}
+.scroll-area::-webkit-scrollbar{width:4px}
+.scroll-area::-webkit-scrollbar-thumb{background:#233047; border-radius:99px}
+
+h1,h2{font-family:Rajdhani,sans-serif; text-transform:uppercase; letter-spacing:.06em}
+.intro-header{display:flex; justify-content:space-between; align-items:flex-start; gap:10px}
+.intro-header h1{color:var(--accent); font-size:calc(1.65rem * var(--scale)); line-height:.95}
+.intro-header p{color:var(--muted); font-size:calc(.74rem * var(--scale)); line-height:1.4; margin-top:4px}
+.btn-index,.secondary,.a11y{background:var(--surface2); color:var(--muted); border:1px solid var(--border); border-radius:9px; padding:9px 11px; font-size:calc(.78rem * var(--scale)); font-weight:700; flex-shrink:0; transition:.18s}
+.btn-index{color:var(--accent); text-decoration:none; display:inline-flex; align-items:center}
+.a11y.active{color:#001018; background:var(--accent); border-color:var(--accent); box-shadow:0 0 18px rgba(0,234,255,.35)}
+.secondary:hover,.a11y:hover{border-color:var(--border2); transform:translateY(-1px)}
+
+.card{background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:10px; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-shrink:0}
+.card.col{flex-direction:column; align-items:stretch}
+.controls{display:flex; gap:6px}
+select{max-width:62%; padding:8px 10px; border-radius:8px; background:#0e1526; color:white; border:1px solid var(--border); font-size:calc(.82rem * var(--scale)); outline:none}
+select:focus{border-color:var(--accent)}
+.lang-row{display:flex; justify-content:space-between; align-items:center; gap:10px; width:100%}
+.lang-row label{color:var(--muted); font-weight:600; font-size:calc(.8rem * var(--scale))}
+
+.section-title{color:var(--accent); font-size:calc(.88rem * var(--scale)); text-align:center; letter-spacing:.12em; margin-top:2px}
+
+.modules-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px}
+.module-card{
+  min-width:0; padding:13px 12px; text-align:left; border:1px solid var(--border); border-radius:14px;
+  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--surface2);
+  color:white; display:flex; flex-direction:column; gap:6px; transition:.2s cubic-bezier(.2,.8,.2,1);
+  position:relative; overflow:hidden; isolation:isolate;
+}
+.module-card::before{content:""; position:absolute; inset:0; background:radial-gradient(300px 120px at 0% 0%, rgba(0,234,255,.12), transparent 60%); opacity:0; transition:.2s; z-index:-1}
+.module-card:hover{border-color:var(--border2); transform:translateY(-2px)}
+.module-card:hover::before{opacity:1}
+.module-card:active{transform:scale(.97)}
+.mod-num{color:var(--accent); font-size:calc(.7rem * var(--scale)); font-weight:700; letter-spacing:.08em}
+.mod-title{font-size:calc(.92rem * var(--scale)); font-weight:700; line-height:1.2}
+.mod-prog,.mod-record{color:var(--muted); font-size:calc(.70rem * var(--scale)); line-height:1.3}
+.mod-record{color:var(--success)}
+
+.game-header{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-shrink:0; border-bottom:1px solid var(--border); padding-bottom:10px}
+.game-header h2{font-size:calc(.92rem * var(--scale)); color:var(--accent); text-align:center; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+
+.hud{display:flex; justify-content:space-between; color:var(--muted); font-size:calc(.76rem * var(--scale)); font-weight:700; flex-shrink:0; letter-spacing:.02em}
+.help{padding:10px 11px; background:linear-gradient(180deg, rgba(0,234,255,.06), rgba(0,234,255,.02)); border:1px dashed rgba(0,234,255,.26); border-radius:10px; color:#cbd5e1; font-size:calc(.78rem * var(--scale)); line-height:1.45; flex-shrink:0}
+
+.prompt{background:linear-gradient(180deg, var(--surface3), var(--surface2)); padding:14px; border-radius:14px; border:1px solid var(--border); border-left:3px solid var(--accent); display:flex; flex-direction:column; gap:10px; flex-shrink:0; box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.prompt-top{display:flex; justify-content:space-between; align-items:center; gap:8px}
+.prompt-tag{color:var(--muted); font-size:calc(.7rem * var(--scale)); text-transform:uppercase; letter-spacing:.08em; font-weight:700}
+.badge{font-size:calc(.68rem * var(--scale)); font-weight:700; padding:5px 8px; border-radius:999px; background:rgba(0,234,255,.12); color:var(--accent); white-space:nowrap; border:1px solid rgba(0,234,255,.22)}
+.badge.write{color:var(--error); background:rgba(255,66,109,.12); border-color:rgba(255,66,109,.22)}
+.target{font-size:calc(1.22rem * var(--scale)); font-weight:700; line-height:1.35; overflow-wrap:anywhere; letter-spacing:-.01em}
+
+.anki-options{display:flex; flex-direction:column; gap:9px}
+.option{
+  padding:13px 14px; border-radius:12px; border:1px solid var(--border);
+  background:var(--surface2); color:white; font-size:calc(1rem * var(--scale)); font-weight:600;
+  text-align:left; line-height:1.35; overflow-wrap:anywhere; transition:.18s;
+}
+.option:hover{border-color:var(--border2); background:#101a2e}
+.option:active{transform:scale(.98); border-color:var(--accent)}
+.option.correct{border-color:var(--success); background:rgba(0,255,136,.1)}
+.option.wrong{border-color:var(--error); background:rgba(255,66,109,.1)}
+
+.typing{display:flex; flex-direction:column; gap:10px}
+.user-input{
+  width:100%; min-width:0; padding:14px 12px; border:2px solid var(--border); border-radius:12px;
+  background:#060912; color:white; font-size:max(16px, calc(1rem * var(--scale))); text-align:center; outline:none; transition:.18s;
+}
+.user-input:focus{border-color:var(--accent); box-shadow:0 0 0 4px rgba(0,234,255,.15)}
+
+.main-btn{
+  width:100%; padding:13px; border:0; border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#001018; font-family:Rajdhani,sans-serif; font-size:calc(1.06rem * var(--scale)); font-weight:700; letter-spacing:.04em;
+  box-shadow:0 10px 24px rgba(0,234,255,.25); transition:.18s;
+}
+.main-btn:hover{transform:translateY(-1px); box-shadow:0 14px 30px rgba(0,234,255,.3)}
+.main-btn:active{transform:scale(.98)}
+.main-btn.error-btn{background:linear-gradient(135deg,#ff5a84,#ff2e6a); color:white; box-shadow:0 10px 24px rgba(255,66,109,.3)}
+.main-btn.success-btn{background:linear-gradient(135deg,#2eff9e,#00c86a); color:#001b10; box-shadow:0 10px 24px rgba(0,255,136,.28)}
+
+.feedback{display:none; padding:11px 12px; border-radius:12px; font-size:calc(.86rem * var(--scale)); text-align:center; line-height:1.45; flex-shrink:0; border:1px solid transparent}
+.feedback.success{display:block; color:var(--success); background:rgba(0,255,136,.08); border-color:rgba(0,255,136,.22)}
+.feedback.error{display:block; color:#ffd1dc; background:rgba(255,66,109,.1); border-color:rgba(255,66,109,.24)}
+.answer{display:block; color:white; font-size:calc(1.06rem * var(--scale)); font-weight:700; margin:6px 0}
+
+.game-bottom{flex-shrink:0; display:flex; flex-direction:column; gap:8px}
+.hidden{display:none !important}
+
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes pop{0%{transform:scale(.9); opacity:0}100%{transform:scale(1); opacity:1}}
+.pop{animation:pop .35s cubic-bezier(.2,.8,.2,1)}
+
+@media(max-height:700px){ .app{gap:7px; padding:7px} .prompt{padding:11px} .option{padding:11px 12px} }
+@media(max-width:360px){ .modules-grid{grid-template-columns:1fr} }
 </style>
 </head>
-
 <body>
-
 <div class="app">
+  <div class="global-progress">
+    <div class="global-info"><span>PROGRESO GENERAL: <b id="global-pct">0%</b></span><span id="global-languages">EN · DE</span></div>
+    <div class="progress-track"><div id="global-fill" class="progress-fill"></div></div>
+  </div>
 
-    <div class="global-progress">
-        <div class="global-info">
-            <span>PROGRESO GENERAL: <b id="global-pct">0%</b></span>
-            <span id="global-languages">EN · DE · ES</span>
-        </div>
-        <div class="progress-track">
-            <div id="global-fill" class="progress-fill"></div>
-        </div>
+  <section id="screen-intro" class="screen active">
+    <div class="scroll-area">
+      <header class="intro-header">
+        <div><h1>PolyGlot<br>Matrix</h1><p>Memorización inteligente · 3 aciertos consecutivos para dominar.</p></div>
+        <a href="index.html" class="btn-index">⌂ Índice</a>
+      </header>
+
+      <div class="card"><span>🔍 Tamaño</span><div class="controls">
+        <button class="a11y active" data-size="1">A</button><button class="a11y" data-size="1.15">A+</button><button class="a11y" data-size="1.3">A++</button>
+      </div></div>
+
+      <div class="card col">
+        <div class="lang-row"><label for="sel-q">Preguntar en:</label><select id="sel-q"><option value="en">Inglés (EN)</option><option value="de">Alemán (DE)</option><option value="es">Español (ES)</option></select></div>
+        <div class="lang-row"><label for="sel-a">Responder en:</label><select id="sel-a"><option value="de">Alemán (DE)</option><option value="en">Inglés (EN)</option><option value="es">Español (ES)</option></select><button id="swap-langs" class="secondary" title="Intercambiar">⇄</button></div>
+      </div>
+
+      <h2 class="section-title">MÓDULOS DE APRENDIZAJE</h2>
+      <div id="modules-grid" class="modules-grid"></div>
+    </div>
+  </section>
+
+  <section id="screen-game" class="screen">
+    <header class="game-header">
+      <button class="secondary" id="menu-btn">← Menú</button>
+      <h2 id="game-title">Módulo</h2>
+      <div class="controls"><button class="a11y" data-size="1">A</button><button class="a11y" data-size="1.15">A+</button><button class="a11y" data-size="1.3">A++</button></div>
+    </header>
+
+    <div class="hud"><span id="hud-progress">Dominadas: 0/0</span><span id="hud-streak">Racha: 0/3</span></div>
+
+    <div class="scroll-area" id="game-scroll">
+      <div class="help" id="human-help">Cada frase necesita tres aciertos consecutivos. Un error reinicia su racha.</div>
+      <div class="prompt">
+        <div class="prompt-top"><span class="prompt-tag" id="label-instruction">Traduce:</span><span class="badge" id="mode-badge">FASE 1/3</span></div>
+        <div class="target" id="display-target">Cargando...</div>
+      </div>
+      <div id="anki-container" class="anki-options"></div>
+      <div id="typing-container" class="typing hidden">
+        <input id="user-input" class="user-input" type="text" placeholder="Escribe la traducción..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done">
+      </div>
+      <div id="feedback-box" class="feedback" aria-live="polite"></div>
     </div>
 
-    <!-- INICIO -->
-    <section id="screen-intro" class="screen active">
-
-        <div class="scroll-area">
-
-            <header class="intro-header">
-                <div>
-                    <h1>PolyGlot Matrix</h1>
-                    <p>Memorización inteligente · Motor de tres aciertos.</p>
-                </div>
-                <a href="index.html" class="btn-index">⌂ Índice</a>
-            </header>
-
-            <div class="accessibility">
-                <span>🔍 Tamaño de letra</span>
-                <div class="controls">
-                    <button class="a11y active" data-size="1">A</button>
-                    <button class="a11y" data-size="1.15">A+</button>
-                    <button class="a11y" data-size="1.3">A++</button>
-                </div>
-            </div>
-
-            <div class="config">
-                <div class="lang-row">
-                    <label for="sel-q">Preguntar en:</label>
-                    <select id="sel-q">
-                        <option value="en">Inglés (EN)</option>
-                        <option value="de">Alemán (DE)</option>
-                        <option value="es">Español (ES)</option>
-                    </select>
-                </div>
-
-                <div class="lang-row">
-                    <label for="sel-a">Responder en:</label>
-                    <select id="sel-a">
-                        <option value="de">Alemán (DE)</option>
-                        <option value="en">Inglés (EN)</option>
-                        <option value="es">Español (ES)</option>
-                    </select>
-                </div>
-            </div>
-
-            <h2 class="section-title">MÓDULOS DE APRENDIZAJE</h2>
-
-            <div id="modules-grid" class="modules-grid"></div>
-
-        </div>
-    </section>
-
-    <!-- ESTUDIO -->
-    <section id="screen-game" class="screen">
-
-        <header class="game-header">
-            <button class="secondary" id="menu-btn">← Menú</button>
-
-            <h2 id="game-title">Módulo</h2>
-
-            <div class="controls">
-                <button class="a11y" data-size="1">A</button>
-                <button class="a11y" data-size="1.15">A+</button>
-                <button class="a11y" data-size="1.3">A++</button>
-            </div>
-        </header>
-
-        <div class="hud">
-            <span id="hud-progress">Dominadas: 0/0</span>
-            <span id="hud-streak">Racha: 0/3</span>
-        </div>
-
-        <div class="scroll-area" id="game-scroll">
-
-            <div class="help" id="human-help">
-                Cada frase necesita tres respuestas correctas consecutivas. Un error reinicia su racha.
-            </div>
-
-            <div class="prompt">
-                <div class="prompt-top">
-                    <span class="prompt-tag" id="label-instruction">Traduce:</span>
-                    <span class="badge" id="mode-badge">FASE 1/3</span>
-                </div>
-                <div class="target" id="display-target">Cargando...</div>
-            </div>
-
-            <div id="anki-container" class="anki-options"></div>
-
-            <div id="typing-container" class="typing hidden">
-                <input
-                    id="user-input"
-                    class="user-input"
-                    type="text"
-                    placeholder="Escribe la traducción..."
-                    autocomplete="off"
-                    autocorrect="off"
-                    autocapitalize="off"
-                    spellcheck="false"
-                    enterkeyhint="done"
-                >
-            </div>
-
-            <div id="feedback-box" class="feedback" aria-live="polite"></div>
-
-        </div>
-
-        <div class="game-bottom">
-            <button id="action-btn" class="main-btn hidden">Comprobar respuesta</button>
-        </div>
-
-    </section>
-
+    <div class="game-bottom"><button id="action-btn" class="main-btn hidden">Comprobar</button></div>
+  </section>
 </div>
 
 <script>
 "use strict";
-
-/* =====================================================
-   BANCO DE DATOS
-===================================================== */
-
-const partsData = [
-{
-    id:1,
-    title:"1. Necesidades Básicas",
-    help:"Estructuras fundamentales: tener, poseer y expresar necesidades.",
-    items:[
-        {en:"I have time.",de:"Ich habe Zeit.",es:"Tengo tiempo."},
-        {en:"I have money.",de:"Ich habe Geld.",es:"Tengo dinero."},
-        {en:"I have food.",de:"Ich habe Essen.",es:"Tengo comida."},
-        {en:"I have water.",de:"Ich habe Wasser.",es:"Tengo agua."},
-        {en:"I have friends.",de:"Ich habe Freunde.",es:"Tengo amigos."},
-        {en:"I have a car.",de:"Ich habe ein Auto.",es:"Tengo un auto."},
-        {en:"I have a house.",de:"Ich habe ein Haus.",es:"Tengo una casa."},
-        {en:"I have a problem.",de:"Ich habe ein Problem.",es:"Tengo un problema."}
-    ]
-},
-{
-    id:2,
-    title:"2. Mente y Emociones",
-    help:"Conceptos abstractos, sentimientos y estados mentales.",
-    items:[
-        {en:"I have an idea.",de:"Ich habe eine Idee.",es:"Tengo una idea."},
-        {en:"I have a question.",de:"Ich habe eine Frage.",es:"Tengo una pregunta."},
-        {en:"I have energy.",de:"Ich habe Energie.",es:"Tengo energía."},
-        {en:"I have luck.",de:"Ich habe Glück.",es:"Tengo suerte."},
-        {en:"I have courage.",de:"Ich habe Mut.",es:"Tengo valor."},
-        {en:"I have faith.",de:"Ich habe Vertrauen.",es:"Tengo fe/confianza."},
-        {en:"I have hope.",de:"Ich habe Hoffnung.",es:"Tengo esperanza."}
-    ]
-},
-{
-    id:3,
-    title:"3. Fortaleza y Propósito",
-    help:"Estados internos, decisiones y expresiones de propósito.",
-    items:[
-        {en:"I have strength.",de:"Ich habe Kraft.",es:"Tengo fuerza."},
-        {en:"I have patience.",de:"Ich habe Geduld.",es:"Tengo paciencia."},
-        {en:"I have time today.",de:"Ich habe heute Zeit.",es:"Tengo tiempo hoy."},
-        {en:"I have a reason.",de:"Ich habe einen Grund.",es:"Tengo una razón."},
-        {en:"I have a chance.",de:"Ich habe eine Chance.",es:"Tengo una oportunidad."},
-        {en:"I have a dream.",de:"Ich habe einen Traum.",es:"Tengo un sueño."},
-        {en:"I have everything.",de:"Ich habe alles.",es:"Tengo todo."}
-    ]
-}
+const partsData=[
+{id:1,title:"1. Necesidades Básicas",help:"Estructuras fundamentales: tener, poseer y expresar necesidades.",items:[
+{en:"I have time.",de:"Ich habe Zeit.",es:"Tengo tiempo."},{en:"I have money.",de:"Ich habe Geld.",es:"Tengo dinero."},{en:"I have food.",de:"Ich habe Essen.",es:"Tengo comida."},{en:"I have water.",de:"Ich habe Wasser.",es:"Tengo agua."},{en:"I have friends.",de:"Ich habe Freunde.",es:"Tengo amigos."},{en:"I have a car.",de:"Ich habe ein Auto.",es:"Tengo un auto."},{en:"I have a house.",de:"Ich habe ein Haus.",es:"Tengo una casa."},{en:"I have a problem.",de:"Ich habe ein Problem.",es:"Tengo un problema."}]},
+{id:2,title:"2. Mente y Emociones",help:"Conceptos abstractos, sentimientos y estados mentales.",items:[
+{en:"I have an idea.",de:"Ich habe eine Idee.",es:"Tengo una idea."},{en:"I have a question.",de:"Ich habe eine Frage.",es:"Tengo una pregunta."},{en:"I have energy.",de:"Ich habe Energie.",es:"Tengo energía."},{en:"I have luck.",de:"Ich habe Glück.",es:"Tengo suerte."},{en:"I have courage.",de:"Ich habe Mut.",es:"Tengo valor."},{en:"I have faith.",de:"Ich habe Vertrauen.",es:"Tengo fe."},{en:"I have hope.",de:"Ich habe Hoffnung.",es:"Tengo esperanza."}]},
+{id:3,title:"3. Fortaleza y Propósito",help:"Estados internos, decisiones y expresiones de propósito.",items:[
+{en:"I have strength.",de:"Ich habe Kraft.",es:"Tengo fuerza."},{en:"I have patience.",de:"Ich habe Geduld.",es:"Tengo paciencia."},{en:"I have time today.",de:"Ich habe heute Zeit.",es:"Tengo tiempo hoy."},{en:"I have a reason.",de:"Ich habe einen Grund.",es:"Tengo una razón."},{en:"I have a chance.",de:"Ich habe eine Chance.",es:"Tengo una oportunidad."},{en:"I have a dream.",de:"Ich habe einen Traum.",es:"Tengo un sueño."},{en:"I have everything.",de:"Ich habe alles.",es:"Tengo todo."}]}
 ];
 
-/* =====================================================
-   ALMACENAMIENTO SEGURO
-===================================================== */
+const STORAGE={config:"polyglot_matrix_config_v2",progress:"polyglot_matrix_progress_v2",records:"polyglot_matrix_records_v2",font:"polyglot_matrix_fontsize_v2"};
 
-const STORAGE = {
-    config:"polyglot_matrix_config",
-    progress:"polyglot_matrix_progress",
-    records:"polyglot_matrix_records",
-    font:"polyglot_matrix_fontsize"
-};
+const $=id=>document.getElementById(id);
+const safeRead=(k,fb)=>{try{const v=localStorage.getItem(k); return v==null?fb:JSON.parse(v)}catch{return fb}};
+const safeWrite=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v)); return true}catch(e){console.warn("Storage fail",e); return false}};
+const shuffle=a=>{const r=[...a]; for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]} return r};
+const normalize=s=>String(s).trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()«»"'?¿!¡()]/g,"").replace(/\s+/g," ").trim();
+const haptic=t=>{try{navigator.vibrate&&navigator.vibrate(t)}catch{}};
 
-function readStorage(key,fallback) {
-    try {
-        const value = localStorage.getItem(key);
-        return value === null ? fallback : JSON.parse(value);
-    } catch {
-        return fallback;
-    }
-}
+const App={
+  langQ:"en", langA:"de", font:1,
+  progress:{}, records:{},
+  rt:{partIdx:0, pool:[], active:[], streaks:{}, cur:null, last:null, completed:0, errors:0, start:0, token:0, state:"IDLE", timers:[]},
+  clearTimers(){ this.rt.timers.forEach(clearTimeout); this.rt.timers=[]; },
+  setState(s){ this.rt.state=s; },
+  keyProgress(i){ return `p_${i}_${this.langQ}_${this.langA}`; },
+  keyRecord(i){ return `rec_${i}_${this.langQ}_${this.langA}`; },
+  getCompleted(i){ const v=this.progress[this.keyProgress(i)]; return Array.isArray(v)?v:[]; },
 
-function writeStorage(key,value) {
-    try {
-        localStorage.setItem(key,JSON.stringify(value));
-        return true;
-    } catch(error) {
-        console.warn("No se pudo guardar:",error);
-        return false;
-    }
-}
-
-let userProgress = readStorage(STORAGE.progress,{});
-let userRecords = readStorage(STORAGE.records,{});
-const savedConfig = readStorage(STORAGE.config,{});
-
-let langQ = ["en","de","es"].includes(savedConfig.q) ? savedConfig.q : "en";
-let langA = ["en","de","es"].includes(savedConfig.a) ? savedConfig.a : "de";
-
-if(langQ === langA) {
-    langA = ["en","de","es"].find(x => x !== langQ);
-}
-
-/* =====================================================
-   ESTADO DEL MOTOR
-===================================================== */
-
-let currentPartIdx = 0;
-let activeGroup = [];
-let pool = [];
-let streaks = {};
-let currentItem = null;
-let lastItem = null;
-
-let completedCount = 0;
-let errorCount = 0;
-let startTime = 0;
-
-let gameState = "QUESTION";
-let fontSize = 1;
-let questionToken = 0;
-
-const $ = id => document.getElementById(id);
-
-function shuffle(array) {
-    const result = [...array];
-
-    for(let i=result.length-1;i>0;i--) {
-        const j = Math.floor(Math.random()*(i+1));
-        [result[i],result[j]] = [result[j],result[i]];
-    }
-
-    return result;
-}
-
-function progressKey(idx) {
-    return `p_${idx}_${langQ}_${langA}`;
-}
-
-function recordKey(idx) {
-    return `rec_${idx}_${langQ}_${langA}`;
-}
-
-function getCompleted(idx) {
-    const value = userProgress[progressKey(idx)];
-    return Array.isArray(value) ? value : [];
-}
-
-/* =====================================================
-   INICIALIZACIÓN
-===================================================== */
-
-function initApp() {
-    $("sel-q").value = langQ;
-    $("sel-a").value = langA;
-
-    const savedFont = Number(localStorage.getItem(STORAGE.font));
-
-    if([1,1.15,1.3].includes(savedFont)) {
-        fontSize = savedFont;
-    }
-
-    applyFontSize();
-    renderModules();
-    updateGlobalProgress();
-    updateLanguageBadge();
-}
-
-function updateLanguageBadge() {
-    $("global-languages").textContent =
-        `${langQ.toUpperCase()} · ${langA.toUpperCase()}`;
-}
-
-/* =====================================================
-   CONFIGURACIÓN
-===================================================== */
-
-function saveConfig() {
-    const q = $("sel-q").value;
-    let a = $("sel-a").value;
-
-    if(q === a) {
-        a = ["en","de","es"].find(x => x !== q);
-        $("sel-a").value = a;
-    }
-
-    langQ = q;
-    langA = a;
-
-    writeStorage(STORAGE.config,{q:langQ,a:langA});
-
-    renderModules();
-    updateGlobalProgress();
-    updateLanguageBadge();
-}
-
-$("sel-q").addEventListener("change",saveConfig);
-$("sel-a").addEventListener("change",saveConfig);
-
-/* =====================================================
-   ACCESIBILIDAD
-===================================================== */
-
-function applyFontSize() {
-    document.documentElement.style.setProperty("--scale",fontSize);
-
-    document.querySelectorAll("[data-size]").forEach(btn => {
-        btn.classList.toggle(
-            "active",
-            Math.abs(Number(btn.dataset.size)-fontSize)<.001
-        );
+  init(){
+    const cfg=safeRead(STORAGE.config,{});
+    this.langQ=["en","de","es"].includes(cfg.q)?cfg.q:"en";
+    this.langA=["en","de","es"].includes(cfg.a)?cfg.a:"de";
+    if(this.langQ===this.langA) this.langA=["en","de","es"].find(x=>x!==this.langQ);
+    this.progress=safeRead(STORAGE.progress,{});
+    this.records=safeRead(STORAGE.records,{});
+    const sf=Number(localStorage.getItem(STORAGE.font));
+    if([1,1.15,1.3].includes(sf)) this.font=sf;
+    $("sel-q").value=this.langQ; $("sel-a").value=this.langA;
+    this.applyFont(); this.renderModules(); this.updateGlobal(); this.updateBadge();
+    this.bindEvents();
+  },
+  applyFont(){
+    document.documentElement.style.setProperty("--scale",String(this.font));
+    document.querySelectorAll("[data-size]").forEach(b=>b.classList.toggle("active", Math.abs(Number(b.dataset.size)-this.font)<0.001));
+  },
+  updateBadge(){ $("global-languages").textContent=`${this.langQ.toUpperCase()} · ${this.langA.toUpperCase()}`; },
+  updateGlobal(){
+    let tot=0, done=0;
+    partsData.forEach((p,i)=>{ tot+=p.items.length; done+=this.getCompleted(i).length; });
+    const pct=tot?Math.round(done/tot*100):0;
+    $("global-pct").textContent=pct+"%"; $("global-fill").style.width=pct+"%";
+  },
+  renderModules(){
+    const grid=$("modules-grid"); grid.replaceChildren();
+    const frag=document.createDocumentFragment();
+    partsData.forEach((part,idx)=>{
+      const done=this.getCompleted(idx).length; const tot=part.items.length; const pct=tot?Math.round(done/tot*100):0;
+      const rec=this.records[this.keyRecord(idx)];
+      const card=document.createElement("button"); card.type="button"; card.className="module-card pop";
+      card.style.animationDelay=`${idx*40}ms`;
+      card.innerHTML=`<span class="mod-num">MÓDULO 0${idx+1} · ${pct}%</span><span class="mod-title">${part.title.replace(/^\d+\.\s*/,"")}</span><span class="mod-prog">Dominadas: ${done}/${tot}</span><span class="mod-record">${rec?`🏆 ${rec.time}s · ${rec.errors} errores`:`🏆 Sin récord`}</span>`;
+      card.addEventListener("click",()=>this.startPart(idx));
+      // reset con long-press
+      let pressTimer=null;
+      card.addEventListener("touchstart",()=>{ pressTimer=setTimeout(()=>{ if(confirm(`¿Borrar progreso de "${part.title}" en ${this.langQ.toUpperCase()}→${this.langA.toUpperCase()}?`)){ this.resetProgress(idx);} },650); },{passive:true});
+      card.addEventListener("touchend",()=>clearTimeout(pressTimer));
+      frag.appendChild(card);
     });
-}
-
-function setFontSize(value) {
-    fontSize = Number(value);
-
-    if(![1,1.15,1.3].includes(fontSize)) return;
-
-    applyFontSize();
-
-    try {
-        localStorage.setItem(STORAGE.font,String(fontSize));
-    } catch {}
-}
-
-document.addEventListener("click",event => {
-    const btn = event.target.closest("[data-size]");
-    if(btn) setFontSize(btn.dataset.size);
-});
-
-/* =====================================================
-   PANTALLAS
-===================================================== */
-
-function switchScreen(id) {
-    document.querySelectorAll(".screen").forEach(screen => {
-        screen.classList.toggle("active",screen.id===id);
-    });
-}
-
-$("menu-btn").addEventListener("click",returnToMenu);
-
-function returnToMenu() {
-    $("user-input").blur();
-    renderModules();
-    updateGlobalProgress();
-    switchScreen("screen-intro");
-}
-
-/* =====================================================
-   MÓDULOS
-===================================================== */
-
-function renderModules() {
-    const grid = $("modules-grid");
-    grid.replaceChildren();
-
-    partsData.forEach((part,idx) => {
-        const done = getCompleted(idx).length;
-        const total = part.items.length;
-        const pct = Math.round(done/total*100);
-        const record = userRecords[recordKey(idx)];
-
-        const card = document.createElement("button");
-        card.type = "button";
-        card.className = "module-card";
-
-        const number = document.createElement("span");
-        number.className = "mod-num";
-        number.textContent = `MÓDULO 0${idx+1}`;
-
-        const title = document.createElement("span");
-        title.className = "mod-title";
-        title.textContent = part.title.replace(/^\d+\.\s*/,"");
-
-        const progress = document.createElement("span");
-        progress.className = "mod-prog";
-        progress.textContent = `Dominadas: ${done}/${total} · ${pct}%`;
-
-        const best = document.createElement("span");
-        best.className = "mod-record";
-        best.textContent = record
-            ? `🏆 ${record.time}s · ${record.errors} errores`
-            : "🏆 Sin récord";
-
-        card.append(number,title,progress,best);
-
-        card.addEventListener("click",() => startPart(idx));
-
-        grid.appendChild(card);
-    });
-}
-
-function updateGlobalProgress() {
-    let total = 0;
-    let completed = 0;
-
-    partsData.forEach((part,idx) => {
-        total += part.items.length;
-        completed += getCompleted(idx).length;
-    });
-
-    const pct = total ? Math.round(completed/total*100) : 0;
-
-    $("global-pct").textContent = pct+"%";
-    $("global-fill").style.width = pct+"%";
-}
-
-/* =====================================================
-   INICIO DE MÓDULO
-===================================================== */
-
-function startPart(idx) {
-    if(!Number.isInteger(idx) || !partsData[idx]) return;
-
-    currentPartIdx = idx;
-
-    const part = partsData[idx];
-    const completed = getCompleted(idx);
-
-    completedCount = completed.length;
-    errorCount = 0;
-
-    streaks = {};
-    part.items.forEach((_,i) => {
-        streaks[i] = 0;
-    });
-
-    // Los elementos ya dominados no vuelven al banco inicial.
-    pool = shuffle(
-        part.items.map((_,i)=>i).filter(i=>!completed.includes(i))
-    );
-
-    activeGroup = [];
-    currentItem = null;
-    lastItem = null;
-    gameState = "QUESTION";
-    questionToken++;
-
-    startTime = Date.now();
-
-    $("game-title").textContent = part.title;
-    $("human-help").textContent = part.help+
-        " Cada frase requiere 3 aciertos consecutivos. Si fallas, vuelves a 0.";
-
-    switchScreen("screen-game");
-
-    if(pool.length===0) {
-        finishCycle();
-        return;
-    }
-
-    loadNextQuestion();
-}
-
-/* =====================================================
-   MOTOR DE GRUPOS INTELIGENTES DE TRES
-===================================================== */
-
-function refillActiveGroup() {
-    while(activeGroup.length<3 && pool.length>0) {
-        activeGroup.push(pool.shift());
-    }
-}
-
-function chooseNextItem() {
-    // Si hay una respuesta fallida, se repite obligatoriamente.
-    if(currentItem!==null && streaks[currentItem]===0 &&
-       activeGroup.includes(currentItem) &&
-       gameState==="RETRY") {
-        gameState="QUESTION";
-        return currentItem;
-    }
-
-    let candidates = activeGroup.filter(i=>i!==lastItem);
-
-    // Si queda una sola pregunta, puede repetirse.
-    if(candidates.length===0) candidates=[...activeGroup];
-
-    if(!candidates.length) return null;
-
-    return candidates[Math.floor(Math.random()*candidates.length)];
-}
-
-/* =====================================================
-   CARGA DE PREGUNTAS
-===================================================== */
-
-function loadNextQuestion() {
-    questionToken++;
-
-    refillActiveGroup();
-
-    if(activeGroup.length===0) {
-        if(pool.length===0) {
-            finishCycle();
-            return;
-        }
-
-        refillActiveGroup();
-    }
-
-    currentItem = chooseNextItem();
-
-    if(currentItem===null) {
-        finishCycle();
-        return;
-    }
-
-    gameState = "QUESTION";
-
-    const item = partsData[currentPartIdx].items[currentItem];
-
-    $("display-target").textContent = item[langQ];
-    $("hud-progress").textContent =
-        `Dominadas: ${completedCount}/${partsData[currentPartIdx].items.length}`;
-
-    $("hud-streak").textContent = `Racha: ${streaks[currentItem]}/3`;
-
-    $("feedback-box").className = "feedback";
-    $("feedback-box").textContent = "";
-
-    const isTyping = streaks[currentItem]===2;
-
-    $("mode-badge").textContent = isTyping
-        ? "FASE FINAL · 3/3"
-        : `FASE ANKI · ${streaks[currentItem]+1}/3`;
-
-    $("mode-badge").classList.toggle("write",isTyping);
-
-    $("anki-container").classList.toggle("hidden",isTyping);
-    $("typing-container").classList.toggle("hidden",!isTyping);
-
-    $("action-btn").classList.toggle("hidden",!isTyping);
-    $("action-btn").textContent = "Comprobar respuesta";
-    $("action-btn").className = "main-btn";
-
-    if(isTyping) {
-        const input = $("user-input");
-        input.disabled = false;
-        input.value = "";
-
-        // El usuario puede abrir el teclado cuando lo necesite.
-        // No se fuerza el teclado, evitando que reduzca la pantalla.
-    } else {
-        generateAnkiOptions(item[langA]);
-    }
-}
-
-/* =====================================================
-   OPCIONES ANKI
-===================================================== */
-
-function generateAnkiOptions(correctAnswer) {
-    const container = $("anki-container");
-    container.replaceChildren();
-
-    const distractors = [];
-
-    partsData.forEach(part => {
-        part.items.forEach(item => {
-            const answer = item[langA];
-
-            if(answer!==correctAnswer && !distractors.includes(answer)) {
-                distractors.push(answer);
-            }
-        });
-    });
-
-    const options = shuffle([
-        correctAnswer,
-        ...shuffle(distractors).slice(0,2)
-    ]);
-
-    options.forEach(option => {
-        const btn = document.createElement("button");
-
-        btn.type = "button";
-        btn.className = "option";
-        btn.textContent = option;
-
-        btn.addEventListener("click",() => {
-            processAnswer(option);
-        });
-
-        container.appendChild(btn);
-    });
-}
-
-/* =====================================================
-   NORMALIZACIÓN DE RESPUESTAS
-===================================================== */
-
-function normalize(value) {
-    return String(value)
-        .trim()
-        .toLocaleLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g,"")
-        .replace(/[.,\/#!$%\^&\*;:{}=\-_`~()«»?¿!¡"']/g,"")
-        .replace(/\s+/g," ");
-}
-
-/* =====================================================
-   COMPROBACIÓN
-===================================================== */
-
-function handleAction() {
-    if(gameState!=="QUESTION") {
-        if(gameState==="ERROR_WAIT" || gameState==="SUCCESS_WAIT") {
-            loadNextQuestion();
-        }
-        return;
-    }
-
-    const value = $("user-input").value.trim();
-
-    if(!value) {
-        $("user-input").focus();
-        return;
-    }
-
-    processAnswer(value);
-}
-
-$("action-btn").addEventListener("click",handleAction);
-
-$("user-input").addEventListener("keydown",event => {
-    if(event.key==="Enter") {
-        event.preventDefault();
-        handleAction();
-    }
-});
-
-function processAnswer(userValue) {
-    if(gameState!=="QUESTION" || currentItem===null) return;
-
-    const item = partsData[currentPartIdx].items[currentItem];
-    const correct = item[langA];
-    const feedback = $("feedback-box");
-    const typing = !$("typing-container").classList.contains("hidden");
-
-    // Bloqueo inmediato contra dobles clics.
-    gameState = "PROCESSING";
-
-    if(typing) {
-        $("user-input").disabled = true;
-    } else {
-        $("anki-container").querySelectorAll("button").forEach(btn=>{
-            btn.disabled = true;
-        });
-    }
-
-    if(normalize(userValue)===normalize(correct)) {
-        handleCorrect(feedback);
-    } else {
-        handleIncorrect(feedback,correct);
-    }
-}
-
-/* =====================================================
-   RESPUESTA CORRECTA
-===================================================== */
-
-function handleCorrect(feedback) {
-    streaks[currentItem]++;
-    lastItem = currentItem;
-
-    const streak = streaks[currentItem];
-
-    $("hud-streak").textContent = `Racha: ${streak}/3`;
-
-    if(streak>=3) {
-        completedCount++;
-
-        activeGroup = activeGroup.filter(i=>i!==currentItem);
-
-        const key = progressKey(currentPartIdx);
-
-        if(!Array.isArray(userProgress[key])) {
-            userProgress[key]=[];
-        }
-
-        if(!userProgress[key].includes(currentItem)) {
-            userProgress[key].push(currentItem);
-        }
-
-        writeStorage(STORAGE.progress,userProgress);
-        updateGlobalProgress();
-
-        feedback.innerHTML =
-            "<strong>¡FRASE DOMINADA!</strong><br>3 respuestas correctas consecutivas.";
-
-        feedback.className = "feedback success";
-    } else {
-        feedback.innerHTML =
-            `<strong>¡CORRECTO!</strong><br>Racha actual: ${streak}/3.`;
-
-        feedback.className = "feedback success";
-    }
-
-    gameState = "SUCCESS_WAIT";
-
-    // Continuar automáticamente, sin obligar a tocar otro botón.
-    setTimeout(()=>{
-        if(gameState==="SUCCESS_WAIT") {
-            loadNextQuestion();
-        }
-    },650);
-}
-
-/* =====================================================
-   RESPUESTA INCORRECTA
-===================================================== */
-
-function handleIncorrect(feedback,correct) {
-    errorCount++;
-
-    streaks[currentItem]=0;
-
-    $("hud-streak").textContent = "Racha: 0/3";
-
-    feedback.replaceChildren();
-
-    const title = document.createElement("strong");
-    title.textContent = "INCORRECTO";
-
-    const explanation = document.createElement("div");
-    explanation.textContent =
-        `Traducción correcta (${langA.toUpperCase()}):`;
-
-    const answer = document.createElement("span");
-    answer.className = "answer";
-    answer.textContent = correct;
-
-    const detail = document.createElement("div");
-    detail.textContent = "Racha reiniciada. Debes repetir esta misma frase.";
-
-    feedback.append(title,explanation,answer,detail);
-    feedback.className = "feedback error";
-
-    gameState = "ERROR_WAIT";
-
-    $("action-btn").classList.remove("hidden");
-    $("action-btn").textContent = "Repetir esta frase →";
-    $("action-btn").className = "main-btn error-btn";
-
-    // En Anki también existe un botón visible para repetir.
-    // No se deja al usuario atrapado sin poder continuar.
-    $("action-btn").onclick = () => {
-        if(gameState==="ERROR_WAIT") {
-            gameState="RETRY";
-            loadNextQuestion();
-        }
-    };
-
-    if(!$("typing-container").classList.contains("hidden")) {
-        $("user-input").disabled = true;
-    }
-
-    // Para Anki se mantiene el botón general visible.
-    $("action-btn").classList.remove("hidden");
-}
-
-/* =====================================================
-   CICLO COMPLETADO
-===================================================== */
-
-function finishCycle() {
-    gameState="FINISHED";
-
-    const elapsed = Math.max(0,(Date.now()-startTime)/1000);
-    const time = elapsed.toFixed(1);
-
-    const key = recordKey(currentPartIdx);
-    const previous = userRecords[key];
-
-    let isNewRecord = false;
-
-    if(!previous ||
-       elapsed < Number(previous.time) ||
-       (elapsed===Number(previous.time) &&
-        errorCount<Number(previous.errors))) {
-
-        userRecords[key]={
-            time,
-            errors:errorCount,
-            date:new Date().toISOString()
-        };
-
-        writeStorage(STORAGE.records,userRecords);
-        isNewRecord=true;
-    }
-
-    renderModules();
-    updateGlobalProgress();
-
-    const part = partsData[currentPartIdx];
-
-    const summary = [
-        "¡MÓDULO COMPLETADO!",
-        "",
-        `Módulo: ${part.title}`,
-        `Tiempo: ${time} segundos`,
-        `Errores: ${errorCount}`,
-        `Frases dominadas: ${part.items.length}/${part.items.length}`,
-        "",
-        isNewRecord ? "🏆 ¡NUEVO RÉCORD PERSONAL!" : "¡Buen trabajo!"
-    ];
-
-    const feedback = $("feedback-box");
-
-    feedback.textContent=summary.join("\n");
-    feedback.className="feedback success";
-
-    $("display-target").textContent="¡OBJETIVO CONSEGUIDO!";
-    $("anki-container").classList.add("hidden");
-    $("typing-container").classList.add("hidden");
-    $("mode-badge").textContent="COMPLETADO";
-    $("hud-streak").textContent="3/3";
-    $("hud-progress").textContent="100%";
-
-    $("action-btn").classList.remove("hidden");
-    $("action-btn").className="main-btn success-btn";
-    $("action-btn").textContent="Reiniciar módulo";
-
-    $("action-btn").onclick=()=>{
-        startPart(currentPartIdx);
-    };
-
-    // Restaurar el comportamiento normal del botón en la siguiente partida.
-    if(typeof confetti!=="undefined") {
-        try {
-            confetti({particleCount:100,spread:75,origin:{y:.65}});
-        } catch {}
-    }
-}
-
-/* =====================================================
-   RESTAURACIÓN DE EVENTOS
-===================================================== */
-
-// El botón es reutilizado en distintos estados.
-$("action-btn").onclick=handleAction;
-
-function restoreActionButton() {
-    $("action-btn").onclick=handleAction;
-}
-
-const originalLoadNextQuestion = loadNextQuestion;
-
-// El botón siempre conserva el comportamiento correcto
-// después de cambiar de pregunta.
-const actionObserver = new MutationObserver(()=>{
-    if(gameState==="QUESTION") {
-        $("action-btn").onclick=handleAction;
-    }
-});
-
-actionObserver.observe($("action-btn"),{
-    attributes:true,
-    attributeFilter:["class"]
-});
-
-/* =====================================================
-   ADAPTACIÓN AL TECLADO MÓVIL
-===================================================== */
-
-if(window.visualViewport) {
-    const viewport = window.visualViewport;
-
-    function adaptViewport() {
-        const available = viewport.height;
-
-        document.querySelector(".app").style.height =
-            Math.min(window.innerHeight,available)+"px";
-
-        if(document.activeElement===$("user-input")) {
-            $("game-scroll").scrollTop =
-                $("game-scroll").scrollHeight;
-        }
-    }
-
-    viewport.addEventListener("resize",adaptViewport);
-    viewport.addEventListener("scroll",adaptViewport);
-    window.addEventListener("resize",adaptViewport);
-}
-
-/* =====================================================
-   ARRANQUE
-===================================================== */
-
-initApp();
-
-</script>
-</body>
-</html>
+    grid.appendChild(frag);
+  },
+  resetProgress(idx){
+    delete this.progress[this.keyProgress(idx)];
+    delete this.records[this.keyRecord(idx)];
+    safeWrite(STORAGE.progress,this.progress); safeWrite(STORAGE.records,this.records);
+    this.renderModules(); this.updateGlobal(); haptic(30);
+  },
+  saveConfig(){
+    let q=$("sel-q").value, a=$("sel-a").value;
+    if(q===a) a=["en","de","es"].find(x=>x!==q);
+    $("sel-a").value=a; this.langQ=q; this.langA=a;
+    safeW
