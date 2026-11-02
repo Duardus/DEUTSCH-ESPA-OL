@@ -5,291 +5,82 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#03050b">
 <title>PolyGlot Matrix — Infinite Master</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <style>
-:root{
-  --bg:#03050b; --surface:#0d1320; --surface2:#0b101c; --surface3:#111a2d;
-  --text:#f8fafc; --muted:#94a3b8; --muted2:#64748b;
-  --accent:#00eaff; --accent2:#0077ff; --success:#00ff88; --error:#ff426d;
-  --border:rgba(255,255,255,.11); --border2:rgba(255,255,255,.18);
-  --radius:14px; --radius-sm:10px;
-  --scale:1; --gap:10px; --safe-bottom:env(safe-area-inset-bottom,0px);
-  --shadow:0 20px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.06);
-}
+:root{--bg:#03050b;--surface:#0d1320;--surface2:#0b101c;--surface3:#111a2d;--text:#f8fafc;--muted:#94a3b8;--accent:#00eaff;--accent2:#0077ff;--success:#00ff88;--error:#ff426d;--border:rgba(255,255,255,.12);--border2:rgba(255,255,255,.18);--scale:1;--safe:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html{height:100%;font-size:16px}
-body{
-  min-height:100%; height:100dvh; overflow:hidden;
-  background:
-    radial-gradient(800px 400px at 50% -10%, rgba(0,234,255,.14), transparent 60%),
-    radial-gradient(600px 300px at 90% 20%, rgba(0,119,255,.12), transparent 60%),
-    var(--bg);
-  color:var(--text); font-family:Inter,system-ui,sans-serif;
-  display:flex; justify-content:center; align-items:stretch;
-}
-button,input,select{font:inherit}
-button{cursor:pointer; touch-action:manipulation; user-select:none}
-button:disabled{opacity:.5; cursor:not-allowed}
-.app{
-  width:100%; max-width:480px; height:100%; max-height:100dvh;
-  display:flex; flex-direction:column; gap:10px;
-  padding:10px; padding-bottom:calc(10px + var(--safe-bottom));
-  background:linear-gradient(180deg, rgba(17,26,45,.96), rgba(13,19,32,.98));
-  border:1px solid var(--border); border-radius:0; box-shadow:var(--shadow);
-  overflow:hidden;
-}
-@media(min-width:520px){ .app{ border-radius:18px; margin:12px auto; max-height:860px; height:calc(100dvh - 24px);} }
-
-.global-progress{
-  flex-shrink:0; background:var(--surface2); border:1px solid var(--border);
-  border-radius:12px; padding:10px 12px; position:relative; overflow:hidden;
-}
-.global-progress::after{
-  content:""; position:absolute; inset:0;
-  background:linear-gradient(90deg, transparent, rgba(0,234,255,.06), transparent);
-  animation:shimmer 3.5s infinite; pointer-events:none;
-}
-.global-info{display:flex; justify-content:space-between; gap:8px; color:var(--muted); font-size:calc(.72rem * var(--scale)); font-weight:700; letter-spacing:.04em}
-.global-info b{color:var(--accent)}
-.progress-track{width:100%; height:6px; background:#1a2333; border-radius:99px; overflow:hidden; margin-top:7px}
-.progress-fill{width:0%; height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .35s cubic-bezier(.2,.8,.2,1)}
-
-.screen{display:none; flex:1; min-height:0; flex-direction:column; gap:var(--gap)}
-.screen.active{display:flex}
-.scroll-area{flex:1; min-height:0; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:thin; display:flex; flex-direction:column; gap:var(--gap); padding-bottom:6px}
-.scroll-area::-webkit-scrollbar{width:4px}
-.scroll-area::-webkit-scrollbar-thumb{background:#233047; border-radius:99px}
-
-h1,h2{font-family:Rajdhani,sans-serif; text-transform:uppercase; letter-spacing:.06em}
-.intro-header{display:flex; justify-content:space-between; align-items:flex-start; gap:10px}
-.intro-header h1{color:var(--accent); font-size:calc(1.65rem * var(--scale)); line-height:.95}
-.intro-header p{color:var(--muted); font-size:calc(.74rem * var(--scale)); line-height:1.4; margin-top:4px}
-.btn-index,.secondary,.a11y{background:var(--surface2); color:var(--muted); border:1px solid var(--border); border-radius:9px; padding:9px 11px; font-size:calc(.78rem * var(--scale)); font-weight:700; flex-shrink:0; transition:.18s}
-.btn-index{color:var(--accent); text-decoration:none; display:inline-flex; align-items:center}
-.a11y.active{color:#001018; background:var(--accent); border-color:var(--accent); box-shadow:0 0 18px rgba(0,234,255,.35)}
-.secondary:hover,.a11y:hover{border-color:var(--border2); transform:translateY(-1px)}
-
-.card{background:var(--surface2); border:1px solid var(--border); border-radius:12px; padding:10px; display:flex; align-items:center; justify-content:space-between; gap:10px; flex-shrink:0}
-.card.col{flex-direction:column; align-items:stretch}
-.controls{display:flex; gap:6px}
-select{max-width:62%; padding:8px 10px; border-radius:8px; background:#0e1526; color:white; border:1px solid var(--border); font-size:calc(.82rem * var(--scale)); outline:none}
-select:focus{border-color:var(--accent)}
-.lang-row{display:flex; justify-content:space-between; align-items:center; gap:10px; width:100%}
-.lang-row label{color:var(--muted); font-weight:600; font-size:calc(.8rem * var(--scale))}
-
-.section-title{color:var(--accent); font-size:calc(.88rem * var(--scale)); text-align:center; letter-spacing:.12em; margin-top:2px}
-
-.modules-grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px}
-.module-card{
-  min-width:0; padding:13px 12px; text-align:left; border:1px solid var(--border); border-radius:14px;
-  background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01)), var(--surface2);
-  color:white; display:flex; flex-direction:column; gap:6px; transition:.2s cubic-bezier(.2,.8,.2,1);
-  position:relative; overflow:hidden; isolation:isolate;
-}
-.module-card::before{content:""; position:absolute; inset:0; background:radial-gradient(300px 120px at 0% 0%, rgba(0,234,255,.12), transparent 60%); opacity:0; transition:.2s; z-index:-1}
-.module-card:hover{border-color:var(--border2); transform:translateY(-2px)}
-.module-card:hover::before{opacity:1}
-.module-card:active{transform:scale(.97)}
-.mod-num{color:var(--accent); font-size:calc(.7rem * var(--scale)); font-weight:700; letter-spacing:.08em}
-.mod-title{font-size:calc(.92rem * var(--scale)); font-weight:700; line-height:1.2}
-.mod-prog,.mod-record{color:var(--muted); font-size:calc(.70rem * var(--scale)); line-height:1.3}
-.mod-record{color:var(--success)}
-
-.game-header{display:flex; align-items:center; justify-content:space-between; gap:8px; flex-shrink:0; border-bottom:1px solid var(--border); padding-bottom:10px}
-.game-header h2{font-size:calc(.92rem * var(--scale)); color:var(--accent); text-align:center; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
-
-.hud{display:flex; justify-content:space-between; color:var(--muted); font-size:calc(.76rem * var(--scale)); font-weight:700; flex-shrink:0; letter-spacing:.02em}
-.help{padding:10px 11px; background:linear-gradient(180deg, rgba(0,234,255,.06), rgba(0,234,255,.02)); border:1px dashed rgba(0,234,255,.26); border-radius:10px; color:#cbd5e1; font-size:calc(.78rem * var(--scale)); line-height:1.45; flex-shrink:0}
-
-.prompt{background:linear-gradient(180deg, var(--surface3), var(--surface2)); padding:14px; border-radius:14px; border:1px solid var(--border); border-left:3px solid var(--accent); display:flex; flex-direction:column; gap:10px; flex-shrink:0; box-shadow:0 10px 30px rgba(0,0,0,.25)}
-.prompt-top{display:flex; justify-content:space-between; align-items:center; gap:8px}
-.prompt-tag{color:var(--muted); font-size:calc(.7rem * var(--scale)); text-transform:uppercase; letter-spacing:.08em; font-weight:700}
-.badge{font-size:calc(.68rem * var(--scale)); font-weight:700; padding:5px 8px; border-radius:999px; background:rgba(0,234,255,.12); color:var(--accent); white-space:nowrap; border:1px solid rgba(0,234,255,.22)}
-.badge.write{color:var(--error); background:rgba(255,66,109,.12); border-color:rgba(255,66,109,.22)}
-.target{font-size:calc(1.22rem * var(--scale)); font-weight:700; line-height:1.35; overflow-wrap:anywhere; letter-spacing:-.01em}
-
-.anki-options{display:flex; flex-direction:column; gap:9px}
-.option{
-  padding:13px 14px; border-radius:12px; border:1px solid var(--border);
-  background:var(--surface2); color:white; font-size:calc(1rem * var(--scale)); font-weight:600;
-  text-align:left; line-height:1.35; overflow-wrap:anywhere; transition:.18s;
-}
-.option:hover{border-color:var(--border2); background:#101a2e}
-.option:active{transform:scale(.98); border-color:var(--accent)}
-.option.correct{border-color:var(--success); background:rgba(0,255,136,.1)}
-.option.wrong{border-color:var(--error); background:rgba(255,66,109,.1)}
-
-.typing{display:flex; flex-direction:column; gap:10px}
-.user-input{
-  width:100%; min-width:0; padding:14px 12px; border:2px solid var(--border); border-radius:12px;
-  background:#060912; color:white; font-size:max(16px, calc(1rem * var(--scale))); text-align:center; outline:none; transition:.18s;
-}
-.user-input:focus{border-color:var(--accent); box-shadow:0 0 0 4px rgba(0,234,255,.15)}
-
-.main-btn{
-  width:100%; padding:13px; border:0; border-radius:12px;
-  background:linear-gradient(135deg,var(--accent),var(--accent2));
-  color:#001018; font-family:Rajdhani,sans-serif; font-size:calc(1.06rem * var(--scale)); font-weight:700; letter-spacing:.04em;
-  box-shadow:0 10px 24px rgba(0,234,255,.25); transition:.18s;
-}
-.main-btn:hover{transform:translateY(-1px); box-shadow:0 14px 30px rgba(0,234,255,.3)}
-.main-btn:active{transform:scale(.98)}
-.main-btn.error-btn{background:linear-gradient(135deg,#ff5a84,#ff2e6a); color:white; box-shadow:0 10px 24px rgba(255,66,109,.3)}
-.main-btn.success-btn{background:linear-gradient(135deg,#2eff9e,#00c86a); color:#001b10; box-shadow:0 10px 24px rgba(0,255,136,.28)}
-
-.feedback{display:none; padding:11px 12px; border-radius:12px; font-size:calc(.86rem * var(--scale)); text-align:center; line-height:1.45; flex-shrink:0; border:1px solid transparent}
-.feedback.success{display:block; color:var(--success); background:rgba(0,255,136,.08); border-color:rgba(0,255,136,.22)}
-.feedback.error{display:block; color:#ffd1dc; background:rgba(255,66,109,.1); border-color:rgba(255,66,109,.24)}
-.answer{display:block; color:white; font-size:calc(1.06rem * var(--scale)); font-weight:700; margin:6px 0}
-
-.game-bottom{flex-shrink:0; display:flex; flex-direction:column; gap:8px}
-.hidden{display:none !important}
-
-@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-@keyframes pop{0%{transform:scale(.9); opacity:0}100%{transform:scale(1); opacity:1}}
-.pop{animation:pop .35s cubic-bezier(.2,.8,.2,1)}
-
-@media(max-height:700px){ .app{gap:7px; padding:7px} .prompt{padding:11px} .option{padding:11px 12px} }
-@media(max-width:360px){ .modules-grid{grid-template-columns:1fr} }
+html,body{height:100%}body{min-height:100vh;min-height:100dvh;background:radial-gradient(800px 400px at 50% -10%, rgba(0,234,255,.14), transparent 60%),radial-gradient(600px 300px at 90% 20%, rgba(0,119,255,.12), transparent 60%),var(--bg);color:var(--text);font-family:Inter,sans-serif;display:flex;justify-content:center;overflow:hidden}
+button,input,select{font:inherit}button{cursor:pointer}
+.app{width:100%;max-width:480px;height:100%;max-height:100dvh;display:flex;flex-direction:column;gap:10px;padding:10px;padding-bottom:calc(10px + var(--safe));background:linear-gradient(180deg,rgba(17,26,45,.96),rgba(13,19,32,.98));border:1px solid var(--border);overflow:hidden}
+.global-progress{flex-shrink:0;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:10px 12px}
+.global-info{display:flex;justify-content:space-between;color:var(--muted);font-size:calc(.72rem * var(--scale));font-weight:700}.global-info b{color:var(--accent)}
+.track{width:100%;height:6px;background:#1a2333;border-radius:99px;overflow:hidden;margin-top:7px}.fill{width:0%;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .35s}
+.screen{display:none;flex:1;min-height:0;flex-direction:column;gap:10px}.screen.active{display:flex}
+.scroll{flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+.intro{display:flex;justify-content:space-between;gap:10px}.intro h1{color:var(--accent);font-size:calc(1.65rem * var(--scale));line-height:.95;font-family:Rajdhani,sans-serif}
+.card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:10px;display:flex;justify-content:space-between;gap:10px;flex-shrink:0}.card.col{flex-direction:column;align-items:stretch}
+.a11y{padding:9px 11px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-weight:700}.a11y.active{background:var(--accent);color:#001018}
+.modules-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;min-height:140px}
+.module-card{padding:13px 12px;border:1px solid var(--border);border-radius:14px;background:var(--surface2);color:white;display:flex;flex-direction:column;gap:6px;text-align:left}
+.m-num{color:var(--accent);font-size:.7rem;font-weight:700}.m-title{font-weight:700}.m-prog,.m-rec{color:var(--muted);font-size:.70rem}.m-rec{color:var(--success)}
+.game-h{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--border);padding-bottom:10px;flex-shrink:0}
+.hud{display:flex;justify-content:space-between;color:var(--muted);font-weight:700;flex-shrink:0}
+.prompt{background:linear-gradient(180deg,var(--surface3),var(--surface2));padding:14px;border-radius:14px;border:1px solid var(--border);border-left:3px solid var(--accent);flex-shrink:0}
+.target{font-size:calc(1.22rem * var(--scale));font-weight:700}
+.anki{display:flex;flex-direction:column;gap:9px}.opt{padding:13px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface2);color:white;font-weight:600;text-align:left}
+.inp{width:100%;padding:14px;border:2px solid var(--border);border-radius:12px;background:#060912;color:white;text-align:center;font-size:16px}
+.main{width:100%;padding:13px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#001018;font-family:Rajdhani,sans-serif;font-weight:700}
+.fb{display:none;padding:11px;border-radius:12px;text-align:center}.fb.ok{display:block;background:rgba(0,255,136,.08);color:var(--success);border:1px solid rgba(0,255,136,.22)}.fb.er{display:block;background:rgba(255,66,109,.1);color:#ffd1dc;border:1px solid rgba(255,66,109,.24)}
+.hidden{display:none!important}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="global-progress">
-    <div class="global-info"><span>PROGRESO GENERAL: <b id="global-pct">0%</b></span><span id="global-languages">EN · DE</span></div>
-    <div class="progress-track"><div id="global-fill" class="progress-fill"></div></div>
-  </div>
-
+  <div class="global-progress"><div class="global-info"><span>PROGRESO: <b id="global-pct">0%</b></span><span id="global-languages">EN·DE</span></div><div class="track"><div id="global-fill" class="fill"></div></div></div>
   <section id="screen-intro" class="screen active">
-    <div class="scroll-area">
-      <header class="intro-header">
-        <div><h1>PolyGlot<br>Matrix</h1><p>Memorización inteligente · 3 aciertos consecutivos para dominar.</p></div>
-        <a href="index.html" class="btn-index">⌂ Índice</a>
-      </header>
-
-      <div class="card"><span>🔍 Tamaño</span><div class="controls">
-        <button class="a11y active" data-size="1">A</button><button class="a11y" data-size="1.15">A+</button><button class="a11y" data-size="1.3">A++</button>
-      </div></div>
-
-      <div class="card col">
-        <div class="lang-row"><label for="sel-q">Preguntar en:</label><select id="sel-q"><option value="en">Inglés (EN)</option><option value="de">Alemán (DE)</option><option value="es">Español (ES)</option></select></div>
-        <div class="lang-row"><label for="sel-a">Responder en:</label><select id="sel-a"><option value="de">Alemán (DE)</option><option value="en">Inglés (EN)</option><option value="es">Español (ES)</option></select><button id="swap-langs" class="secondary" title="Intercambiar">⇄</button></div>
-      </div>
-
-      <h2 class="section-title">MÓDULOS DE APRENDIZAJE</h2>
+    <div class="scroll">
+      <div class="intro"><div><h1>PolyGlot<br>Matrix</h1><p>3 aciertos seguidos para dominar.</p></div><a href="#" style="color:var(--accent);text-decoration:none;font-weight:700">⌂</a></div>
+      <div class="card"><span>🔍 Tamaño</span><div style="display:flex;gap:6px"><button class="a11y active" data-size="1">A</button><button class="a11y" data-size="1.15">A+</button><button class="a11y" data-size="1.3">A++</button></div></div>
+      <div class="card col"><div style="display:flex;justify-content:space-between"><label>Preguntar:</label><select id="sel-q"><option value="en">EN</option><option value="de">DE</option><option value="es">ES</option></select></div><div style="display:flex;justify-content:space-between"><label>Responder:</label><select id="sel-a"><option value="de">DE</option><option value="en">EN</option><option value="es">ES</option></select><button id="swap-langs" style="padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface2);color:white">⇄</button></div></div>
+      <h2 style="color:var(--accent);text-align:center;font-size:.88rem;letter-spacing:.12em;font-family:Rajdhani">MÓDULOS DE APRENDIZAJE</h2>
       <div id="modules-grid" class="modules-grid"></div>
     </div>
   </section>
-
   <section id="screen-game" class="screen">
-    <header class="game-header">
-      <button class="secondary" id="menu-btn">← Menú</button>
-      <h2 id="game-title">Módulo</h2>
-      <div class="controls"><button class="a11y" data-size="1">A</button><button class="a11y" data-size="1.15">A+</button><button class="a11y" data-size="1.3">A++</button></div>
-    </header>
-
-    <div class="hud"><span id="hud-progress">Dominadas: 0/0</span><span id="hud-streak">Racha: 0/3</span></div>
-
-    <div class="scroll-area" id="game-scroll">
-      <div class="help" id="human-help">Cada frase necesita tres aciertos consecutivos. Un error reinicia su racha.</div>
-      <div class="prompt">
-        <div class="prompt-top"><span class="prompt-tag" id="label-instruction">Traduce:</span><span class="badge" id="mode-badge">FASE 1/3</span></div>
-        <div class="target" id="display-target">Cargando...</div>
-      </div>
-      <div id="anki-container" class="anki-options"></div>
-      <div id="typing-container" class="typing hidden">
-        <input id="user-input" class="user-input" type="text" placeholder="Escribe la traducción..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done">
-      </div>
-      <div id="feedback-box" class="feedback" aria-live="polite"></div>
-    </div>
-
-    <div class="game-bottom"><button id="action-btn" class="main-btn hidden">Comprobar</button></div>
+    <header class="game-h"><button id="menu-btn" style="padding:8px 11px;border-radius:9px;border:1px solid var(--border);background:var(--surface2);color:var(--muted)">← Menú</button><h2 id="game-title" style="font-family:Rajdhani;color:var(--accent);flex:1;text-align:center">Módulo</h2><div style="display:flex;gap:6px"><button class="a11y" data-size="1">A</button><button class="a11y" data-size="1.15">A+</button><button class="a11y" data-size="1.3">A++</button></div></header>
+    <div class="hud"><span id="hud-progress">0/0</span><span id="hud-streak">Racha: 0/3</span></div>
+    <div class="scroll" id="game-scroll"><div id="human-help" style="padding:10px;border:1px dashed rgba(0,234,255,.26);border-radius:10px;color:#cbd5e1;font-size:.78rem">Cada frase necesita 3 aciertos consecutivos.</div><div class="prompt"><div style="display:flex;justify-content:space-between"><span style="color:var(--muted);font-size:.7rem;font-weight:700">Traduce:</span><span id="mode-badge" style="font-size:.68rem;font-weight:700;padding:5px 8px;border-radius:999px;background:rgba(0,234,255,.12);color:var(--accent)">FASE 1/3</span></div><div id="display-target" class="target">Cargando...</div></div><div id="anki-container" class="anki"></div><div id="typing-container" class="hidden"><input id="user-input" class="inp" placeholder="Escribe la traducción..."></div><div id="feedback-box" class="fb"></div></div>
+    <div style="flex-shrink:0"><button id="action-btn" class="main hidden">Comprobar</button></div>
   </section>
 </div>
-
 <script>
-"use strict";
-const partsData=[
-{id:1,title:"1. Necesidades Básicas",help:"Estructuras fundamentales: tener, poseer y expresar necesidades.",items:[
-{en:"I have time.",de:"Ich habe Zeit.",es:"Tengo tiempo."},{en:"I have money.",de:"Ich habe Geld.",es:"Tengo dinero."},{en:"I have food.",de:"Ich habe Essen.",es:"Tengo comida."},{en:"I have water.",de:"Ich habe Wasser.",es:"Tengo agua."},{en:"I have friends.",de:"Ich habe Freunde.",es:"Tengo amigos."},{en:"I have a car.",de:"Ich habe ein Auto.",es:"Tengo un auto."},{en:"I have a house.",de:"Ich habe ein Haus.",es:"Tengo una casa."},{en:"I have a problem.",de:"Ich habe ein Problem.",es:"Tengo un problema."}]},
-{id:2,title:"2. Mente y Emociones",help:"Conceptos abstractos, sentimientos y estados mentales.",items:[
-{en:"I have an idea.",de:"Ich habe eine Idee.",es:"Tengo una idea."},{en:"I have a question.",de:"Ich habe eine Frage.",es:"Tengo una pregunta."},{en:"I have energy.",de:"Ich habe Energie.",es:"Tengo energía."},{en:"I have luck.",de:"Ich habe Glück.",es:"Tengo suerte."},{en:"I have courage.",de:"Ich habe Mut.",es:"Tengo valor."},{en:"I have faith.",de:"Ich habe Vertrauen.",es:"Tengo fe."},{en:"I have hope.",de:"Ich habe Hoffnung.",es:"Tengo esperanza."}]},
-{id:3,title:"3. Fortaleza y Propósito",help:"Estados internos, decisiones y expresiones de propósito.",items:[
-{en:"I have strength.",de:"Ich habe Kraft.",es:"Tengo fuerza."},{en:"I have patience.",de:"Ich habe Geduld.",es:"Tengo paciencia."},{en:"I have time today.",de:"Ich habe heute Zeit.",es:"Tengo tiempo hoy."},{en:"I have a reason.",de:"Ich habe einen Grund.",es:"Tengo una razón."},{en:"I have a chance.",de:"Ich habe eine Chance.",es:"Tengo una oportunidad."},{en:"I have a dream.",de:"Ich habe einen Traum.",es:"Tengo un sueño."},{en:"I have everything.",de:"Ich habe alles.",es:"Tengo todo."}]}
-];
-
-const STORAGE={config:"polyglot_matrix_config_v2",progress:"polyglot_matrix_progress_v2",records:"polyglot_matrix_records_v2",font:"polyglot_matrix_fontsize_v2"};
-
-const $=id=>document.getElementById(id);
-const safeRead=(k,fb)=>{try{const v=localStorage.getItem(k); return v==null?fb:JSON.parse(v)}catch{return fb}};
-const safeWrite=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v)); return true}catch(e){console.warn("Storage fail",e); return false}};
-const shuffle=a=>{const r=[...a]; for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]} return r};
-const normalize=s=>String(s).trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()«»"'?¿!¡()]/g,"").replace(/\s+/g," ").trim();
-const haptic=t=>{try{navigator.vibrate&&navigator.vibrate(t)}catch{}};
-
-const App={
-  langQ:"en", langA:"de", font:1,
-  progress:{}, records:{},
-  rt:{partIdx:0, pool:[], active:[], streaks:{}, cur:null, last:null, completed:0, errors:0, start:0, token:0, state:"IDLE", timers:[]},
-  clearTimers(){ this.rt.timers.forEach(clearTimeout); this.rt.timers=[]; },
-  setState(s){ this.rt.state=s; },
-  keyProgress(i){ return `p_${i}_${this.langQ}_${this.langA}`; },
-  keyRecord(i){ return `rec_${i}_${this.langQ}_${this.langA}`; },
-  getCompleted(i){ const v=this.progress[this.keyProgress(i)]; return Array.isArray(v)?v:[]; },
-
-  init(){
-    const cfg=safeRead(STORAGE.config,{});
-    this.langQ=["en","de","es"].includes(cfg.q)?cfg.q:"en";
-    this.langA=["en","de","es"].includes(cfg.a)?cfg.a:"de";
-    if(this.langQ===this.langA) this.langA=["en","de","es"].find(x=>x!==this.langQ);
-    this.progress=safeRead(STORAGE.progress,{});
-    this.records=safeRead(STORAGE.records,{});
-    const sf=Number(localStorage.getItem(STORAGE.font));
-    if([1,1.15,1.3].includes(sf)) this.font=sf;
-    $("sel-q").value=this.langQ; $("sel-a").value=this.langA;
-    this.applyFont(); this.renderModules(); this.updateGlobal(); this.updateBadge();
-    this.bindEvents();
-  },
-  applyFont(){
-    document.documentElement.style.setProperty("--scale",String(this.font));
-    document.querySelectorAll("[data-size]").forEach(b=>b.classList.toggle("active", Math.abs(Number(b.dataset.size)-this.font)<0.001));
-  },
-  updateBadge(){ $("global-languages").textContent=`${this.langQ.toUpperCase()} · ${this.langA.toUpperCase()}`; },
-  updateGlobal(){
-    let tot=0, done=0;
-    partsData.forEach((p,i)=>{ tot+=p.items.length; done+=this.getCompleted(i).length; });
-    const pct=tot?Math.round(done/tot*100):0;
-    $("global-pct").textContent=pct+"%"; $("global-fill").style.width=pct+"%";
-  },
-  renderModules(){
-    const grid=$("modules-grid"); grid.replaceChildren();
-    const frag=document.createDocumentFragment();
-    partsData.forEach((part,idx)=>{
-      const done=this.getCompleted(idx).length; const tot=part.items.length; const pct=tot?Math.round(done/tot*100):0;
-      const rec=this.records[this.keyRecord(idx)];
-      const card=document.createElement("button"); card.type="button"; card.className="module-card pop";
-      card.style.animationDelay=`${idx*40}ms`;
-      card.innerHTML=`<span class="mod-num">MÓDULO 0${idx+1} · ${pct}%</span><span class="mod-title">${part.title.replace(/^\d+\.\s*/,"")}</span><span class="mod-prog">Dominadas: ${done}/${tot}</span><span class="mod-record">${rec?`🏆 ${rec.time}s · ${rec.errors} errores`:`🏆 Sin récord`}</span>`;
-      card.addEventListener("click",()=>this.startPart(idx));
-      // reset con long-press
-      let pressTimer=null;
-      card.addEventListener("touchstart",()=>{ pressTimer=setTimeout(()=>{ if(confirm(`¿Borrar progreso de "${part.title}" en ${this.langQ.toUpperCase()}→${this.langA.toUpperCase()}?`)){ this.resetProgress(idx);} },650); },{passive:true});
-      card.addEventListener("touchend",()=>clearTimeout(pressTimer));
-      frag.appendChild(card);
-    });
-    grid.appendChild(frag);
-  },
-  resetProgress(idx){
-    delete this.progress[this.keyProgress(idx)];
-    delete this.records[this.keyRecord(idx)];
-    safeWrite(STORAGE.progress,this.progress); safeWrite(STORAGE.records,this.records);
-    this.renderModules(); this.updateGlobal(); haptic(30);
-  },
-  saveConfig(){
-    let q=$("sel-q").value, a=$("sel-a").value;
-    if(q===a) a=["en","de","es"].find(x=>x!==q);
-    $("sel-a").value=a; this.langQ=q; this.langA=a;
-    safeW
+const partsData=[{id:1,title:"1. Necesidades Básicas",help:"Fundamentales.",items:[{en:"I have time.",de:"Ich habe Zeit.",es:"Tengo tiempo."},{en:"I have money.",de:"Ich habe Geld.",es:"Tengo dinero."},{en:"I have food.",de:"Ich habe Essen.",es:"Tengo comida."},{en:"I have water.",de:"Ich habe Wasser.",es:"Tengo agua."},{en:"I have friends.",de:"Ich habe Freunde.",es:"Tengo amigos."},{en:"I have a car.",de:"Ich habe ein Auto.",es:"Tengo un auto."},{en:"I have a house.",de:"Ich habe ein Haus.",es:"Tengo una casa."},{en:"I have a problem.",de:"Ich habe ein Problem.",es:"Tengo un problema."}]},{id:2,title:"2. Mente y Emociones",help:"Abstractos.",items:[{en:"I have an idea.",de:"Ich habe eine Idee.",es:"Tengo una idea."},{en:"I have a question.",de:"Ich habe eine Frage.",es:"Tengo una pregunta."},{en:"I have energy.",de:"Ich habe Energie.",es:"Tengo energía."},{en:"I have luck.",de:"Ich habe Glück.",es:"Tengo suerte."},{en:"I have courage.",de:"Ich habe Mut.",es:"Tengo valor."},{en:"I have faith.",de:"Ich habe Vertrauen.",es:"Tengo fe."},{en:"I have hope.",de:"Ich habe Hoffnung.",es:"Tengo esperanza."}]},{id:3,title:"3. Fortaleza",help:"Propósito.",items:[{en:"I have strength.",de:"Ich habe Kraft.",es:"Tengo fuerza."},{en:"I have patience.",de:"Ich habe Geduld.",es:"Tengo paciencia."},{en:"I have time today.",de:"Ich habe heute Zeit.",es:"Tengo tiempo hoy."},{en:"I have a reason.",de:"Ich habe einen Grund.",es:"Tengo una razón."},{en:"I have a chance.",de:"Ich habe eine Chance.",es:"Tengo una oportunidad."},{en:"I have a dream.",de:"Ich habe einen Traum.",es:"Tengo un sueño."},{en:"I have everything.",de:"Ich habe alles.",es:"Tengo todo."}]}];
+const STORAGE={c:"poly_v3_c",p:"poly_v3_p",r:"poly_v3_r",f:"poly_v3_f"};const $=id=>document.getElementById(id);
+const safeRead=(k,fb)=>{try{const v=localStorage.getItem(k);return v==null?fb:JSON.parse(v)}catch{return fb}};const safeWrite=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v));return true}catch{return false}};
+const shuffle=a=>{const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]]}return r};
+const norm=s=>String(s).trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[.,\/#!$%\^&\*;:{}=\-_`~()«»"'?¿!¡()]/g,"").replace(/\s+/g," ").trim();
+const App={langQ:"en",langA:"de",font:1,progress:{},records:{},rt:{idx:0,pool:[],active:[],streaks:{},cur:null,last:null,comp:0,err:0,start:0,token:0,state:"IDLE",tim:[]},
+clear(){this.rt.tim.forEach(clearTimeout);this.rt.tim=[]},kP(i){return `p_${i}_${this.langQ}_${this.langA}`},kR(i){return `r_${i}_${this.langQ}_${this.langA}`},getDone(i){const v=this.progress[this.kP(i)];return Array.isArray(v)?v:[]},
+init(){const cfg=safeRead(STORAGE.c,{});this.langQ=["en","de","es"].includes(cfg.q)?cfg.q:"en";this.langA=["en","de","es"].includes(cfg.a)?cfg.a:"de";if(this.langQ===this.langA)this.langA=["en","de","es"].find(x=>x!==this.langQ);this.progress=safeRead(STORAGE.p,{});this.records=safeRead(STORAGE.r,{});const sf=Number(localStorage.getItem(STORAGE.f));if([1,1.15,1.3].includes(sf))this.font=sf;$("sel-q").value=this.langQ;$("sel-a").value=this.langA;this.fontApply();this.render();this.global();$("global-languages").textContent=`${this.langQ.toUpperCase()}·${this.langA.toUpperCase()}`;this.bind()},
+fontApply(){document.documentElement.style.setProperty("--scale",String(this.font));document.querySelectorAll("[data-size]").forEach(b=>b.classList.toggle("active",Math.abs(Number(b.dataset.size)-this.font)<0.001))},
+global(){let t=0,d=0;partsData.forEach((p,i)=>{t+=p.items.length;d+=this.getDone(i).length});const pct=t?Math.round(d/t*100):0;$("global-pct").textContent=pct+"%";$("global-fill").style.width=pct+"%"},
+render(){const g=$("modules-grid");g.replaceChildren();const fr=document.createDocumentFragment();partsData.forEach((part,i)=>{const done=this.getDone(i).length;const tot=part.items.length;const pct=Math.round(done/tot*100);const rec=this.records[this.kR(i)];const c=document.createElement("button");c.className="module-card";c.innerHTML=`<span class="m-num">MÓDULO 0${i+1} · ${pct}%</span><span class="m-title">${part.title.replace(/^\d+\.\s*/,"")}</span><span class="m-prog">Dominadas: ${done}/${tot}</span><span class="m-rec">${rec?`🏆 ${rec.time}s · ${rec.errors} err`:`🏆 Sin récord`}</span>`;c.onclick=()=>this.start(i);fr.appendChild(c)});g.appendChild(fr)},
+save(){let q=$("sel-q").value,a=$("sel-a").value;if(q===a)a=["en","de","es"].find(x=>x!==q);$("sel-a").value=a;this.langQ=q;this.langA=a;safeWrite(STORAGE.c,{q,a});this.render();this.global();$("global-languages").textContent=`${this.langQ.toUpperCase()}·${this.langA.toUpperCase()}`},
+bind(){$("sel-q").onchange=()=>this.save();$("sel-a").onchange=()=>this.save();$("swap-langs").onclick=()=>{const q=$("sel-q").value,a=$("sel-a").value;$("sel-q").value=a;$("sel-a").value=q;this.save()};document.addEventListener("click",e=>{const b=e.target.closest("[data-size]");if(!b)return;const v=Number(b.dataset.size);if(![1,1.15,1.3].includes(v))return;this.font=v;this.fontApply();localStorage.setItem(STORAGE.f,String(v))});$("menu-btn").onclick=()=>this.menu();$("action-btn").onclick=()=>this.act();$("user-input").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();this.act()}})},
+menu(){this.clear();$("user-input").blur();this.rt.state="IDLE";this.render();this.global();document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id==="screen-intro"))},
+start(idx,opts={}){const replay=!!opts.forceReplay;this.clear();this.rt.idx=idx;const part=partsData[idx];const done=replay?[]:this.getDone(idx);this.rt.comp=done.length;this.rt.err=0;this.rt.streaks={};this.rt.pool=[];this.rt.active=[];this.rt.cur=null;this.rt.last=null;this.rt.token++;part.items.forEach((_,i)=>this.rt.streaks[i]=0);this.rt.pool=shuffle(part.items.map((_,i)=>i).filter(i=>replay||!done.includes(i)));this.rt.start=Date.now();this.rt.state="QUESTION";$("game-title").textContent=part.title;$("human-help").textContent=part.help+" 3 aciertos seguidos.";document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id==="screen-game"));if(this.rt.pool.length===0&&!replay){this.finish(true);return}this.next()},
+refill(){while(this.rt.active.length<3&&this.rt.pool.length>0)this.rt.active.push(this.rt.pool.shift())},
+pick(){if(this.rt.cur!==null&&this.rt.streaks[this.rt.cur]===0&&this.rt.active.includes(this.rt.cur)&&this.rt.state==="RETRY"){this.rt.state="QUESTION";return this.rt.cur}let c=this.rt.active.filter(i=>i!==this.rt.last);if(c.length===0)c=[...this.rt.active];if(c.length===0)return null;return c[Math.floor(Math.random()*c.length)]},
+next(){this.rt.token++;const tok=this.rt.token;this.clear();this.refill();if(this.rt.active.length===0){if(this.rt.pool.length===0){this.finish(false);return}this.refill()}const nxt=this.pick();if(nxt===null){this.finish(false);return}this.rt.cur=nxt;this.rt.state="QUESTION";const part=partsData[this.rt.idx];const it=part.items[nxt];$("display-target").textContent=it[this.langQ];$("hud-progress").textContent=`Dominadas: ${this.rt.comp}/${part.items.length}`;$("hud-streak").textContent=`Racha: ${this.rt.streaks[nxt]}/3`;const fb=$("feedback-box");fb.className="fb";fb.textContent="";const typ=this.rt.streaks[nxt]===2;$("mode-badge").textContent=typ?"FASE FINAL · 3/3":`FASE ANKI · ${this.rt.streaks[nxt]+1}/3`;$("anki-container").classList.toggle("hidden",typ);$("typing-container").classList.toggle("hidden",!typ);const act=$("action-btn");act.classList.toggle("hidden",!typ);act.textContent=typ?"Comprobar respuesta":"";act.className=typ?"main":"main hidden";if(typ){const inp=$("user-input");inp.disabled=false;inp.value="";setTimeout(()=>inp.focus(),50)}else{this.gen(it[this.langA],tok)}},
+gen(correct,tok){const cont=$("anki-container");cont.replaceChildren();const all=[];partsData.forEach(p=>p.items.forEach(it=>{const a=it[this.langA];if(a!==correct&&!all.includes(a))all.push(a)}));const opts=shuffle([correct,...shuffle(all).slice(0,2)]);opts.forEach(o=>{const b=document.createElement("button");b.className="opt";b.textContent=o;b.onclick=()=>{if(this.rt.token!==tok)return;this.proc(o,b)};cont.appendChild(b)})},
+act(){if(this.rt.state==="ERROR_WAIT"||this.rt.state==="SUCCESS_WAIT"){this.next();return}if(this.rt.state!=="QUESTION")return;const v=$("user-input").value.trim();if(!v)return;this.proc(v)},
+proc(val,btn){if(this.rt.state!=="QUESTION"||this.rt.cur===null)return;this.rt.state="PROCESSING";$("user-input").disabled=true;const part=partsData[this.rt.idx];const it=part.items[this.rt.cur];const correct=it[this.langA];const ok=norm(val)===norm(correct);if(ok){if(btn)btn.style.borderColor="#00ff88";this.ok(tok=>tok)}else{if(btn)btn.style.borderColor="#ff426d";this.bad(correct)}},
+ok(){this.rt.streaks[this.rt.cur]++;this.rt.last=this.rt.cur;const st=this.rt.streaks[this.rt.cur];$("hud-streak").textContent=`Racha: ${st}/3`;const fb=$("feedback-box");if(st>=3){this.rt.comp++;this.rt.active=this.rt.active.filter(i=>i!==this.rt.cur);const k=this.kP(this.rt.idx);if(!Array.isArray(this.progress[k]))this.progress[k]=[];if(!this.progress[k].includes(this.rt.cur))this.progress[k].push(this.rt.cur);safeWrite(STORAGE.p,this.progress);this.global();fb.innerHTML="<strong>¡FRASE DOMINADA!</strong>";fb.className="fb ok"}else{fb.innerHTML=`<strong>¡CORRECTO!</strong> Racha ${st}/3`;fb.className="fb ok"}this.rt.state="SUCCESS_WAIT";const t=setTimeout(()=>this.next(),650);this.rt.tim.push(t)},
+bad(correct){this.rt.err++;this.rt.streaks[this.rt.cur]=0;$("hud-streak").textContent="Racha: 0/3";const fb=$("feedback-box");fb.innerHTML=`<strong>INCORRECTO</strong><br>Correcto en ${this.langA.toUpperCase()}:<span style="display:block;color:white;font-weight:700;margin:6px 0">${correct}</span>Racha reiniciada.`;fb.className="fb er";this.rt.state="ERROR_WAIT";const act=$("action-btn");act.classList.remove("hidden");act.textContent="Repetir →";act.className="main";act.style.background="linear-gradient(135deg,#ff5a84,#ff2e6a)"},
+finish(already){this.rt.state="FINISHED";this.clear();const el=(Date.now()-this.rt.start)/1000;const tm=el.toFixed(1);const part=partsData[this.rt.idx];if(!already){const k=this.kR(this.rt.idx);const prev=this.records[k];if(!prev||el<Number(prev.time)){this.records[k]={time:tm,errors:this.rt.err};safeWrite(STORAGE.r,this.records)}try{confetti({particleCount:120,spread:70,origin:{y:.7}})}catch{}}this.render();this.global();const fb=$("feedback-box");fb.className="fb ok";fb.innerHTML=`<strong>¡MÓDULO COMPLETADO!</strong><br>${part.title}<br>Tiempo ${tm}s · Errores ${this.rt.err}`;$("display-target").textContent="¡OBJETIVO CONSEGUIDO!";$("anki-container").classList.add("hidden");$("typing-container").classList.add("hidden");const act=$("action-btn");act.classList.remove("hidden");act.className="main";act.style.background="linear-gradient(135deg,#2eff9e,#00c86a)";act.textContent="Practicar de nuevo";act.onclick=()=>this.start(this.rt.idx,{forceReplay:true})}
+};
+document.addEventListener("DOMContentLoaded",()=>App.init());
+</script>
+</body>
+</html>
