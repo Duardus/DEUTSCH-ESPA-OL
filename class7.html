@@ -8,199 +8,90 @@
 <title>AVERE MASTER — Italiano</title>
 
 <style>
-:root {
-  --bg:#080d18;
-  --panel:#111c2e;
-  --panel2:#1a2b43;
-  --border:#30445f;
-  --text:#f3f6ff;
-  --muted:#91a3bd;
-  --green:#35e6a0;
-  --red:#ff627b;
-  --gold:#ffd166;
-  --blue:#62aaff;
+:root{
+  --bg:#080d18;--panel:#111c2e;--panel2:#1a2b43;
+  --border:#30445f;--text:#f3f6ff;--muted:#91a3bd;
+  --green:#35e6a0;--red:#ff627b;--gold:#ffd166;--blue:#62aaff;
 }
 *{box-sizing:border-box}
 html{min-height:100%;scroll-behavior:smooth}
 body{
-  margin:0;
-  min-height:100vh;
-  min-height:100dvh;
-  background:var(--bg);
-  color:var(--text);
+  margin:0;min-height:100vh;min-height:100dvh;
+  background:var(--bg);color:var(--text);
   font-family:system-ui,-apple-system,sans-serif;
 }
 button,input{font:inherit}
 button{touch-action:manipulation;cursor:pointer}
 .app{
-  max-width:680px;
-  width:100%;
-  margin:auto;
+  max-width:680px;width:100%;margin:auto;
   padding:max(12px,env(safe-area-inset-top)) 13px
-    max(40px,env(safe-area-inset-bottom));
+  max(40px,env(safe-area-inset-bottom));
 }
 header{text-align:center;padding:12px 0 17px}
-.logo{
-  font-size:10px;
-  letter-spacing:4px;
-  color:var(--green);
-  font-weight:900;
-}
+.logo{font-size:10px;letter-spacing:4px;color:var(--green);font-weight:900}
 h1{font-size:28px;margin:8px 0}
 .subtitle{font-size:12px;color:var(--muted)}
 .stats{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:7px;
-  margin:13px 0;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;margin:13px 0;
 }
 .stat{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:13px;
-  padding:11px 3px;
-  text-align:center;
-  min-width:0;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:13px;padding:11px 3px;text-align:center;min-width:0;
 }
 .stat strong{
-  display:block;
-  font-size:21px;
-  font-variant-numeric:tabular-nums;
+  display:block;font-size:21px;font-variant-numeric:tabular-nums;
 }
 .stat span{font-size:9px;color:var(--muted)}
 .progress-info{
-  display:flex;
-  justify-content:space-between;
-  color:var(--muted);
-  font-size:11px;
-  margin-bottom:7px;
-  gap:8px;
+  display:flex;justify-content:space-between;color:var(--muted);
+  font-size:11px;margin-bottom:7px;gap:8px;
 }
-.progress{
-  height:9px;
-  background:#26364d;
-  border-radius:20px;
-  overflow:hidden;
-}
+.progress{height:9px;background:#26364d;border-radius:20px;overflow:hidden}
 .bar{
-  height:100%;
-  width:0;
+  height:100%;width:0;
   background:linear-gradient(90deg,var(--green),var(--blue));
   transition:width .3s;
 }
 .conjugation-info{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  color:var(--muted);
-  font-size:10px;
-  margin-top:12px;
-  margin-bottom:6px;
+  display:flex;justify-content:space-between;gap:8px;
+  color:var(--muted);font-size:10px;margin:12px 0 6px;
 }
-.conjugations{
-  display:grid;
-  grid-template-columns:repeat(6,minmax(0,1fr));
-  gap:5px;
-}
+.conjugations{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px}
 .conj{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:9px;
-  text-align:center;
-  padding:8px 2px;
-  color:var(--muted);
-  font-size:10px;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:9px;text-align:center;padding:8px 2px;
+  color:var(--muted);font-size:10px;
 }
-.conj.done{
-  color:var(--green);
-  border-color:var(--green);
-  background:#103326;
-}
-.slots{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:7px;
-  margin:17px 0;
-}
+.conj.done{color:var(--green);border-color:var(--green);background:#103326}
+.slots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:17px 0}
 .slot{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:11px 4px;
-  text-align:center;
-  min-width:0;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:12px;padding:11px 4px;text-align:center;min-width:0;
 }
 .slot.active{border-color:var(--green)}
 .slot b{font-size:11px}
-.slot small{
-  display:block;
-  color:var(--muted);
-  font-size:10px;
-  margin-top:5px;
-}
-.mini{
-  height:4px;
-  background:#29384f;
-  border-radius:10px;
-  margin-top:8px;
-  overflow:hidden;
-}
-.mini div{
-  height:100%;
-  background:var(--green);
-  transition:width .2s;
-}
+.slot small{display:block;color:var(--muted);font-size:10px;margin-top:5px}
+.mini{height:4px;background:#29384f;border-radius:10px;margin-top:8px;overflow:hidden}
+.mini div{height:100%;background:var(--green);transition:width .2s}
 .question{
   background:linear-gradient(145deg,#182740,#101a2a);
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:23px 16px;
+  border:1px solid var(--border);border-radius:22px;padding:23px 16px;
 }
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-}
-.mode{
-  color:var(--green);
-  font-size:10px;
-  letter-spacing:1px;
-  font-weight:900;
-}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mode{color:var(--green);font-size:10px;letter-spacing:1px;font-weight:900}
 .counter{font-size:11px;color:var(--muted)}
 .prompt{
-  font-size:clamp(25px,7vw,37px);
-  font-weight:850;
-  text-align:center;
-  line-height:1.2;
-  overflow-wrap:anywhere;
-  margin:32px 0 9px;
+  font-size:clamp(25px,7vw,37px);font-weight:850;text-align:center;
+  line-height:1.2;overflow-wrap:anywhere;margin:32px 0 9px;
 }
-.translation{
-  text-align:center;
-  color:var(--muted);
-  font-size:14px;
-  min-height:21px;
-}
-.instruction{
-  text-align:center;
-  font-size:11px;
-  color:var(--muted);
-  margin:25px 0 13px;
-}
+.translation{text-align:center;color:var(--muted);font-size:14px;min-height:21px}
+.instruction{text-align:center;font-size:11px;color:var(--muted);margin:25px 0 13px}
 .answers{display:grid;grid-template-columns:1fr;gap:10px}
 .answer{
-  width:100%;
-  min-height:55px;
-  background:var(--panel2);
-  border:1px solid var(--border);
-  border-radius:13px;
-  padding:13px;
-  color:var(--text);
-  font-size:16px;
-  font-weight:750;
-  text-align:left;
+  width:100%;min-height:55px;background:var(--panel2);
+  border:1px solid var(--border);border-radius:13px;padding:13px;
+  color:var(--text);font-size:16px;font-weight:750;text-align:left;
   overflow-wrap:anywhere;
 }
 .answer.correct{background:#104735;border-color:var(--green)}
@@ -208,98 +99,51 @@ h1{font-size:28px;margin:8px 0}
 .answer:disabled{opacity:1}
 .write{display:none;grid-template-columns:minmax(0,1fr);gap:10px}
 .write input{
-  width:100%;
-  min-width:0;
-  height:58px;
-  padding:14px;
-  background:#080f1c;
-  border:2px solid var(--border);
-  border-radius:13px;
-  color:white;
-  font-size:19px;
-  outline:none;
+  width:100%;min-width:0;height:58px;padding:14px;
+  background:#080f1c;border:2px solid var(--border);
+  border-radius:13px;color:white;font-size:19px;outline:none;
 }
 .write input:focus{border-color:var(--green)}
 .check{
-  min-height:55px;
-  border:0;
-  border-radius:13px;
-  background:var(--green);
-  color:#062518;
-  font-weight:950;
+  min-height:55px;border:0;border-radius:13px;
+  background:var(--green);color:#062518;font-weight:950;
 }
 .feedback{
-  min-height:65px;
-  margin-top:15px;
-  padding:12px;
-  border-radius:12px;
-  text-align:center;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:5px;
-  font-size:12px;
-  line-height:1.5;
+  min-height:65px;margin-top:15px;padding:12px;border-radius:12px;
+  text-align:center;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:5px;
+  font-size:12px;line-height:1.5;
 }
 .feedback strong{font-size:17px}
 .neutral{background:#1a2940;color:#d0ddef}
 .good{background:#103d30;color:#91ffce}
 .bad{background:#49222f;color:#ffadbc}
-.controls{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  margin-top:16px;
-}
+.controls{display:flex;justify-content:space-between;gap:8px;margin-top:16px;flex-wrap:wrap}
 .secondary{
-  min-height:43px;
-  padding:9px 14px;
-  background:var(--panel);
-  color:var(--muted);
-  border:1px solid var(--border);
-  border-radius:10px;
-  font-size:11px;
+  min-height:43px;padding:9px 12px;background:var(--panel);
+  color:var(--muted);border:1px solid var(--border);
+  border-radius:10px;font-size:11px;
 }
-.note{
-  text-align:center;
-  color:var(--muted);
-  font-size:10px;
-  line-height:1.7;
-  margin-top:17px;
-}
+.save-status{text-align:center;color:var(--green);font-size:10px;margin-top:12px}
+.note{text-align:center;color:var(--muted);font-size:10px;line-height:1.7;margin-top:17px}
 .celebration{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:20;
-  background:#050a14ed;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  overflow-y:auto;
+  display:none;position:fixed;inset:0;z-index:20;background:#050a14ed;
+  align-items:center;justify-content:center;padding:20px;overflow-y:auto;
 }
 .celebration.show{display:flex}
 .celebration-box{
-  max-width:390px;
-  width:100%;
-  padding:28px 20px;
-  border:1px solid var(--gold);
-  border-radius:23px;
-  background:#17253c;
-  text-align:center;
+  max-width:390px;width:100%;padding:28px 20px;
+  border:1px solid var(--gold);border-radius:23px;
+  background:#17253c;text-align:center;
 }
 .emoji{font-size:65px}
 .celebration-box h2{color:var(--gold);font-size:29px}
 .celebration-box p{line-height:1.7;color:#d7e3f4}
 .celebration-box button{
-  width:100%;
-  min-height:53px;
-  background:var(--gold);
-  border:0;
-  border-radius:12px;
-  font-weight:950;
+  width:100%;min-height:53px;background:var(--gold);
+  border:0;border-radius:12px;font-weight:950;
 }
+.file-input{display:none}
 @media(max-width:380px){
   .app{padding-left:10px;padding-right:10px}
   .question{padding:18px 12px}
@@ -307,6 +151,7 @@ h1{font-size:28px;margin:8px 0}
   .answer{font-size:14px}
   .stat strong{font-size:19px}
   .conj{font-size:9px}
+  .secondary{font-size:10px;padding:8px}
 }
 @media(max-height:650px){
   header{padding:4px 0}
@@ -327,32 +172,13 @@ h1{font-size:28px;margin:8px 0}
   <div class="subtitle">Un verbo · Sei coniugazioni · Presente</div>
 </header>
 
-<!-- ESTADÍSTICAS -->
 <section class="stats">
-  <div class="stat">
-    <strong id="learnedWords">0</strong>
-    <span>PALABRAS APRENDIDAS</span>
-  </div>
-  <div class="stat">
-    <strong id="remainingWords">0</strong>
-    <span>PALABRAS PENDIENTES</span>
-  </div>
-  <div class="stat">
-    <strong id="totalWords">0</strong>
-    <span>TOTAL VOCABULARIO</span>
-  </div>
-  <div class="stat">
-    <strong id="mastered">0</strong>
-    <span>PREGUNTAS DOMINADAS</span>
-  </div>
-  <div class="stat">
-    <strong id="accuracy">100%</strong>
-    <span>PRECISIÓN</span>
-  </div>
-  <div class="stat">
-    <strong id="streak">0</strong>
-    <span>RACHA GLOBAL</span>
-  </div>
+  <div class="stat"><strong id="learnedWords">0</strong><span>PALABRAS APRENDIDAS</span></div>
+  <div class="stat"><strong id="remainingWords">0</strong><span>PENDIENTES</span></div>
+  <div class="stat"><strong id="totalWords">0</strong><span>TOTAL ÚNICO</span></div>
+  <div class="stat"><strong id="mastered">0</strong><span>PREGUNTAS DOMINADAS</span></div>
+  <div class="stat"><strong id="accuracy">100%</strong><span>PRECISIÓN</span></div>
+  <div class="stat"><strong id="streak">0</strong><span>RACHA GLOBAL</span></div>
 </section>
 
 <div class="progress-info">
@@ -362,14 +188,13 @@ h1{font-size:28px;margin:8px 0}
 <div class="progress"><div class="bar" id="bar"></div></div>
 
 <div class="conjugation-info">
-  <span>CONJUGACIONES PRACTICADAS</span>
+  <span>CONJUGACIONES DOMINADAS</span>
   <b id="conjugationCount">0 / 6</b>
 </div>
 <div class="conjugations" id="conjugations"></div>
 
 <div class="slots" id="slots"></div>
 
-<!-- PREGUNTA -->
 <section class="question">
   <div class="top">
     <span class="mode" id="mode">ALTERNATIVAS · INTENTO 1</span>
@@ -385,10 +210,8 @@ h1{font-size:28px;margin:8px 0}
   <div class="write" id="write">
     <input id="typed" type="text"
       placeholder="Scrivi in italiano..."
-      autocomplete="off"
-      autocapitalize="none"
-      spellcheck="false"
-      enterkeyhint="done">
+      autocomplete="off" autocapitalize="none"
+      spellcheck="false" enterkeyhint="done">
     <button class="check" id="check">COMPROBAR →</button>
   </div>
 
@@ -401,411 +224,335 @@ h1{font-size:28px;margin:8px 0}
 <div class="controls">
   <button class="secondary" id="restart">↻ Reiniciar</button>
   <button class="secondary" id="sound">🔊 Sonido ON</button>
+  <button class="secondary" id="backup">↓ Guardar copia</button>
+  <button class="secondary" id="restoreBackup">↑ Restaurar copia</button>
+  <input class="file-input" id="backupFile" type="file" accept=".json,application/json">
 </div>
+
+<div class="save-status" id="saveStatus">● PROGRESO GUARDADO EN ESTE DISPOSITIVO</div>
 
 <div class="note">
-  Cada palabra nueva aparece una sola vez.<br>
-  Se practican las seis conjugaciones de AVERE en presente.<br>
-  Dos intentos con alternativas y el tercero escrito.<br>
-  Al dominar una pregunta, entra una nueva automáticamente.
+  Cada palabra o expresión diferente cuenta una sola vez.<br>
+  Las seis conjugaciones se practican con vocabulario variado.<br>
+  Dos intentos con alternativas; el tercero se escribe.<br>
+  El progreso se guarda automáticamente en este dispositivo.
+</div>
 </div>
 
-</div>
-
-<!-- CELEBRACIÓN -->
 <div class="celebration" id="celebration">
   <div class="celebration-box">
     <div class="emoji" id="emoji">🏆</div>
     <h2 id="celebrationTitle">BRAVISSIMO!</h2>
     <p id="celebrationText"></p>
-    <button id="continue">VOLVER A EMPEZAR</button>
+    <button id="continue">CONTINUAR</button>
   </div>
 </div>
 
 <script>
 "use strict";
 
-/* =====================================================
-   1. LAS SEIS CONJUGACIONES DE AVERE EN PRESENTE
+/* =========================================================
+   1. CONFIGURACIÓN Y CONJUGACIONES
+========================================================= */
 
-   io ho
-   tu hai
-   lui/lei ha
-   noi abbiamo
-   voi avete
-   loro hanno
+const STORAGE_KEY="avere_master_progress_v3";
+const SAVE_VERSION=3;
 
-   He y She comparten HA. No se cuentan como
-   dos conjugaciones diferentes.
-===================================================== */
-
-const persons = [
-  {
-    key:"io",
-    label:"IO",
-    en:"I",
-    have:"have",
-    italian:"ho",
-    spanish:"tengo",
-    subject:"Yo"
-  },
-  {
-    key:"tu",
-    label:"TU",
-    en:"You",
-    have:"have",
-    italian:"hai",
-    spanish:"tienes",
-    subject:"Tú"
-  },
-  {
-    key:"lui",
-    label:"LUI / LEI",
-    en:"He",
-    have:"has",
-    italian:"ha",
-    spanish:"tiene",
-    subject:"Él"
-  },
-  {
-    key:"noi",
-    label:"NOI",
-    en:"We",
-    have:"have",
-    italian:"abbiamo",
-    spanish:"tenemos",
-    subject:"Nosotros"
-  },
-  {
-    key:"voi",
-    label:"VOI",
-    en:"You",
-    have:"have",
-    italian:"avete",
-    spanish:"tienen",
-    subject:"Ustedes"
-  },
-  {
-    key:"loro",
-    label:"LORO",
-    en:"They",
-    have:"have",
-    italian:"hanno",
-    spanish:"tienen",
-    subject:"Ellos"
-  }
+const persons=[
+  {key:"io",label:"IO",en:"I",have:"have",italian:"ho",spanish:"tengo",subject:"Yo"},
+  {key:"tu",label:"TU",en:"You",have:"have",italian:"hai",spanish:"tienes",subject:"Tú"},
+  {key:"lui",label:"LUI / LEI",en:"He",have:"has",italian:"ha",spanish:"tiene",subject:"Él"},
+  {key:"noi",label:"NOI",en:"We",have:"have",italian:"abbiamo",spanish:"tenemos",subject:"Nosotros"},
+  {key:"voi",label:"VOI",en:"You",have:"have",italian:"avete",spanish:"tienen",subject:"Ustedes"},
+  {key:"loro",label:"LORO",en:"They",have:"have",italian:"hanno",spanish:"tienen",subject:"Ellos"}
 ];
 
-/* =====================================================
-   2. BASE DE DATOS ÚNICA
+/* =========================================================
+   2. VOCABULARIO
 
-   Formato:
-   [inglés, italiano, español, palabra clave]
+   Cada entrada representa un concepto léxico.
+   El sistema elimina automáticamente los complementos
+   italianos repetidos antes de contar y crear preguntas.
 
-   Cada concepto aparece UNA SOLA VEZ.
-   La respuesta italiana tiene como máximo dos
-   palabras después del verbo.
+   Se cuentan palabras/expresiones distintas, NO conjugaciones.
+========================================================= */
 
-   No se crean siete preguntas con la misma palabra.
-===================================================== */
-
-const vocabulary = [
-
-  // Objetos y posesiones
-  ["a car","un'auto","un auto","auto"],
-  ["a house","una casa","una casa","casa"],
-  ["a dog","un cane","un perro","cane"],
-  ["a cat","un gatto","un gato","gatto"],
-  ["a book","un libro","un libro","libro"],
-  ["a phone","un telefono","un teléfono","telefono"],
-  ["a friend","un amico","un amigo","amico"],
-  ["a sister","una sorella","una hermana","sorella"],
-  ["a brother","un fratello","un hermano","fratello"],
-  ["a family","una famiglia","una familia","famiglia"],
-  ["a child","un bambino","un niño","bambino"],
-  ["a question","una domanda","una pregunta","domanda"],
-  ["an idea","un'idea","una idea","idea"],
-  ["a problem","un problema","un problema","problema"],
-  ["a job","un lavoro","un trabajo","lavoro"],
-  ["money","soldi","dinero","soldi"],
-  ["time","tempo","tiempo","tempo"],
-  ["a key","una chiave","una llave","chiave"],
-  ["a bicycle","una bicicletta","una bicicleta","bicicletta"],
-  ["a computer","un computer","una computadora","computer"],
-  ["a ticket","un biglietto","un boleto","biglietto"],
-  ["a room","una stanza","una habitación","stanza"],
-  ["a garden","un giardino","un jardín","giardino"],
-  ["a passport","un passaporto","un pasaporte","passaporto"],
-  ["a coffee","un caffè","un café","caffè"],
-  ["water","acqua","agua","acqua"],
-  ["a table","un tavolo","una mesa","tavolo"],
-  ["a television","una televisione","un televisor","televisione"],
-  ["a watch","un orologio","un reloj","orologio"],
-  ["a wallet","un portafoglio","una billetera","portafoglio"],
-  ["a dream","un sogno","un sueño","sogno"],
-  ["a name","un nome","un nombre","nome"],
-  ["a plan","un piano","un plan","piano"],
-  ["a photo","una foto","una fotografía","foto"],
-  ["a message","un messaggio","un mensaje","messaggio"],
-  ["an appointment","un appuntamento","una cita","appuntamento"],
-  ["a possibility","una possibilità","una posibilidad","possibilita"],
-  ["a chance","un'occasione","una oportunidad","occasione"],
-  ["a choice","una scelta","una elección","scelta"],
-  ["a reason","un motivo","un motivo","motivo"],
-  ["a goal","un obiettivo","un objetivo","obiettivo"],
-  ["a bicycle","una bici","una bicicleta","bici"],
-  ["a train ticket","un biglietto","un boleto de tren","biglietto-treno"],
-  ["a passport","un documento","un documento","documento"],
-  ["a camera","una fotocamera","una cámara","fotocamera"],
-  ["a suitcase","una valigia","una maleta","valigia"],
-  ["a map","una mappa","un mapa","mappa"],
-  ["a dictionary","un dizionario","un diccionario","dizionario"],
-  ["a newspaper","un giornale","un periódico","giornale"],
-  ["a magazine","una rivista","una revista","rivista"],
-  ["a bicycle helmet","un casco","un casco","casco"],
-  ["a motorcycle","una moto","una motocicleta","moto"],
-  ["a boat","una barca","un barco","barca"],
-  ["a plane","un aereo","un avión","aereo"],
-  ["a television","un televisore","un televisor","televisore"],
-
-  // Conceptos y estados con AVERE
-  ["hunger","fame","hambre","fame"],
-  ["thirst","sete","sed","sete"],
-  ["sleepiness","sonno","sueño","sonno"],
-  ["fear","paura","miedo","paura"],
-  ["cold","freddo","frío","freddo"],
-  ["heat","caldo","calor","caldo"],
-  ["reason","ragione","razón","ragione"],
-  ["patience","pazienza","paciencia","pazienza"],
-  ["luck","fortuna","suerte","fortuna"],
-  ["a desire","voglia","ganas","voglia"],
-  ["a need","un bisogno","una necesidad","bisogno"],
-  ["a doubt","un dubbio","una duda","dubbio"],
-  ["hope","speranza","esperanza","speranza"],
-  ["respect","rispetto","respeto","rispetto"],
-  ["experience","esperienza","experiencia","esperienza"],
-  ["energy","energia","energía","energia"],
-  ["courage","coraggio","valor","coraggio"],
-  ["success","successo","éxito","successo"],
-  ["a headache","mal di testa","dolor de cabeza","mal-di-testa"],
-  ["a stomachache","mal di stomaco","dolor de estómago","mal-di-stomaco"],
-  ["a fever","la febbre","fiebre","febbre"],
-  ["a temperature","la temperatura","temperatura","temperatura"],
-  ["a secret","un segreto","un secreto","segreto"],
-  ["a mistake","un errore","un error","errore"],
-  ["a memory","un ricordo","un recuerdo","ricordo"],
-  ["an opportunity","un'opportunità","una oportunidad","opportunita"],
-  ["a responsibility","una responsabilità","una responsabilidad","responsabilita"],
-  ["a conversation","una conversazione","una conversación","conversazione"],
-  ["a meeting","una riunione","una reunión","riunione"],
-  ["a solution","una soluzione","una solución","soluzione"],
-  ["a concern","una preoccupazione","una preocupación","preoccupazione"],
-  ["a possibility","una possibilità","una posibilidad","possibilita2"],
-  ["a preference","una preferenza","una preferencia","preferenza"],
-  ["a habit","un'abitudine","un hábito","abitudine"],
-  ["an opinion","un'opinione","una opinión","opinione"],
-  ["a relationship","una relazione","una relación","relazione"],
-  ["a project","un progetto","un proyecto","progetto"],
-  ["a certificate","un certificato","un certificado","certificato"],
-  ["a document","un documento","un documento","documento2"],
-  ["a reservation","una prenotazione","una reserva","prenotazione"],
-  ["a subscription","un abbonamento","una suscripción","abbonamento"],
-  ["a birthday","un compleanno","un cumpleaños","compleanno"],
-  ["a wedding","un matrimonio","una boda","matrimonio"],
-  ["a party","una festa","una fiesta","festa"],
-  ["a meeting","un incontro","un encuentro","incontro"],
-  ["a story","una storia","una historia","storia"],
-  ["a lesson","una lezione","una lección","lezione"],
-  ["a class","una classe","una clase","classe"],
-  ["a language","una lingua","un idioma","lingua"],
-  ["a future","un futuro","un futuro","futuro"],
-  ["a past","un passato","un pasado","passato"],
-  ["a present","un presente","un presente","presente"],
-  ["a choice","un'opzione","una opción","opzione"],
-  ["a result","un risultato","un resultado","risultato"],
-  ["a price","un prezzo","un precio","prezzo"],
-  ["a discount","uno sconto","un descuento","sconto"],
-  ["a receipt","uno scontrino","un recibo","scontrino"],
-  ["a reservation","una camera","una habitación reservada","camera"],
-  ["a seat","un posto","un asiento","posto"],
-  ["a place","un luogo","un lugar","luogo"],
-  ["a village","un paese","un pueblo","paese"],
-  ["a city","una città","una ciudad","citta"],
-  ["a country","un paese","un país","paese2"],
-  ["a mountain","una montagna","una montaña","montagna"],
-  ["a river","un fiume","un río","fiume"],
-  ["a beach","una spiaggia","una playa","spiaggia"],
-  ["a forest","un bosco","un bosque","bosco"],
-  ["a restaurant","un ristorante","un restaurante","ristorante"],
-  ["a hotel","un albergo","un hotel","albergo"],
-  ["a shop","un negozio","una tienda","negozio"],
-  ["a market","un mercato","un mercado","mercato"],
-  ["a hospital","un ospedale","un hospital","ospedale"],
-  ["a school","una scuola","una escuela","scuola"],
-  ["a university","un'università","una universidad","universita"],
-  ["a bank","una banca","un banco","banca"],
-  ["a station","una stazione","una estación","stazione"],
-  ["a church","una chiesa","una iglesia","chiesa"],
-  ["a museum","un museo","un museo","museo"],
-  ["a library","una biblioteca","una biblioteca","biblioteca"],
-  ["a garden","un parco","un parque","parco"],
-  ["a street","una strada","una calle","strada"],
-  ["a bridge","un ponte","un puente","ponte"],
-  ["a building","un edificio","un edificio","edificio"],
-  ["an address","un indirizzo","una dirección","indirizzo"],
-  ["a telephone number","un numero","un número","numero"],
-  ["a password","una password","una contraseña","password"],
-  ["an email","un'e-mail","un correo electrónico","email"],
-  ["a website","un sito","un sitio web","sito"],
-  ["a file","un file","un archivo","file"],
-  ["a video","un video","un video","video"],
-  ["a photograph","una fotografia","una fotografía","fotografia"],
-  ["a song","una canzone","una canción","canzone"],
-  ["a film","un film","una película","film"],
-  ["a game","un gioco","un juego","gioco"],
-  ["a sport","uno sport","un deporte","sport"],
-  ["a team","una squadra","un equipo","squadra"],
-  ["a match","una partita","un partido","partita"],
-  ["a bicycle","una bicicletta","una bicicleta","bicicletta2"],
-  ["a key","una password","una contraseña","password2"],
-  ["a gift","un regalo","un regalo","regalo"],
-  ["a flower","un fiore","una flor","fiore"],
-  ["a tree","un albero","un árbol","albero"],
-  ["a plant","una pianta","una planta","pianta"],
-  ["a horse","un cavallo","un caballo","cavallo"],
-  ["a bird","un uccello","un pájaro","uccello"],
-  ["a fish","un pesce","un pez","pesce"],
-  ["a rabbit","un coniglio","un conejo","coniglio"],
-  ["a mouse","un topo","un ratón","topo"],
-  ["a cow","una mucca","una vaca","mucca"],
-  ["a sheep","una pecora","una oveja","pecora"],
-  ["a pig","un maiale","un cerdo","maiale"],
-  ["a chicken","un pollo","un pollo","pollo"],
-  ["an egg","un uovo","un huevo","uovo"],
-  ["a sandwich","un panino","un sándwich","panino"],
-  ["a pizza","una pizza","una pizza","pizza"],
-  ["a cake","una torta","una torta","torta"],
-  ["an apple","una mela","una manzana","mela"],
-  ["an orange","un'arancia","una naranja","arancia"],
-  ["a banana","una banana","un plátano","banana"],
-  ["a pear","una pera","una pera","pera"],
-  ["a lemon","un limone","un limón","limone"],
-  ["a tomato","un pomodoro","un tomate","pomodoro"],
-  ["a potato","una patata","una papa","patata"],
-  ["a carrot","una carota","una zanahoria","carota"],
-  ["a salad","un'insalata","una ensalada","insalata"],
-  ["a soup","una zuppa","una sopa","zuppa"],
-  ["a dessert","un dolce","un postre","dolce"],
-  ["a bottle","una bottiglia","una botella","bottiglia"],
-  ["a glass","un bicchiere","un vaso","bicchiere"],
-  ["a cup","una tazza","una taza","tazza"],
-  ["a plate","un piatto","un plato","piatto"],
-  ["a fork","una forchetta","un tenedor","forchetta"],
-  ["a spoon","un cucchiaio","una cuchara","cucchiaio"],
-  ["a knife","un coltello","un cuchillo","coltello"],
-  ["a bed","un letto","una cama","letto"],
-  ["a chair","una sedia","una silla","sedia"],
-  ["a sofa","un divano","un sofá","divano"],
-  ["a door","una porta","una puerta","porta"],
-  ["a window","una finestra","una ventana","finestra"],
-  ["a mirror","uno specchio","un espejo","specchio"],
-  ["a lamp","una lampada","una lámpara","lampada"],
-  ["a shower","una doccia","una ducha","doccia"],
-  ["a bathroom","un bagno","un baño","bagno"],
-  ["a kitchen","una cucina","una cocina","cucina"],
-  ["a bedroom","una camera","un dormitorio","camera2"],
-  ["a shirt","una camicia","una camisa","camicia"],
-  ["a jacket","una giacca","una chaqueta","giacca"],
-  ["a coat","un cappotto","un abrigo","cappotto"],
-  ["a shoe","una scarpa","un zapato","scarpa"],
-  ["a hat","un cappello","un sombrero","cappello"],
-  ["a dress","un vestito","un vestido","vestito"],
-  ["a bag","una borsa","un bolso","borsa"],
-  ["an umbrella","un ombrello","un paraguas","ombrello"],
-  ["a ring","un anello","un anillo","anello"],
-  ["a necklace","una collana","un collar","collana"],
-  ["a bracelet","un braccialetto","una pulsera","braccialetto"],
-  ["a watch","un orologio","un reloj","orologio2"],
-  ["a pair of glasses","gli occhiali","los anteojos","occhiali"],
-  ["a shoe","uno stivale","una bota","stivale"],
-  ["a sweater","un maglione","un suéter","maglione"],
-  ["a scarf","una sciarpa","una bufanda","sciarpa"],
-  ["a belt","una cintura","un cinturón","cintura"],
-  ["a wallet","un portafoglio","una billetera","portafoglio2"]
+const vocabulary=[
+["a car","un'auto","un auto"],
+["a house","una casa","una casa"],
+["a dog","un cane","un perro"],
+["a cat","un gatto","un gato"],
+["a book","un libro","un libro"],
+["a phone","un telefono","un teléfono"],
+["a friend","un amico","un amigo"],
+["a sister","una sorella","una hermana"],
+["a brother","un fratello","un hermano"],
+["a family","una famiglia","una familia"],
+["a child","un bambino","un niño"],
+["a question","una domanda","una pregunta"],
+["an idea","un'idea","una idea"],
+["a problem","un problema","un problema"],
+["a job","un lavoro","un trabajo"],
+["money","soldi","dinero"],
+["time","tempo","tiempo"],
+["a key","una chiave","una llave"],
+["a bicycle","una bicicletta","una bicicleta"],
+["a computer","un computer","una computadora"],
+["a ticket","un biglietto","un boleto"],
+["a room","una stanza","una habitación"],
+["a garden","un giardino","un jardín"],
+["a passport","un passaporto","un pasaporte"],
+["a coffee","un caffè","un café"],
+["water","acqua","agua"],
+["a table","un tavolo","una mesa"],
+["a television","una televisione","un televisor"],
+["a watch","un orologio","un reloj"],
+["a wallet","un portafoglio","una billetera"],
+["a dream","un sogno","un sueño"],
+["a name","un nome","un nombre"],
+["a plan","un piano","un plan"],
+["a photo","una foto","una fotografía"],
+["a message","un messaggio","un mensaje"],
+["an appointment","un appuntamento","una cita"],
+["a possibility","una possibilità","una posibilidad"],
+["a chance","un'occasione","una oportunidad"],
+["a choice","una scelta","una elección"],
+["a reason","un motivo","un motivo"],
+["a goal","un obiettivo","un objetivo"],
+["a camera","una fotocamera","una cámara"],
+["a suitcase","una valigia","una maleta"],
+["a map","una mappa","un mapa"],
+["a dictionary","un dizionario","un diccionario"],
+["a newspaper","un giornale","un periódico"],
+["a magazine","una rivista","una revista"],
+["a motorcycle","una moto","una motocicleta"],
+["a boat","una barca","un barco"],
+["a plane","un aereo","un avión"],
+["a need","un bisogno","una necesidad"],
+["a doubt","un dubbio","una duda"],
+["hope","speranza","esperanza"],
+["respect","rispetto","respeto"],
+["experience","esperienza","experiencia"],
+["energy","energia","energía"],
+["courage","coraggio","valor"],
+["success","successo","éxito"],
+["a headache","mal di testa","dolor de cabeza"],
+["a stomachache","mal di stomaco","dolor de estómago"],
+["a fever","la febbre","fiebre"],
+["a temperature","la temperatura","temperatura"],
+["a secret","un segreto","un secreto"],
+["a mistake","un errore","un error"],
+["a memory","un ricordo","un recuerdo"],
+["an opportunity","un'opportunità","una oportunidad"],
+["a responsibility","una responsabilità","una responsabilidad"],
+["a conversation","una conversazione","una conversación"],
+["a meeting","una riunione","una reunión"],
+["a solution","una soluzione","una solución"],
+["a concern","una preoccupazione","una preocupación"],
+["a preference","una preferenza","una preferencia"],
+["a habit","un'abitudine","un hábito"],
+["an opinion","un'opinione","una opinión"],
+["a relationship","una relazione","una relación"],
+["a project","un progetto","un proyecto"],
+["a certificate","un certificato","un certificado"],
+["a document","un documento","un documento"],
+["a reservation","una prenotazione","una reserva"],
+["a subscription","un abbonamento","una suscripción"],
+["a birthday","un compleanno","un cumpleaños"],
+["a wedding","un matrimonio","una boda"],
+["a party","una festa","una fiesta"],
+["a meeting","un incontro","un encuentro"],
+["a story","una storia","una historia"],
+["a lesson","una lezione","una lección"],
+["a class","una classe","una clase"],
+["a language","una lingua","un idioma"],
+["a future","un futuro","un futuro"],
+["a past","un passato","un pasado"],
+["a present","un presente","un presente"],
+["a choice","un'opzione","una opción"],
+["a result","un risultato","un resultado"],
+["a price","un prezzo","un precio"],
+["a discount","uno sconto","un descuento"],
+["a receipt","uno scontrino","un recibo"],
+["a seat","un posto","un asiento"],
+["a place","un luogo","un lugar"],
+["a village","un paese","un pueblo"],
+["a city","una città","una ciudad"],
+["a country","una nazione","una nación"],
+["a mountain","una montagna","una montaña"],
+["a river","un fiume","un río"],
+["a beach","una spiaggia","una playa"],
+["a forest","un bosco","un bosque"],
+["a restaurant","un ristorante","un restaurante"],
+["a hotel","un albergo","un hotel"],
+["a shop","un negozio","una tienda"],
+["a market","un mercato","un mercado"],
+["a hospital","un ospedale","un hospital"],
+["a school","una scuola","una escuela"],
+["a university","un'università","una universidad"],
+["a bank","una banca","un banco"],
+["a station","una stazione","una estación"],
+["a church","una chiesa","una iglesia"],
+["a museum","un museo","un museo"],
+["a library","una biblioteca","una biblioteca"],
+["a park","un parco","un parque"],
+["a street","una strada","una calle"],
+["a bridge","un ponte","un puente"],
+["a building","un edificio","un edificio"],
+["an address","un indirizzo","una dirección"],
+["a number","un numero","un número"],
+["a password","una password","una contraseña"],
+["an email","un'e-mail","un correo electrónico"],
+["a website","un sito","un sitio web"],
+["a file","un file","un archivo"],
+["a video","un video","un video"],
+["a photograph","una fotografia","una fotografía"],
+["a song","una canzone","una canción"],
+["a film","un film","una película"],
+["a game","un gioco","un juego"],
+["a sport","uno sport","un deporte"],
+["a team","una squadra","un equipo"],
+["a match","una partita","un partido"],
+["a gift","un regalo","un regalo"],
+["a flower","un fiore","una flor"],
+["a tree","un albero","un árbol"],
+["a plant","una pianta","una planta"],
+["a horse","un cavallo","un caballo"],
+["a bird","un uccello","un pájaro"],
+["a fish","un pesce","un pez"],
+["a rabbit","un coniglio","un conejo"],
+["a mouse","un topo","un ratón"],
+["a cow","una mucca","una vaca"],
+["a sheep","una pecora","una oveja"],
+["a pig","un maiale","un cerdo"],
+["a chicken","un pollo","un pollo"],
+["an egg","un uovo","un huevo"],
+["a sandwich","un panino","un sándwich"],
+["a pizza","una pizza","una pizza"],
+["a cake","una torta","una torta"],
+["an apple","una mela","una manzana"],
+["an orange","un'arancia","una naranja"],
+["a banana","una banana","un plátano"],
+["a pear","una pera","una pera"],
+["a lemon","un limone","un limón"],
+["a tomato","un pomodoro","un tomate"],
+["a potato","una patata","una papa"],
+["a carrot","una carota","una zanahoria"],
+["a salad","un'insalata","una ensalada"],
+["a soup","una zuppa","una sopa"],
+["a dessert","un dolce","un postre"],
+["a bottle","una bottiglia","una botella"],
+["a glass","un bicchiere","un vaso"],
+["a cup","una tazza","una taza"],
+["a plate","un piatto","un plato"],
+["a fork","una forchetta","un tenedor"],
+["a spoon","un cucchiaio","una cuchara"],
+["a knife","un coltello","un cuchillo"],
+["a bed","un letto","una cama"],
+["a chair","una sedia","una silla"],
+["a sofa","un divano","un sofá"],
+["a door","una porta","una puerta"],
+["a window","una finestra","una ventana"],
+["a mirror","uno specchio","un espejo"],
+["a lamp","una lampada","una lámpara"],
+["a shower","una doccia","una ducha"],
+["a bathroom","un bagno","un baño"],
+["a kitchen","una cucina","una cocina"],
+["a bedroom","una camera da letto","un dormitorio"],
+["a shirt","una camicia","una camisa"],
+["a jacket","una giacca","una chaqueta"],
+["a coat","un cappotto","un abrigo"],
+["a shoe","una scarpa","un zapato"],
+["a hat","un cappello","un sombrero"],
+["a dress","un vestito","un vestido"],
+["a bag","una borsa","un bolso"],
+["an umbrella","un ombrello","un paraguas"],
+["a ring","un anello","un anillo"],
+["a necklace","una collana","un collar"],
+["a bracelet","un braccialetto","una pulsera"],
+["a pair of glasses","gli occhiali","los anteojos"],
+["a boot","uno stivale","una bota"],
+["a sweater","un maglione","un suéter"],
+["a scarf","una sciarpa","una bufanda"],
+["a belt","una cintura","un cinturón"],
+["a little time","poco tempo","poco tiempo"],
+["a lot of work","molto lavoro","mucho trabajo"],
+["many friends","molti amici","muchos amigos"],
+["some free time","del tempo libero","algo de tiempo libre"],
+["a good opportunity","una buona occasione","una buena oportunidad"],
+["a great idea","una grande idea","una gran idea"],
+["a strong desire","un forte desiderio","un fuerte deseo"],
+["a big family","una famiglia numerosa","una familia numerosa"],
+["a small apartment","un piccolo appartamento","un pequeño departamento"],
+["a good memory","una buona memoria","una buena memoria"],
+["a difficult task","un compito difficile","una tarea difícil"],
+["a serious problem","un problema serio","un problema serio"],
+["a clear answer","una risposta chiara","una respuesta clara"],
+["a valid reason","un motivo valido","un motivo válido"],
+["a new project","un nuovo progetto","un nuevo proyecto"],
+["a beautiful view","una bella vista","una bonita vista"],
+["a strong character","un carattere forte","un carácter fuerte"],
+["a good impression","una buona impressione","una buena impresión"],
+["a free evening","una serata libera","una noche libre"],
+["a busy day","una giornata piena","un día ocupado"],
+["a difficult choice","una scelta difficile","una elección difícil"],
+["a real chance","una vera possibilità","una posibilidad real"],
+["a great responsibility","una grande responsabilità","una gran responsabilidad"],
+["a personal goal","un obiettivo personale","un objetivo personal"],
+["a good relationship","un buon rapporto","una buena relación"]
 ];
 
-/* =====================================================
-   3. EXPRESIONES IDIOMÁTICAS
+/* =========================================================
+   3. EXPRESIONES IDIOMÁTICAS CON AVERE
 
-   Se practican una sola vez cada una.
-   No se repite "hambre" con las seis personas.
-===================================================== */
+   Cada expresión se incorpora una sola vez.
+   Se practican con personas diferentes.
+========================================================= */
 
-const idioms = [
-  {
-    prompt:"I am hungry",
-    answer:"ho fame",
-    translation:"Yo tengo hambre",
-    key:"fame",
-    person:"io"
-  },
-  {
-    prompt:"You are thirsty",
-    answer:"hai sete",
-    translation:"Tú tienes sed",
-    key:"sete",
-    person:"tu"
-  },
-  {
-    prompt:"He is sleepy",
-    answer:"ha sonno",
-    translation:"Él tiene sueño",
-    key:"sonno",
-    person:"lui"
-  },
-  {
-    prompt:"She is afraid",
-    answer:"ha paura",
-    translation:"Ella tiene miedo",
-    key:"paura",
-    person:"lui"
-  },
-  {
-    prompt:"We are cold",
-    answer:"abbiamo freddo",
-    translation:"Nosotros tenemos frío",
-    key:"freddo",
-    person:"noi"
-  },
-  {
-    prompt:"They are hot",
-    answer:"hanno caldo",
-    translation:"Ellos tienen calor",
-    key:"caldo",
-    person:"loro"
-  }
+const idioms=[
+  {en:"I am hungry",es:"Yo tengo hambre",it:"fame",person:"io"},
+  {en:"You are thirsty",es:"Tú tienes sed",it:"sete",person:"tu"},
+  {en:"He is sleepy",es:"Él tiene sueño",it:"sonno",person:"lui"},
+  {en:"She is afraid",es:"Ella tiene miedo",it:"paura",person:"lui"},
+  {en:"We are cold",es:"Nosotros tenemos frío",it:"freddo",person:"noi"},
+  {en:"You are hot",es:"Ustedes tienen calor",it:"caldo",person:"voi"},
+  {en:"They are right",es:"Ellos tienen razón",it:"ragione",person:"loro"},
+  {en:"I am in a hurry",es:"Yo tengo prisa",it:"fretta",person:"io"},
+  {en:"You are lucky",es:"Tú tienes suerte",it:"fortuna",person:"tu"},
+  {en:"He is patient",es:"Él tiene paciencia",it:"pazienza",person:"lui"},
+  {en:"We are interested",es:"Nosotros tenemos interés",it:"interesse",person:"noi"},
+  {en:"You are curious",es:"Ustedes tienen curiosidad",it:"curiosità",person:"voi"},
+  {en:"They are ashamed",es:"Ellos tienen vergüenza",it:"vergogna",person:"loro"}
 ];
 
-/* =====================================================
-   4. CONSTRUIR EL BANCO SIN REPETIR VOCABULARIO
+/* =========================================================
+   4. CREAR BANCO ÚNICO
 
-   Cada elemento léxico se asigna a una sola persona.
-   La asignación rota entre las seis conjugaciones.
-
-   Así se practican todas las formas del verbo sin
-   volver a estudiar la misma palabra seis veces.
-===================================================== */
+   Deduplicación por expresión italiana.
+   Una misma palabra no se cuenta dos veces.
+   Las seis conjugaciones se reparten por turnos.
+========================================================= */
 
 const bank=[];
-const usedVocabulary=new Set();
+const seenItalian=new Set();
 let nextId=1;
 
-function addQuestion(prompt,answer,translation,personKey,vocabKey){
-  if(usedVocabulary.has(vocabKey)){
-    return;
-  }
+function normalize(value){
+  return String(value??"")
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[’']/g,"'")
+    .replace(/[.,!?;:]/g,"")
+    .replace(/\s+/g," ");
+}
 
-  usedVocabulary.add(vocabKey);
+function addItem(prompt,answer,translation,personKey,lexicalItem){
+  const uniqueKey=normalize(lexicalItem);
+  if(!uniqueKey || seenItalian.has(uniqueKey))return false;
+
+  seenItalian.add(uniqueKey);
 
   bank.push({
     id:nextId++,
@@ -813,47 +560,49 @@ function addQuestion(prompt,answer,translation,personKey,vocabKey){
     answer,
     translation,
     person:personKey,
-    vocabKey
+    lexical:lexicalItem
   });
+
+  return true;
 }
 
-/* Primero se incluyen las expresiones idiomáticas. */
+/* Incorporar expresiones idiomáticas una vez. */
 for(const item of idioms){
-  addQuestion(
-    item.prompt,
-    item.answer,
-    item.translation,
-    item.person,
-    item.key
+  const person=persons.find(p=>p.key===item.person);
+  addItem(
+    item.en,
+    person.italian+" "+item.it,
+    item.es,
+    person.key,
+    item.it
   );
 }
 
-/* Después se distribuyen las palabras entre las personas. */
+/* Incorporar vocabulario restante, repartiendo personas. */
 let personIndex=0;
 
 for(const item of vocabulary){
   const person=persons[personIndex];
-
-  const prompt=person.en+" "+person.have+" "+item[0];
   const answer=person.italian+" "+item[1];
-  const translation=person.subject+" "+person.spanish+" "+item[2];
 
-  addQuestion(
-    prompt,
+  const added=addItem(
+    person.en+" "+person.have+" "+item[0],
     answer,
-    translation,
+    person.subject+" "+person.spanish+" "+item[2],
     person.key,
-    item[3]
+    item[1]
   );
 
-  personIndex=(personIndex+1)%persons.length;
+  if(added)personIndex=(personIndex+1)%persons.length;
 }
 
 const TOTAL=bank.length;
+const bankById=new Map(bank.map(item=>[item.id,item]));
+const BANK_SIGNATURE=bank.map(item=>item.id+":"+item.answer).join("|");
 
-/* =====================================================
-   5. ESTADO DEL ENTRENAMIENTO
-===================================================== */
+/* =========================================================
+   5. ESTADO
+========================================================= */
 
 let pending=[];
 let queue=[];
@@ -870,9 +619,10 @@ let soundEnabled=true;
 let locked=false;
 let completed=false;
 let timer=null;
+let celebrationFinal=false;
 
-const masteredPersons=new Set();
-const masteredVocabulary=new Set();
+let masteredPersons=new Set();
+let masteredVocabulary=new Set();
 
 const $=id=>document.getElementById(id);
 
@@ -884,9 +634,209 @@ const typedEl=$("typed");
 const feedbackEl=$("feedback");
 const slotsEl=$("slots");
 
-/* =====================================================
-   6. UTILIDADES
-===================================================== */
+/* =========================================================
+   6. GUARDADO AUTOMÁTICO EN EL DISPOSITIVO
+
+   Se guarda:
+   - Palabras ya dominadas.
+   - Preguntas activas y sus rachas.
+   - Preguntas pendientes.
+   - Pregunta actual.
+   - Estadísticas y precisión.
+   - Conjugaciones dominadas.
+   - Sonido y estado de finalización.
+
+   El guardado se realiza después de cada cambio importante.
+========================================================= */
+
+function buildSaveData(){
+  return {
+    version:SAVE_VERSION,
+    signature:BANK_SIGNATURE,
+    savedAt:new Date().toISOString(),
+    pending:pending.map(item=>item.id),
+    queue:queue.map(q=>({
+      id:q.item.id,
+      slot:q.slot,
+      streak:q.streak
+    })),
+    currentId:current?.item.id??null,
+    previousId:previous?.item.id??null,
+    forcedId:forced?.item.id??null,
+    mastered,
+    correctAnswers,
+    wrongAnswers,
+    globalStreak,
+    masteredPersons:[...masteredPersons],
+    masteredVocabulary:[...masteredVocabulary],
+    soundEnabled,
+    completed,
+    celebrationFinal
+  };
+}
+
+function saveProgress(){
+  try{
+    const data=buildSaveData();
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+    $("saveStatus").textContent="● PROGRESO GUARDADO EN ESTE DISPOSITIVO";
+    $("saveStatus").style.color="var(--green)";
+    return true;
+  }catch(error){
+    $("saveStatus").textContent="⚠ NO SE PUDO GUARDAR · DESCARGA UNA COPIA";
+    $("saveStatus").style.color="var(--red)";
+    return false;
+  }
+}
+
+function restoreProgress(data){
+  if(!data || data.version!==SAVE_VERSION ||
+     data.signature!==BANK_SIGNATURE ||
+     !Array.isArray(data.pending) ||
+     !Array.isArray(data.queue)){
+    return false;
+  }
+
+  const restoredQueue=[];
+
+  for(const saved of data.queue){
+    const item=bankById.get(Number(saved.id));
+    if(!item)continue;
+
+    restoredQueue.push({
+      item,
+      slot:Number(saved.slot),
+      streak:Math.max(0,Math.min(2,Number(saved.streak)||0))
+    });
+  }
+
+  const restoredPending=data.pending
+    .map(id=>bankById.get(Number(id)))
+    .filter(Boolean);
+
+  if(restoredQueue.length+restoredPending.length+
+     (Array.isArray(data.masteredVocabulary)?data.masteredVocabulary.length:0)!==TOTAL){
+    return false;
+  }
+
+  queue=restoredQueue;
+  pending=restoredPending;
+
+  mastered=Number(data.mastered)||0;
+  correctAnswers=Number(data.correctAnswers)||0;
+  wrongAnswers=Number(data.wrongAnswers)||0;
+  globalStreak=Number(data.globalStreak)||0;
+
+  masteredPersons=new Set(
+    Array.isArray(data.masteredPersons)?data.masteredPersons:[]
+  );
+
+  masteredVocabulary=new Set(
+    Array.isArray(data.masteredVocabulary)?data.masteredVocabulary:[]
+  );
+
+  soundEnabled=data.soundEnabled!==false;
+  completed=data.completed===true;
+  celebrationFinal=data.celebrationFinal===true;
+
+  current=queue.find(q=>q.item.id===Number(data.currentId))||null;
+  previous=queue.find(q=>q.item.id===Number(data.previousId))||null;
+  forced=queue.find(q=>q.item.id===Number(data.forcedId))||null;
+
+  if(!current && queue.length>0){
+    selectNext();
+  }
+
+  $("sound").textContent=soundEnabled?"🔊 Sonido ON":"🔇 Sonido OFF";
+
+  updateStats();
+  updateSlots();
+  updateConjugations();
+
+  if(completed){
+    finishGame();
+  }else if(celebrationFinal){
+    showCelebration(
+      "¡BRAVISSIMO!",
+      "Has completado este entrenamiento.",
+      "🏆",
+      true
+    );
+  }else{
+    render();
+  }
+
+  $("saveStatus").textContent="● PROGRESO ANTERIOR RECUPERADO";
+  $("saveStatus").style.color="var(--green)";
+
+  return true;
+}
+
+function loadProgress(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return false;
+
+    const data=JSON.parse(raw);
+    return restoreProgress(data);
+  }catch(error){
+    return false;
+  }
+}
+
+/* =========================================================
+   7. COPIA DE SEGURIDAD DESCARGABLE
+========================================================= */
+
+function downloadBackup(){
+  saveProgress();
+
+  try{
+    const data=JSON.stringify(buildSaveData(),null,2);
+    const blob=new Blob([data],{type:"application/json"});
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement("a");
+
+    link.href=url;
+    link.download="avere-master-copia-de-seguridad.json";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+    $("saveStatus").textContent="● COPIA DE SEGURIDAD DESCARGADA";
+  }catch(error){
+    alert("No se pudo crear la copia de seguridad.");
+  }
+}
+
+function importBackup(file){
+  if(!file)return;
+
+  const reader=new FileReader();
+
+  reader.onload=()=>{
+    try{
+      const data=JSON.parse(reader.result);
+
+      if(!restoreProgress(data)){
+        alert("Esta copia no corresponde a esta versión o está incompleta.");
+        return;
+      }
+
+      saveProgress();
+      alert("¡Progreso recuperado correctamente!");
+    }catch(error){
+      alert("El archivo no es una copia válida de AVERE MASTER.");
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+/* =========================================================
+   8. UTILIDADES
+========================================================= */
 
 function shuffle(array){
   const result=[...array];
@@ -897,17 +847,6 @@ function shuffle(array){
   }
 
   return result;
-}
-
-function normalize(value){
-  return value
-    .toLowerCase()
-    .trim()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g,"")
-    .replace(/[’']/g,"'")
-    .replace(/[.,!?;:]/g,"")
-    .replace(/\s+/g," ");
 }
 
 function speak(text){
@@ -936,17 +875,12 @@ function showFeedback(type,title,message){
 }
 
 function createQuestion(item,slot){
-  return {
-    item,
-    slot,
-    streak:0
-  };
+  return {item,slot,streak:0};
 }
 
-/* =====================================================
-   7. INICIAR
-   Se mantienen tres preguntas activas.
-===================================================== */
+/* =========================================================
+   9. INICIAR O REINICIAR
+========================================================= */
 
 function initialize(){
   if(timer!==null){
@@ -966,8 +900,8 @@ function initialize(){
   wrongAnswers=0;
   globalStreak=0;
 
-  masteredPersons.clear();
-  masteredVocabulary.clear();
+  masteredPersons=new Set();
+  masteredVocabulary=new Set();
 
   current=null;
   previous=null;
@@ -975,14 +909,13 @@ function initialize(){
 
   locked=false;
   completed=false;
+  celebrationFinal=false;
 
   $("celebration").classList.remove("show");
-  $("continue").textContent="VOLVER A EMPEZAR";
 
   for(let slot=1;slot<=3;slot++){
-    queue.push(
-      createQuestion(pending.shift(),slot)
-    );
+    const item=pending.shift();
+    if(item)queue.push(createQuestion(item,slot));
   }
 
   selectNext();
@@ -990,11 +923,12 @@ function initialize(){
   updateSlots();
   updateConjugations();
   render();
+  saveProgress();
 }
 
-/* =====================================================
-   8. SELECCIÓN DE PREGUNTA
-===================================================== */
+/* =========================================================
+   10. SELECCIÓN ALEATORIA
+========================================================= */
 
 function selectNext(){
   if(forced){
@@ -1003,33 +937,33 @@ function selectNext(){
     return;
   }
 
-  let candidates=queue.filter(q=>q!==previous);
+  let candidates=queue.filter(q=>
+    q!==previous
+  );
 
-  if(candidates.length===0){
-    candidates=queue;
-  }
+  if(candidates.length===0)candidates=queue;
 
   if(candidates.length===0){
     current=null;
     return;
   }
 
-  current=candidates[
-    Math.floor(Math.random()*candidates.length)
-  ];
+  current=candidates[Math.floor(Math.random()*candidates.length)];
 }
 
-/* =====================================================
-   9. PRESENTACIÓN
+/* =========================================================
+   11. PRESENTACIÓN
 
-   0/3 = alternativas
-   1/3 = alternativas
-   2/3 = escribir
-===================================================== */
+   Primer intento: alternativas.
+   Segundo intento: alternativas.
+   Tercer intento: respuesta escrita.
+========================================================= */
 
 function render(){
   if(!current){
-    finishGame();
+    if(queue.length===0 && pending.length===0){
+      finishGame();
+    }
     return;
   }
 
@@ -1048,8 +982,8 @@ function render(){
     :"ALTERNATIVAS · INTENTO "+(current.streak+1);
 
   $("instruction").textContent=isWriting
-    ?"Escribe la respuesta italiana sin alternativas"
-    :"Selecciona la respuesta correcta en italiano";
+    ?"Escribe la respuesta italiana sin alternativas."
+    :"Selecciona la respuesta correcta en italiano.";
 
   answersEl.replaceChildren();
   answersEl.style.display=isWriting?"none":"grid";
@@ -1059,6 +993,12 @@ function render(){
     typedEl.value="";
     typedEl.disabled=false;
     $("check").disabled=false;
+
+    setTimeout(()=>{
+      if(current && current.streak===2){
+        typedEl.focus({preventScroll:true});
+      }
+    },100);
   }else{
     renderOptions(q);
   }
@@ -1070,11 +1010,14 @@ function render(){
       ?"Tercer intento: escribe la respuesta de memoria."
       :"Responde correctamente para avanzar en la racha."
   );
+
+  updateSlots();
+  saveProgress();
 }
 
-/* =====================================================
-   10. ALTERNATIVAS
-===================================================== */
+/* =========================================================
+   12. ALTERNATIVAS
+========================================================= */
 
 function renderOptions(q){
   const distractors=shuffle(
@@ -1094,7 +1037,6 @@ function renderOptions(q){
 
   options.forEach(option=>{
     const button=document.createElement("button");
-
     button.type="button";
     button.className="answer";
     button.textContent=option.text;
@@ -1107,9 +1049,9 @@ function renderOptions(q){
   });
 }
 
-/* =====================================================
-   11. COMPROBAR RESPUESTA
-===================================================== */
+/* =========================================================
+   13. COMPROBAR RESPUESTA
+========================================================= */
 
 function checkAnswer(isCorrect,button=null){
   if(locked || !current)return;
@@ -1117,10 +1059,7 @@ function checkAnswer(isCorrect,button=null){
   locked=true;
 
   if(button){
-    const buttons=[
-      ...answersEl.querySelectorAll("button")
-    ];
-
+    const buttons=[...answersEl.querySelectorAll("button")];
     buttons.forEach(b=>b.disabled=true);
 
     if(isCorrect){
@@ -1129,39 +1068,31 @@ function checkAnswer(isCorrect,button=null){
       button.classList.add("wrong");
 
       const correctButton=buttons.find(b=>
-        normalize(b.textContent)===
-        normalize(current.item.answer)
+        normalize(b.textContent)===normalize(current.item.answer)
       );
 
-      if(correctButton){
-        correctButton.classList.add("correct");
-      }
+      if(correctButton)correctButton.classList.add("correct");
     }
   }
 
-  if(isCorrect){
-    handleCorrect();
-  }else{
-    handleWrong();
-  }
+  if(isCorrect)handleCorrect();
+  else handleWrong();
 }
 
 function checkTyped(){
   if(locked || !current)return;
 
   const value=typedEl.value.trim();
-
   if(!value)return;
 
-  const correct=
-    normalize(value)===normalize(current.item.answer);
-
-  checkAnswer(correct);
+  checkAnswer(
+    normalize(value)===normalize(current.item.answer)
+  );
 }
 
-/* =====================================================
-   12. ACIERTO
-===================================================== */
+/* =========================================================
+   14. RESPUESTA CORRECTA
+========================================================= */
 
 function handleCorrect(){
   correctAnswers++;
@@ -1169,7 +1100,6 @@ function handleCorrect(){
   current.streak++;
 
   const answer=current.item.answer;
-
   speak(answer);
 
   if(current.streak===3){
@@ -1181,6 +1111,7 @@ function handleCorrect(){
 
     updateStats();
     updateSlots();
+    saveProgress();
 
     timer=setTimeout(()=>{
       timer=null;
@@ -1200,6 +1131,7 @@ function handleCorrect(){
 
   updateStats();
   updateSlots();
+  saveProgress();
 
   timer=setTimeout(()=>{
     timer=null;
@@ -1210,12 +1142,12 @@ function handleCorrect(){
   },650);
 }
 
-/* =====================================================
-   13. ERROR
+/* =========================================================
+   15. RESPUESTA INCORRECTA
 
-   Reinicia solamente la racha de esa pregunta.
-   Repite inmediatamente la misma pregunta.
-===================================================== */
+   Se reinicia únicamente la racha de esa pregunta.
+   La misma pregunta vuelve inmediatamente con alternativas.
+========================================================= */
 
 function handleWrong(){
   wrongAnswers++;
@@ -1235,6 +1167,7 @@ function handleWrong(){
 
   updateStats();
   updateSlots();
+  saveProgress();
 
   timer=setTimeout(()=>{
     timer=null;
@@ -1245,13 +1178,12 @@ function handleWrong(){
   },1100);
 }
 
-/* =====================================================
-   14. DOMINAR Y REEMPLAZAR
+/* =========================================================
+   16. DOMINAR Y REEMPLAZAR
 
-   La palabra aprendida sale definitivamente.
-   Entra una palabra nueva.
-   No se vuelve a introducir la palabra dominada.
-===================================================== */
+   La palabra dominada desaparece del entrenamiento.
+   Entra una nueva en el mismo espacio.
+========================================================= */
 
 function masterQuestion(){
   if(!current)return;
@@ -1262,15 +1194,12 @@ function masterQuestion(){
   queue=queue.filter(q=>q!==finished);
 
   mastered++;
-  masteredVocabulary.add(item.vocabKey);
+  masteredVocabulary.add(item.id);
   masteredPersons.add(item.person);
 
   if(pending.length>0){
     const newItem=pending.shift();
-
-    queue.push(
-      createQuestion(newItem,finished.slot)
-    );
+    queue.push(createQuestion(newItem,finished.slot));
   }
 
   previous=finished;
@@ -1279,6 +1208,7 @@ function masterQuestion(){
   updateStats();
   updateSlots();
   updateConjugations();
+  saveProgress();
 
   if(queue.length===0){
     finishGame();
@@ -1292,27 +1222,25 @@ function masterQuestion(){
     showCelebration(
       "¡BRAVISSIMO!",
       "Has dominado "+mastered+
-      " palabras o expresiones. ¡Continúa!",
+      " palabras o expresiones diferentes. ¡Continúa!",
       "🏆",
       false
     );
   }
+
+  saveProgress();
 }
 
-/* =====================================================
-   15. ESTADÍSTICAS MEJORADAS
+/* =========================================================
+   17. ESTADÍSTICAS
 
-   Palabras aprendidas: vocabulario dominado.
-   Pendientes: vocabulario aún no dominado.
-   Total: conceptos únicos del banco.
-   Preguntas dominadas: preguntas superadas.
-   Precisión: respuestas correctas / intentos.
-   Racha global: aciertos consecutivos generales.
-===================================================== */
+   El total procede del banco deduplicado.
+   Las conjugaciones nunca aumentan el total.
+========================================================= */
 
 function updateStats(){
   const learned=masteredVocabulary.size;
-  const remaining=TOTAL-learned;
+  const remaining=Math.max(0,TOTAL-learned);
 
   $("learnedWords").textContent=learned;
   $("remainingWords").textContent=remaining;
@@ -1337,17 +1265,17 @@ function updateStats(){
   $("bar").style.width=percent+"%";
 }
 
-/* =====================================================
-   16. TRES PREGUNTAS ACTIVAS
-===================================================== */
+/* =========================================================
+   18. TRES PREGUNTAS ACTIVAS
+========================================================= */
 
 function updateSlots(){
   slotsEl.replaceChildren();
 
   for(let slot=1;slot<=3;slot++){
     const q=queue.find(item=>item.slot===slot);
-
     const div=document.createElement("div");
+
     div.className="slot";
 
     if(current && current.slot===slot){
@@ -1369,21 +1297,17 @@ function updateSlots(){
     mini.className="mini";
 
     const fill=document.createElement("div");
-
-    fill.style.width=q
-      ?(q.streak/3*100)+"%"
-      :"100%";
+    fill.style.width=q?(q.streak/3*100)+"%":"100%";
 
     mini.appendChild(fill);
     div.append(title,detail,mini);
-
     slotsEl.appendChild(div);
   }
 }
 
-/* =====================================================
-   17. SEGUIMIENTO DE LAS SEIS CONJUGACIONES
-===================================================== */
+/* =========================================================
+   19. CONJUGACIONES
+========================================================= */
 
 function updateConjugations(){
   const container=$("conjugations");
@@ -1391,7 +1315,6 @@ function updateConjugations(){
 
   for(const person of persons){
     const div=document.createElement("div");
-
     div.className="conj";
 
     if(masteredPersons.has(person.key)){
@@ -1399,19 +1322,19 @@ function updateConjugations(){
     }
 
     div.textContent=person.label;
-
     container.appendChild(div);
   }
 
-  $("conjugationCount").textContent=
-    masteredPersons.size+" / 6";
+  $("conjugationCount").textContent=masteredPersons.size+" / 6";
 }
 
-/* =====================================================
-   18. CELEBRACIONES Y FINAL
-===================================================== */
+/* =========================================================
+   20. CELEBRACIONES
+========================================================= */
 
 function showCelebration(title,message,emoji,final=true){
+  celebrationFinal=final;
+
   $("celebrationTitle").textContent=title;
   $("celebrationText").textContent=message;
   $("emoji").textContent=emoji;
@@ -1421,6 +1344,7 @@ function showCelebration(title,message,emoji,final=true){
     :"CONTINUAR";
 
   $("celebration").classList.add("show");
+  saveProgress();
 }
 
 function finishGame(){
@@ -1428,10 +1352,12 @@ function finishGame(){
 
   completed=true;
   current=null;
+  celebrationFinal=true;
 
   updateStats();
   updateSlots();
   updateConjugations();
+  saveProgress();
 
   showCelebration(
     "¡BANCO COMPLETADO!",
@@ -1443,9 +1369,9 @@ function finishGame(){
   );
 }
 
-/* =====================================================
-   19. EVENTOS
-===================================================== */
+/* =========================================================
+   21. EVENTOS
+========================================================= */
 
 $("check").addEventListener("click",checkTyped);
 
@@ -1466,7 +1392,8 @@ typedEl.addEventListener("focus",()=>{
 });
 
 $("restart").addEventListener("click",()=>{
-  if(confirm("¿Quieres reiniciar todo el entrenamiento?")){
+  if(confirm("¿Quieres reiniciar todo el entrenamiento? Se borrará tu progreso actual.")){
+    try{localStorage.removeItem(STORAGE_KEY)}catch(error){}
     initialize();
   }
 });
@@ -1481,26 +1408,56 @@ $("sound").addEventListener("click",()=>{
   if(!soundEnabled && "speechSynthesis" in window){
     window.speechSynthesis.cancel();
   }
+
+  saveProgress();
+});
+
+$("backup").addEventListener("click",downloadBackup);
+
+$("restoreBackup").addEventListener("click",()=>{
+  $("backupFile").click();
+});
+
+$("backupFile").addEventListener("change",event=>{
+  const file=event.target.files?.[0];
+  importBackup(file);
+  event.target.value="";
 });
 
 $("continue").addEventListener("click",()=>{
-  if(timer!==null){
-    clearTimeout(timer);
-    timer=null;
-  }
-
   $("celebration").classList.remove("show");
 
   if(completed){
     initialize();
+    return;
+  }
+
+  celebrationFinal=false;
+  saveProgress();
+});
+
+/* Guardar cuando el usuario sale, cambia de pestaña
+   o el navegador pasa a segundo plano. */
+window.addEventListener("pagehide",saveProgress);
+window.addEventListener("beforeunload",saveProgress);
+
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="hidden"){
+    saveProgress();
   }
 });
 
-/* =====================================================
-   20. EJECUCIÓN
-===================================================== */
+/* =========================================================
+   22. ARRANQUE Y RECUPERACIÓN AUTOMÁTICA
+========================================================= */
 
-initialize();
+if(!loadProgress()){
+  initialize();
+}else{
+  updateStats();
+  updateSlots();
+  updateConjugations();
+}
 
 </script>
 </body>
