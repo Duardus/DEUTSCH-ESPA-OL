@@ -8,146 +8,281 @@
 <title>AVERE MASTER — Italiano</title>
 
 <style>
-:root{
- --bg:#080d18;--panel:#111c2e;--panel2:#1a2b43;
- --border:#30445f;--text:#f3f6ff;--muted:#91a3bd;
- --green:#35e6a0;--red:#ff627b;--gold:#ffd166;
- --blue:#62aaff;
+:root {
+  --bg:#080d18;
+  --panel:#111c2e;
+  --panel2:#1a2b43;
+  --border:#30445f;
+  --text:#f3f6ff;
+  --muted:#91a3bd;
+  --green:#35e6a0;
+  --red:#ff627b;
+  --gold:#ffd166;
+  --blue:#62aaff;
 }
 *{box-sizing:border-box}
 html{min-height:100%;scroll-behavior:smooth}
 body{
- margin:0;min-height:100vh;min-height:100dvh;
- background:var(--bg);color:var(--text);
- font-family:system-ui,-apple-system,sans-serif;
+  margin:0;
+  min-height:100vh;
+  min-height:100dvh;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,sans-serif;
 }
 button,input{font:inherit}
 button{touch-action:manipulation;cursor:pointer}
 .app{
- max-width:650px;width:100%;margin:auto;
- padding:max(12px,env(safe-area-inset-top)) 13px
- max(40px,env(safe-area-inset-bottom));
+  max-width:650px;
+  width:100%;
+  margin:auto;
+  padding:max(12px,env(safe-area-inset-top)) 13px
+    max(40px,env(safe-area-inset-bottom));
 }
 header{text-align:center;padding:12px 0 17px}
-.logo{font-size:10px;letter-spacing:4px;color:var(--green);font-weight:900}
+.logo{
+  font-size:10px;
+  letter-spacing:4px;
+  color:var(--green);
+  font-weight:900;
+}
 h1{font-size:28px;margin:8px 0}
 .subtitle{font-size:12px;color:var(--muted)}
 .stats{
- display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
- gap:7px;margin:13px 0;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:7px;
+  margin:13px 0;
 }
 .stat{
- background:var(--panel);border:1px solid var(--border);
- border-radius:13px;padding:11px 3px;text-align:center;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:11px 3px;
+  text-align:center;
 }
-.stat strong{display:block;font-size:21px;font-variant-numeric:tabular-nums}
+.stat strong{
+  display:block;
+  font-size:21px;
+  font-variant-numeric:tabular-nums;
+}
 .stat span{font-size:9px;color:var(--muted)}
 .progress-info{
- display:flex;justify-content:space-between;
- color:var(--muted);font-size:11px;margin-bottom:7px;
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:11px;
+  margin-bottom:7px;
 }
-.progress{height:9px;background:#26364d;border-radius:20px;overflow:hidden}
+.progress{
+  height:9px;
+  background:#26364d;
+  border-radius:20px;
+  overflow:hidden;
+}
 .bar{
- height:100%;width:0;
- background:linear-gradient(90deg,var(--green),var(--blue));
- transition:width .3s;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,var(--green),var(--blue));
+  transition:width .3s;
 }
 .slots{
- display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
- gap:7px;margin:17px 0;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;
+  margin:17px 0;
 }
 .slot{
- background:var(--panel);border:1px solid var(--border);
- border-radius:12px;padding:11px 4px;text-align:center;min-width:0;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:11px 4px;
+  text-align:center;
+  min-width:0;
 }
 .slot.active{border-color:var(--green)}
 .slot b{font-size:11px}
-.slot small{display:block;color:var(--muted);font-size:10px;margin-top:5px}
-.mini{height:4px;background:#29384f;border-radius:10px;margin-top:8px;overflow:hidden}
-.mini div{height:100%;background:var(--green);transition:width .2s}
-.question{
- background:linear-gradient(145deg,#182740,#101a2a);
- border:1px solid var(--border);border-radius:22px;padding:23px 16px;
+.slot small{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+  margin-top:5px;
 }
-.top{display:flex;justify-content:space-between;align-items:center}
-.mode{color:var(--green);font-size:10px;letter-spacing:1.5px;font-weight:900}
+.mini{
+  height:4px;
+  background:#29384f;
+  border-radius:10px;
+  margin-top:8px;
+  overflow:hidden;
+}
+.mini div{
+  height:100%;
+  background:var(--green);
+  transition:width .2s;
+}
+.question{
+  background:linear-gradient(145deg,#182740,#101a2a);
+  border:1px solid var(--border);
+  border-radius:22px;
+  padding:23px 16px;
+}
+.top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+.mode{
+  color:var(--green);
+  font-size:10px;
+  letter-spacing:1px;
+  font-weight:900;
+}
 .counter{font-size:11px;color:var(--muted)}
 .prompt{
- font-size:clamp(25px,7vw,37px);font-weight:850;
- text-align:center;line-height:1.2;overflow-wrap:anywhere;
- margin:32px 0 9px;
+  font-size:clamp(25px,7vw,37px);
+  font-weight:850;
+  text-align:center;
+  line-height:1.2;
+  overflow-wrap:anywhere;
+  margin:32px 0 9px;
 }
-.translation{text-align:center;color:var(--muted);font-size:14px;min-height:21px}
-.instruction{text-align:center;font-size:11px;color:var(--muted);margin:25px 0 13px}
+.translation{
+  text-align:center;
+  color:var(--muted);
+  font-size:14px;
+  min-height:21px;
+}
+.instruction{
+  text-align:center;
+  font-size:11px;
+  color:var(--muted);
+  margin:25px 0 13px;
+}
 .answers{display:grid;grid-template-columns:1fr;gap:10px}
 .answer{
- width:100%;min-height:55px;background:var(--panel2);
- border:1px solid var(--border);border-radius:13px;
- padding:13px;color:var(--text);font-size:16px;
- font-weight:750;text-align:left;overflow-wrap:anywhere;
+  width:100%;
+  min-height:55px;
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:13px;
+  color:var(--text);
+  font-size:16px;
+  font-weight:750;
+  text-align:left;
+  overflow-wrap:anywhere;
 }
 .answer.correct{background:#104735;border-color:var(--green)}
 .answer.wrong{background:#542433;border-color:var(--red)}
 .answer:disabled{opacity:1}
 .write{display:none;grid-template-columns:minmax(0,1fr);gap:10px}
 .write input{
- width:100%;min-width:0;height:58px;padding:14px;
- background:#080f1c;border:2px solid var(--border);
- border-radius:13px;color:white;font-size:19px;outline:none;
+  width:100%;
+  min-width:0;
+  height:58px;
+  padding:14px;
+  background:#080f1c;
+  border:2px solid var(--border);
+  border-radius:13px;
+  color:white;
+  font-size:19px;
+  outline:none;
 }
 .write input:focus{border-color:var(--green)}
 .check{
- min-height:55px;border:0;border-radius:13px;
- background:var(--green);color:#062518;font-weight:950;
+  min-height:55px;
+  border:0;
+  border-radius:13px;
+  background:var(--green);
+  color:#062518;
+  font-weight:950;
 }
 .feedback{
- min-height:65px;margin-top:15px;padding:12px;
- border-radius:12px;text-align:center;
- display:flex;flex-direction:column;align-items:center;
- justify-content:center;gap:5px;font-size:12px;line-height:1.5;
+  min-height:65px;
+  margin-top:15px;
+  padding:12px;
+  border-radius:12px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  font-size:12px;
+  line-height:1.5;
 }
 .feedback strong{font-size:17px}
 .neutral{background:#1a2940;color:#d0ddef}
 .good{background:#103d30;color:#91ffce}
 .bad{background:#49222f;color:#ffadbc}
-.controls{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
-.secondary{
- min-height:43px;padding:9px 14px;background:var(--panel);
- color:var(--muted);border:1px solid var(--border);
- border-radius:10px;font-size:11px;
+.controls{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-top:16px;
 }
-.note{text-align:center;color:var(--muted);font-size:10px;line-height:1.7;margin-top:17px}
+.secondary{
+  min-height:43px;
+  padding:9px 14px;
+  background:var(--panel);
+  color:var(--muted);
+  border:1px solid var(--border);
+  border-radius:10px;
+  font-size:11px;
+}
+.note{
+  text-align:center;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.7;
+  margin-top:17px;
+}
 .celebration{
- display:none;position:fixed;inset:0;z-index:20;
- background:#050a14ed;align-items:center;justify-content:center;
- padding:20px;overflow-y:auto;
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:20;
+  background:#050a14ed;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  overflow-y:auto;
 }
 .celebration.show{display:flex}
 .celebration-box{
- max-width:390px;width:100%;padding:28px 20px;
- border:1px solid var(--gold);border-radius:23px;
- background:#17253c;text-align:center;
+  max-width:390px;
+  width:100%;
+  padding:28px 20px;
+  border:1px solid var(--gold);
+  border-radius:23px;
+  background:#17253c;
+  text-align:center;
 }
 .emoji{font-size:65px}
 .celebration-box h2{color:var(--gold);font-size:29px}
 .celebration-box p{line-height:1.7;color:#d7e3f4}
 .celebration-box button{
- width:100%;min-height:53px;background:var(--gold);
- border:0;border-radius:12px;font-weight:950;
+  width:100%;
+  min-height:53px;
+  background:var(--gold);
+  border:0;
+  border-radius:12px;
+  font-weight:950;
 }
 @media(max-width:380px){
- .app{padding-left:10px;padding-right:10px}
- .question{padding:18px 12px}
- .prompt{font-size:26px;margin-top:24px}
- .answer{font-size:14px}
- .stat strong{font-size:19px}
+  .app{padding-left:10px;padding-right:10px}
+  .question{padding:18px 12px}
+  .prompt{font-size:26px;margin-top:24px}
+  .answer{font-size:14px}
+  .stat strong{font-size:19px}
 }
 @media(max-height:650px){
- header{padding:4px 0}
- .stats{margin:7px 0}
- .question{padding-top:14px;padding-bottom:14px}
- .prompt{margin-top:17px}
- .instruction{margin-top:15px}
+  header{padding:4px 0}
+  .stats{margin:7px 0}
+  .question{padding-top:14px;padding-bottom:14px}
+  .prompt{margin-top:17px}
+  .instruction{margin-top:15px}
 }
 </style>
 </head>
@@ -156,243 +291,318 @@ h1{font-size:28px;margin:8px 0}
 <div class="app">
 
 <header>
- <div class="logo">ITALIAN LANGUAGE TRAINING</div>
- <h1>AVERE MASTER</h1>
- <div class="subtitle">Un verbo · Todas las personas · Presente</div>
+  <div class="logo">ITALIAN LANGUAGE TRAINING</div>
+  <h1>AVERE MASTER</h1>
+  <div class="subtitle">Un verbo · Todas las personas · Presente</div>
 </header>
 
 <section class="stats">
- <div class="stat"><strong id="mastered">0</strong><span>DOMINADAS</span></div>
- <div class="stat"><strong id="total">0</strong><span>TOTAL</span></div>
- <div class="stat"><strong id="accuracy">100%</strong><span>PRECISIÓN</span></div>
- <div class="stat"><strong id="streak">0</strong><span>RACHA GLOBAL</span></div>
+  <div class="stat"><strong id="mastered">0</strong><span>DOMINADAS</span></div>
+  <div class="stat"><strong id="total">0</strong><span>TOTAL</span></div>
+  <div class="stat"><strong id="accuracy">100%</strong><span>PRECISIÓN</span></div>
+  <div class="stat"><strong id="streak">0</strong><span>RACHA GLOBAL</span></div>
 </section>
 
 <div class="progress-info">
- <span>DOMINIO DEL BANCO</span>
- <b id="percent">0%</b>
+  <span>DOMINIO DEL BANCO</span>
+  <b id="percent">0%</b>
 </div>
 <div class="progress"><div class="bar" id="bar"></div></div>
 
 <div class="slots" id="slots"></div>
 
 <section class="question">
- <div class="top">
-  <span class="mode" id="mode">ALTERNATIVAS · 01</span>
-  <span class="counter" id="counter">1 / 3</span>
- </div>
+  <div class="top">
+    <span class="mode" id="mode">ALTERNATIVAS · INTENTO 1</span>
+    <span class="counter" id="counter">0 / 3</span>
+  </div>
 
- <div class="prompt" id="prompt"></div>
- <div class="translation" id="translation"></div>
- <div class="instruction" id="instruction"></div>
+  <div class="prompt" id="prompt"></div>
+  <div class="translation" id="translation"></div>
+  <div class="instruction" id="instruction"></div>
 
- <div class="answers" id="answers"></div>
+  <div class="answers" id="answers"></div>
 
- <div class="write" id="write">
-  <input id="typed" type="text"
-   placeholder="Scrivi in italiano..."
-   autocomplete="off" autocapitalize="none"
-   spellcheck="false" enterkeyhint="done">
-  <button class="check" id="check">COMPROBAR →</button>
- </div>
+  <div class="write" id="write">
+    <input id="typed" type="text"
+      placeholder="Scrivi in italiano..."
+      autocomplete="off"
+      autocapitalize="none"
+      spellcheck="false"
+      enterkeyhint="done">
+    <button class="check" id="check">COMPROBAR →</button>
+  </div>
 
- <div class="feedback neutral" id="feedback" aria-live="polite">
-  <strong>ANDIAMO!</strong>
-  Tres aciertos consecutivos por pregunta.
- </div>
+  <div class="feedback neutral" id="feedback" aria-live="polite">
+    <strong>ANDIAMO!</strong>
+    Tres aciertos consecutivos por pregunta.
+  </div>
 </section>
 
 <div class="controls">
- <button class="secondary" id="restart">↻ Reiniciar</button>
- <button class="secondary" id="sound">🔊 Sonido ON</button>
+  <button class="secondary" id="restart">↻ Reiniciar</button>
+  <button class="secondary" id="sound">🔊 Sonido ON</button>
 </div>
 
 <div class="note">
- Pregunta 1: alternativas · Pregunta 2: alternativas · Pregunta 3: escritura.<br>
- Tres aciertos consecutivos por pregunta. Las preguntas dominadas se reemplazan automáticamente.
+  Primer acierto: alternativas · Segundo acierto: alternativas.<br>
+  Tercer acierto: escribir sin pistas.<br>
+  Al dominar una pregunta, entra una nueva automáticamente.
 </div>
 
 </div>
 
 <div class="celebration" id="celebration">
- <div class="celebration-box">
-  <div class="emoji" id="emoji">🏆</div>
-  <h2 id="celebrationTitle">BRAVISSIMO!</h2>
-  <p id="celebrationText"></p>
-  <button id="continue">CONTINUAR →</button>
- </div>
+  <div class="celebration-box">
+    <div class="emoji" id="emoji">🏆</div>
+    <h2 id="celebrationTitle">BRAVISSIMO!</h2>
+    <p id="celebrationText"></p>
+    <button id="continue">VOLVER A EMPEZAR</button>
+  </div>
 </div>
 
 <script>
 "use strict";
 
-/* =================================================
-   BANCO DE COMPLEMENTOS DE AVERE
-   Cada complemento tiene como máximo dos palabras.
-   Se combina con las siete personas.
-================================================= */
-
-const complements = [
- ["a car","un'auto","un auto"],
- ["a house","una casa","una casa"],
- ["a dog","un cane","un perro"],
- ["a cat","un gatto","un gato"],
- ["a book","un libro","un libro"],
- ["a phone","un telefono","un teléfono"],
- ["a friend","un amico","un amigo"],
- ["a sister","una sorella","una hermana"],
- ["a brother","un fratello","un hermano"],
- ["a family","una famiglia","una familia"],
- ["a child","un bambino","un niño"],
- ["a question","una domanda","una pregunta"],
- ["an idea","un'idea","una idea"],
- ["a problem","un problema","un problema"],
- ["a job","un lavoro","un trabajo"],
- ["money","soldi","dinero"],
- ["time","tempo","tiempo"],
- ["a key","una chiave","una llave"],
- ["a bicycle","una bicicletta","una bicicleta"],
- ["a computer","un computer","una computadora"],
- ["a ticket","un biglietto","un boleto"],
- ["a room","una stanza","una habitación"],
- ["a garden","un giardino","un jardín"],
- ["a passport","un passaporto","un pasaporte"],
- ["a coffee","un caffè","un café"],
- ["water","dell'acqua","agua"],
- ["a table","un tavolo","una mesa"],
- ["a television","una televisione","un televisor"],
- ["a watch","un orologio","un reloj"],
- ["a wallet","un portafoglio","una billetera"],
- ["a dream","un sogno","un sueño"],
- ["a name","un nome","un nombre"],
- ["a plan","un piano","un plan"],
- ["a photo","una foto","una fotografía"],
- ["a message","un messaggio","un mensaje"],
- ["an appointment","un appuntamento","una cita"],
- ["a possibility","una possibilità","una posibilidad"],
- ["a chance","un'occasione","una oportunidad"],
- ["a choice","una scelta","una elección"],
- ["a reason","un motivo","un motivo"],
- ["a goal","un obiettivo","un objetivo"],
- ["a lot","molto","mucho"],
- ["little time","poco tempo","poco tiempo"],
- ["free time","tempo libero","tiempo libre"],
- ["enough money","abbastanza soldi","suficiente dinero"],
- ["no money","niente soldi","nada de dinero"],
- ["many friends","molti amici","muchos amigos"],
- ["many ideas","molte idee","muchas ideas"],
- ["many questions","molte domande","muchas preguntas"],
- ["a lot of work","molto lavoro","mucho trabajo"],
- ["a lot of time","molto tempo","mucho tiempo"],
- ["a lot of patience","molta pazienza","mucha paciencia"],
- ["a lot of experience","molta esperienza","mucha experiencia"],
- ["a lot of energy","molta energia","mucha energía"],
- ["a lot of courage","molto coraggio","mucho valor"],
- ["hunger","fame","hambre"],
- ["thirst","sete","sed"],
- ["sleep","sonno","sueño"],
- ["fear","paura","miedo"],
- ["cold","freddo","frío"],
- ["heat","caldo","calor"],
- ["reason","ragione","razón"],
- ["patience","pazienza","paciencia"],
- ["luck","fortuna","suerte"],
- ["desire","voglia","ganas"],
- ["need","bisogno","necesidad"],
- ["doubt","un dubbio","una duda"],
- ["hope","speranza","esperanza"],
- ["respect","rispetto","respeto"],
- ["experience","esperienza","experiencia"],
- ["energy","energia","energía"],
- ["courage","coraggio","valor"],
- ["success","successo","éxito"],
- ["a lot of fun","molto divertimento","mucha diversión"],
- ["a lot of love","molto amore","mucho amor"],
- ["a little time","un po' di tempo","un poco de tiempo"],
- ["a little money","un po' di soldi","un poco de dinero"],
- ["a little patience","un po' di pazienza","un poco de paciencia"],
- ["a little fear","un po' di paura","un poco de miedo"],
- ["a little luck","un po' di fortuna","un poco de suerte"],
- ["a big problem","un grosso problema","un gran problema"],
- ["a good idea","una buona idea","una buena idea"],
- ["a new car","una macchina nuova","un auto nuevo"],
- ["a beautiful house","una bella casa","una casa bonita"],
- ["a good reason","una buona ragione","una buena razón"],
- ["a difficult question","una domanda difficile","una pregunta difícil"],
- ["a lot of money","un sacco di soldi","mucho dinero"],
- ["a lot of friends","un sacco di amici","muchos amigos"],
- ["a lot of problems","un sacco di problemi","muchos problemas"],
- ["a lot of things","molte cose","muchas cosas"],
- ["a good job","un buon lavoro","un buen trabajo"],
- ["a good family","una bella famiglia","una buena familia"],
- ["a good friend","un buon amico","un buen amigo"],
- ["a big house","una casa grande","una casa grande"],
- ["a small car","una macchina piccola","un auto pequeño"],
- ["a lot of books","molti libri","muchos libros"],
- ["a lot of questions","tante domande","muchas preguntas"],
- ["a lot of dreams","molti sogni","muchos sueños"],
- ["a lot of choices","molte scelte","muchas opciones"]
-];
-
-/* =================================================
-   PERSONAS DE AVERE
-================================================= */
+/* ============================================
+   1. PERSONAS Y CONJUGACIÓN DE AVERE
+============================================ */
 
 const persons = [
- {en:"I",es:"Yo",verb:"ho"},
- {en:"You",es:"Tú",verb:"hai"},
- {en:"He",es:"Él",verb:"ha"},
- {en:"She",es:"Ella",verb:"ha"},
- {en:"We",es:"Nosotros",verb:"abbiamo"},
- {en:"You (plural)",es:"Ustedes",verb:"avete"},
- {en:"They",es:"Ellos",verb:"hanno"}
+  {
+    en:"I",
+    es:"Yo",
+    have:"have",
+    italian:"ho",
+    spanish:"tengo"
+  },
+  {
+    en:"You",
+    es:"Tú",
+    have:"have",
+    italian:"hai",
+    spanish:"tienes"
+  },
+  {
+    en:"He",
+    es:"Él",
+    have:"has",
+    italian:"ha",
+    spanish:"tiene"
+  },
+  {
+    en:"She",
+    es:"Ella",
+    have:"has",
+    italian:"ha",
+    spanish:"tiene"
+  },
+  {
+    en:"We",
+    es:"Nosotros",
+    have:"have",
+    italian:"abbiamo",
+    spanish:"tenemos"
+  },
+  {
+    en:"You (plural)",
+    es:"Ustedes",
+    have:"have",
+    italian:"avete",
+    spanish:"tienen"
+  },
+  {
+    en:"They",
+    es:"Ellos",
+    have:"have",
+    italian:"hanno",
+    spanish:"tienen"
+  }
 ];
 
-/* =================================================
-   GENERAR PREGUNTAS
-================================================= */
+/* ============================================
+   2. COMPLEMENTOS
+   Cada respuesta tiene máximo dos palabras.
+============================================ */
+
+const complements = [
+  ["a car","un'auto","un auto"],
+  ["a house","una casa","una casa"],
+  ["a dog","un cane","un perro"],
+  ["a cat","un gatto","un gato"],
+  ["a book","un libro","un libro"],
+  ["a phone","un telefono","un teléfono"],
+  ["a friend","un amico","un amigo"],
+  ["a sister","una sorella","una hermana"],
+  ["a brother","un fratello","un hermano"],
+  ["a family","una famiglia","una familia"],
+  ["a child","un bambino","un niño"],
+  ["a question","una domanda","una pregunta"],
+  ["an idea","un'idea","una idea"],
+  ["a problem","un problema","un problema"],
+  ["a job","un lavoro","un trabajo"],
+  ["money","soldi","dinero"],
+  ["time","tempo","tiempo"],
+  ["a key","una chiave","una llave"],
+  ["a bicycle","una bicicletta","una bicicleta"],
+  ["a computer","un computer","una computadora"],
+  ["a ticket","un biglietto","un boleto"],
+  ["a room","una stanza","una habitación"],
+  ["a garden","un giardino","un jardín"],
+  ["a passport","un passaporto","un pasaporte"],
+  ["a coffee","un caffè","un café"],
+  ["water","acqua","agua"],
+  ["a table","un tavolo","una mesa"],
+  ["a television","una televisione","un televisor"],
+  ["a watch","un orologio","un reloj"],
+  ["a wallet","un portafoglio","una billetera"],
+  ["a dream","un sogno","un sueño"],
+  ["a name","un nome","un nombre"],
+  ["a plan","un piano","un plan"],
+  ["a photo","una foto","una fotografía"],
+  ["a message","un messaggio","un mensaje"],
+  ["an appointment","un appuntamento","una cita"],
+  ["a possibility","una possibilità","una posibilidad"],
+  ["a chance","un'occasione","una oportunidad"],
+  ["a choice","una scelta","una elección"],
+  ["a reason","un motivo","un motivo"],
+  ["a goal","un obiettivo","un objetivo"],
+  ["little time","poco tempo","poco tiempo"],
+  ["free time","tempo libero","tiempo libre"],
+  ["enough money","abbastanza soldi","suficiente dinero"],
+  ["no money","niente soldi","nada de dinero"],
+  ["many friends","molti amici","muchos amigos"],
+  ["many ideas","molte idee","muchas ideas"],
+  ["many questions","molte domande","muchas preguntas"],
+  ["a lot of work","molto lavoro","mucho trabajo"],
+  ["a lot of time","molto tempo","mucho tiempo"],
+  ["hunger","fame","hambre"],
+  ["thirst","sete","sed"],
+  ["sleep","sonno","sueño"],
+  ["fear","paura","miedo"],
+  ["cold","freddo","frío"],
+  ["heat","caldo","calor"],
+  ["reason","ragione","razón"],
+  ["patience","pazienza","paciencia"],
+  ["luck","fortuna","suerte"],
+  ["desire","voglia","ganas"],
+  ["a need","un bisogno","una necesidad"],
+  ["a doubt","un dubbio","una duda"],
+  ["hope","speranza","esperanza"],
+  ["respect","rispetto","respeto"],
+  ["experience","esperienza","experiencia"],
+  ["energy","energia","energía"],
+  ["courage","coraggio","valor"],
+  ["success","successo","éxito"],
+  ["a big problem","un grosso problema","un gran problema"],
+  ["a good idea","una buona idea","una buena idea"],
+  ["a new car","una macchina nuova","un auto nuevo"],
+  ["a beautiful house","una bella casa","una casa bonita"],
+  ["a good reason","una buona ragione","una buena razón"],
+  ["a difficult question","una domanda difficile","una pregunta difícil"],
+  ["many books","molti libri","muchos libros"],
+  ["many things","molte cose","muchas cosas"],
+  ["a good job","un buon lavoro","un buen trabajo"],
+  ["a good friend","un buon amico","un buen amigo"],
+  ["a big house","una casa grande","una casa grande"],
+  ["a small car","una macchina piccola","un auto pequeño"],
+  ["many dreams","molti sogni","muchos sueños"],
+  ["many choices","molte scelte","muchas opciones"]
+];
+
+/* ============================================
+   3. CONSTRUIR EL BANCO
+   Las frases especiales se expresan naturalmente
+   en inglés, pero conservan AVERE en italiano.
+============================================ */
 
 const bank = [];
-let idCounter = 0;
+let nextId = 1;
 
 for(const person of persons){
- for(const c of complements){
-  bank.push({
-   id:idCounter++,
-   prompt:person.en+" have "+c[0],
-   answer:person.verb+" "+c[1],
-   translation:person.es+" "+person.verb+" "+c[2],
-   person:person.en,
-   complement:c[0]
-  });
- }
+  for(const item of complements){
+    bank.push({
+      id:nextId++,
+      prompt:person.en+" "+person.have+" "+item[0],
+      answer:person.italian+" "+item[1],
+      translation:person.es+" "+person.spanish+" "+item[2],
+      person:person.en
+    });
+  }
 }
 
-const TOTAL = bank.length;
+/* ============================================
+   4. FRASES IDIOMÁTICAS CON AVERE
+============================================ */
 
-/* =================================================
-   ESTADO DEL ENTRENAMIENTO
-================================================= */
+const idioms = [
+  {
+    en:["I am hungry","You are hungry","He is hungry","She is hungry","We are hungry","You are hungry","They are hungry"],
+    es:["Yo tengo hambre","Tú tienes hambre","Él tiene hambre","Ella tiene hambre","Nosotros tenemos hambre","Ustedes tienen hambre","Ellos tienen hambre"],
+    it:"fame"
+  },
+  {
+    en:["I am thirsty","You are thirsty","He is thirsty","She is thirsty","We are thirsty","You are thirsty","They are thirsty"],
+    es:["Yo tengo sed","Tú tienes sed","Él tiene sed","Ella tiene sed","Nosotros tenemos sed","Ustedes tienen sed","Ellos tienen sed"],
+    it:"sete"
+  },
+  {
+    en:["I am sleepy","You are sleepy","He is sleepy","She is sleepy","We are sleepy","You are sleepy","They are sleepy"],
+    es:["Yo tengo sueño","Tú tienes sueño","Él tiene sueño","Ella tiene sueño","Nosotros tenemos sueño","Ustedes tienen sueño","Ellos tienen sueño"],
+    it:"sonno"
+  },
+  {
+    en:["I am afraid","You are afraid","He is afraid","She is afraid","We are afraid","You are afraid","They are afraid"],
+    es:["Yo tengo miedo","Tú tienes miedo","Él tiene miedo","Ella tiene miedo","Nosotros tenemos miedo","Ustedes tienen miedo","Ellos tienen miedo"],
+    it:"paura"
+  },
+  {
+    en:["I am cold","You are cold","He is cold","She is cold","We are cold","You are cold","They are cold"],
+    es:["Yo tengo frío","Tú tienes frío","Él tiene frío","Ella tiene frío","Nosotros tenemos frío","Ustedes tienen frío","Ellos tienen frío"],
+    it:"freddo"
+  },
+  {
+    en:["I am hot","You are hot","He is hot","She is hot","We are hot","You are hot","They are hot"],
+    es:["Yo tengo calor","Tú tienes calor","Él tiene calor","Ella tiene calor","Nosotros tenemos calor","Ustedes tienen calor","Ellos tienen calor"],
+    it:"caldo"
+  }
+];
 
-let pending = [];
-let queue = [];
-let current = null;
-let previous = null;
-let forced = null;
-let mastered = 0;
-let correctAnswers = 0;
-let wrongAnswers = 0;
-let globalStreak = 0;
-let soundEnabled = true;
-let locked = false;
-let completed = false;
-let modeIndex = 0;
+for(const idiom of idioms){
+  persons.forEach((person,index)=>{
+    bank.push({
+      id:nextId++,
+      prompt:idiom.en[index],
+      answer:person.italian+" "+idiom.it,
+      translation:idiom.es[index],
+      person:person.en
+    });
+  });
+}
 
-/* =================================================
-   ELEMENTOS
-================================================= */
+const TOTAL=bank.length;
 
-const $ = id => document.getElementById(id);
+/* ============================================
+   5. ESTADO
+============================================ */
+
+let pending=[];
+let queue=[];
+let current=null;
+let previous=null;
+let forced=null;
+
+let mastered=0;
+let correctAnswers=0;
+let wrongAnswers=0;
+let globalStreak=0;
+
+let soundEnabled=true;
+let locked=false;
+let completed=false;
+let timer=null;
+
+const $=id=>document.getElementById(id);
 
 const promptEl=$("prompt");
 const translationEl=$("translation");
@@ -402,473 +612,532 @@ const typedEl=$("typed");
 const feedbackEl=$("feedback");
 const slotsEl=$("slots");
 
-/* =================================================
-   UTILIDADES
-================================================= */
+/* ============================================
+   6. UTILIDADES
+============================================ */
 
 function shuffle(array){
- const a=[...array];
- for(let i=a.length-1;i>0;i--){
-  const j=Math.floor(Math.random()*(i+1));
-  [a[i],a[j]]=[a[j],a[i]];
- }
- return a;
+  const result=[...array];
+  for(let i=result.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [result[i],result[j]]=[result[j],result[i]];
+  }
+  return result;
 }
 
 function normalize(value){
- return value
-  .toLowerCase()
-  .trim()
-  .normalize("NFD")
-  .replace(/[\u0300-\u036f]/g,"")
-  .replace(/[’']/g,"'")
-  .replace(/[.,!?;:]/g,"")
-  .replace(/\s+/g," ");
+  return value
+    .toLowerCase()
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[’']/g,"'")
+    .replace(/[.,!?;:]/g,"")
+    .replace(/\s+/g," ");
 }
 
 function speak(text){
- if(!soundEnabled || !("speechSynthesis" in window))return;
- window.speechSynthesis.cancel();
- const utterance=new SpeechSynthesisUtterance(text);
- utterance.lang="it-IT";
- utterance.rate=0.85;
- window.speechSynthesis.speak(utterance);
+  if(!soundEnabled || !("speechSynthesis" in window))return;
+  window.speechSynthesis.cancel();
+  const utterance=new SpeechSynthesisUtterance(text);
+  utterance.lang="it-IT";
+  utterance.rate=0.85;
+  window.speechSynthesis.speak(utterance);
 }
 
 function showFeedback(type,title,message){
- feedbackEl.className="feedback "+type;
- feedbackEl.innerHTML="";
- const strong=document.createElement("strong");
- strong.textContent=title;
- const span=document.createElement("span");
- span.textContent=message;
- feedbackEl.append(strong,span);
+  feedbackEl.className="feedback "+type;
+  feedbackEl.replaceChildren();
+
+  const strong=document.createElement("strong");
+  strong.textContent=title;
+
+  const span=document.createElement("span");
+  span.textContent=message;
+
+  feedbackEl.append(strong,span);
 }
 
 function createQuestion(item,slot){
- return {item,slot,streak:0};
+  return {item,slot,streak:0};
 }
 
-/* =================================================
-   INICIALIZACIÓN
-   SIEMPRE HAY TRES PREGUNTAS ACTIVAS.
-================================================= */
+/* ============================================
+   7. INICIAR
+   Siempre tres preguntas activas.
+============================================ */
 
 function initialize(){
- pending=shuffle(bank);
- queue=[];
- mastered=0;
- correctAnswers=0;
- wrongAnswers=0;
- globalStreak=0;
- current=null;
- previous=null;
- forced=null;
- locked=false;
- completed=false;
- modeIndex=0;
-
- // Las tres posiciones iniciales son permanentes:
- // 1 = alternativas, 2 = alternativas, 3 = escribir.
- for(let i=0;i<3;i++){
-  queue.push(createQuestion(pending.shift(),i+1));
- }
-
- selectNext();
- updateStats();
- updateSlots();
- render();
-}
-
-/* =================================================
-   SELECCIÓN
-   Nunca repetir inmediatamente una respuesta correcta.
-   Si hay error, forced repite esa misma pregunta.
-================================================= */
-
-function selectNext(){
- if(forced){
-  current=forced;
-  forced=null;
-  return;
- }
-
- let candidates=queue.filter(q=>q!==previous);
-
- if(candidates.length===0){
-  candidates=queue;
- }
-
- if(candidates.length===0){
-  current=null;
-  return;
- }
-
- current=candidates[Math.floor(Math.random()*candidates.length)];
-}
-
-/* =================================================
-   RENDERIZADO
-================================================= */
-
-function render(){
- if(!current){
-  finishGame();
-  return;
- }
-
- locked=false;
- const q=current.item;
- const isWriting=current.slot===3;
-
- promptEl.textContent=q.prompt;
- translationEl.textContent=q.translation;
-
- $("counter").textContent=current.streak+" / 3";
- $("mode").textContent=isWriting
-  ?"ESCRIBE · 03"
-  :"ALTERNATIVAS · 0"+current.slot;
-
- $("instruction").textContent=isWriting
-  ?"Escribe la respuesta italiana completa"
-  :"Selecciona la respuesta correcta en italiano";
-
- answersEl.innerHTML="";
- answersEl.style.display=isWriting?"none":"grid";
- writeEl.style.display=isWriting?"grid":"none";
-
- if(isWriting){
-  typedEl.value="";
-  typedEl.disabled=false;
-  $("check").disabled=false;
- }else{
-  renderOptions(q);
- }
-
- showFeedback(
-  "neutral",
-  "RACHA "+current.streak+"/3",
-  "Necesitas tres respuestas correctas consecutivas."
- );
-
-}
-
-/* =================================================
-   OPCIONES ALEATORIAS
-================================================= */
-
-function renderOptions(q){
- const wrongPool=bank.filter(item=>
-  item.id!==q.id &&
-  normalize(item.answer)!==normalize(q.answer)
- );
-
- const wrong=shuffle(wrongPool).slice(0,3);
- const options=shuffle([
-  {text:q.answer,correct:true},
-  ...wrong.map(item=>({text:item.answer,correct:false}))
- ]);
-
- options.forEach(option=>{
-  const button=document.createElement("button");
-  button.className="answer";
-  button.type="button";
-  button.textContent=option.text;
-  button.addEventListener("click",()=>checkAnswer(option.correct,button));
-  answersEl.appendChild(button);
- });
-}
-
-/* =================================================
-   COMPROBAR RESPUESTAS
-================================================= */
-
-function checkAnswer(isCorrect,button=null){
- if(locked || !current)return;
- locked=true;
-
- if(button){
-  const buttons=[...answersEl.querySelectorAll("button")];
-  buttons.forEach(b=>b.disabled=true);
-
-  if(isCorrect){
-   button.classList.add("correct");
-  }else{
-   button.classList.add("wrong");
-   const correctButton=buttons.find(b=>
-    normalize(b.textContent)===normalize(current.item.answer)
-   );
-   if(correctButton)correctButton.classList.add("correct");
+  if(timer!==null){
+    clearTimeout(timer);
+    timer=null;
   }
- }
 
- if(isCorrect){
-  handleCorrect();
- }else{
-  handleWrong();
- }
-}
+  pending=shuffle(bank);
+  queue=[];
 
-function checkTyped(){
- if(locked || !current)return;
+  mastered=0;
+  correctAnswers=0;
+  wrongAnswers=0;
+  globalStreak=0;
 
- const value=typedEl.value.trim();
- if(!value)return;
+  current=null;
+  previous=null;
+  forced=null;
+  locked=false;
+  completed=false;
 
- const correct=normalize(value)===normalize(current.item.answer);
- checkAnswer(correct);
-}
+  $("celebration").classList.remove("show");
+  $("continue").textContent="VOLVER A EMPEZAR";
 
-/* =================================================
-   RESPUESTA CORRECTA
-================================================= */
+  for(let slot=1;slot<=3;slot++){
+    queue.push(createQuestion(pending.shift(),slot));
+  }
 
-function handleCorrect(){
- correctAnswers++;
- globalStreak++;
- current.streak++;
-
- const answer=current.item.answer;
- speak(answer);
-
- if(current.streak>=3){
-  showFeedback(
-   "good",
-   "¡DOMINADA! ✓",
-   answer+" — tres aciertos consecutivos."
-  );
-
-  setTimeout(()=>masterQuestion(),700);
-  return;
- }
-
- showFeedback(
-  "good",
-  "¡CORRECTO! ✓",
-  "Racha "+current.streak+"/3 · "+answer
- );
-
- previous=current;
-
- setTimeout(()=>{
   selectNext();
   updateStats();
   updateSlots();
   render();
- },650);
-
- updateStats();
- updateSlots();
 }
 
-/* =================================================
-   RESPUESTA INCORRECTA
-   Reinicia solo la racha de esta pregunta.
-   La misma pregunta se repite inmediatamente.
-================================================= */
+/* ============================================
+   8. SELECCIÓN DE PREGUNTA
+============================================ */
+
+function selectNext(){
+  if(forced){
+    current=forced;
+    forced=null;
+    return;
+  }
+
+  let candidates=queue.filter(q=>q!==previous);
+
+  if(candidates.length===0){
+    candidates=queue;
+  }
+
+  if(candidates.length===0){
+    current=null;
+    return;
+  }
+
+  current=candidates[
+    Math.floor(Math.random()*candidates.length)
+  ];
+}
+
+/* ============================================
+   9. PRESENTACIÓN
+   0/3 = alternativas
+   1/3 = alternativas
+   2/3 = escribir
+============================================ */
+
+function render(){
+  if(!current){
+    finishGame();
+    return;
+  }
+
+  locked=false;
+
+  const q=current.item;
+  const isWriting=current.streak===2;
+
+  promptEl.textContent=q.prompt;
+  translationEl.textContent=q.translation;
+
+  $("counter").textContent=current.streak+" / 3";
+
+  $("mode").textContent=isWriting
+    ?"ESCRIBE · TERCER INTENTO"
+    :"ALTERNATIVAS · INTENTO "+(current.streak+1);
+
+  $("instruction").textContent=isWriting
+    ?"Escribe la respuesta italiana sin alternativas"
+    :"Selecciona la respuesta correcta en italiano";
+
+  answersEl.replaceChildren();
+  answersEl.style.display=isWriting?"none":"grid";
+  writeEl.style.display=isWriting?"grid":"none";
+
+  if(isWriting){
+    typedEl.value="";
+    typedEl.disabled=false;
+    $("check").disabled=false;
+  }else{
+    renderOptions(q);
+  }
+
+  showFeedback(
+    "neutral",
+    "RACHA "+current.streak+"/3",
+    isWriting
+      ?"Tercer intento: escribe la respuesta de memoria."
+      :"Responde correctamente para avanzar en la racha."
+  );
+}
+
+/* ============================================
+   10. ALTERNATIVAS
+============================================ */
+
+function renderOptions(q){
+  const distractors=shuffle(
+    bank.filter(item=>
+      item.id!==q.id &&
+      normalize(item.answer)!==normalize(q.answer)
+    )
+  ).slice(0,3);
+
+  const options=shuffle([
+    {text:q.answer,correct:true},
+    ...distractors.map(item=>({
+      text:item.answer,
+      correct:false
+    }))
+  ]);
+
+  options.forEach(option=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.className="answer";
+    button.textContent=option.text;
+
+    button.addEventListener("click",()=>{
+      checkAnswer(option.correct,button);
+    });
+
+    answersEl.appendChild(button);
+  });
+}
+
+/* ============================================
+   11. COMPROBAR
+============================================ */
+
+function checkAnswer(isCorrect,button=null){
+  if(locked || !current)return;
+
+  locked=true;
+
+  if(button){
+    const buttons=[...answersEl.querySelectorAll("button")];
+    buttons.forEach(b=>b.disabled=true);
+
+    if(isCorrect){
+      button.classList.add("correct");
+    }else{
+      button.classList.add("wrong");
+
+      const correctButton=buttons.find(b=>
+        normalize(b.textContent)===normalize(current.item.answer)
+      );
+
+      if(correctButton){
+        correctButton.classList.add("correct");
+      }
+    }
+  }
+
+  if(isCorrect){
+    handleCorrect();
+  }else{
+    handleWrong();
+  }
+}
+
+function checkTyped(){
+  if(locked || !current)return;
+
+  const value=typedEl.value.trim();
+  if(!value)return;
+
+  const correct=
+    normalize(value)===normalize(current.item.answer);
+
+  checkAnswer(correct);
+}
+
+/* ============================================
+   12. ACIERTO
+============================================ */
+
+function handleCorrect(){
+  correctAnswers++;
+  globalStreak++;
+  current.streak++;
+
+  const answer=current.item.answer;
+  speak(answer);
+
+  if(current.streak===3){
+    showFeedback(
+      "good",
+      "¡DOMINADA! ✓",
+      answer+" · Tres aciertos consecutivos."
+    );
+
+    updateStats();
+    updateSlots();
+
+    timer=setTimeout(()=>{
+      timer=null;
+      masterQuestion();
+    },750);
+
+    return;
+  }
+
+  showFeedback(
+    "good",
+    "¡CORRECTO! ✓",
+    "Racha "+current.streak+"/3 · "+answer
+  );
+
+  previous=current;
+
+  updateStats();
+  updateSlots();
+
+  timer=setTimeout(()=>{
+    timer=null;
+    selectNext();
+    updateStats();
+    updateSlots();
+    render();
+  },650);
+}
+
+/* ============================================
+   13. ERROR
+   Reinicia solamente la racha de esa pregunta.
+   Repite inmediatamente la misma pregunta.
+============================================ */
 
 function handleWrong(){
- wrongAnswers++;
- globalStreak=0;
+  wrongAnswers++;
+  globalStreak=0;
 
- const failed=current;
- failed.streak=0;
+  const failed=current;
+  failed.streak=0;
 
- forced=failed;
+  forced=failed;
 
- showFeedback(
-  "bad",
-  "NO ES CORRECTO",
-  "Respuesta correcta: "+failed.item.answer+
-  ". Tu racha vuelve a 0/3. Repite esta pregunta."
- );
+  showFeedback(
+    "bad",
+    "VOLVEMOS A EMPEZAR",
+    "Respuesta correcta: "+failed.item.answer+
+    ". Tu racha vuelve a cero. Repite esta pregunta."
+  );
 
- if(failed.slot===3){
-  setTimeout(()=>{
-   typedEl.value="";
-   typedEl.disabled=false;
-   $("check").disabled=false;
-   typedEl.focus({preventScroll:true});
-   typedEl.scrollIntoView({behavior:"smooth",block:"center"});
-   locked=false;
-  },900);
- }else{
-  setTimeout(()=>{
-   selectNext();
-   updateStats();
-   updateSlots();
-   render();
+  updateStats();
+  updateSlots();
+
+  timer=setTimeout(()=>{
+    timer=null;
+    selectNext();
+    updateStats();
+    updateSlots();
+    render();
   },1100);
- }
-
- updateStats();
- updateSlots();
 }
 
-/* =================================================
-   DOMINAR UNA PREGUNTA
-   RETIRAR UNA Y AGREGAR UNA NUEVA.
-   NUNCA SE REDUCE EL GRUPO DE TRES.
-================================================= */
+/* ============================================
+   14. DOMINAR Y REEMPLAZAR
+   Se elimina solo la pregunta completada.
+   Entra otra en el mismo espacio.
+   El grupo siempre conserva tres preguntas.
+============================================ */
 
 function masterQuestion(){
- if(!current)return;
+  if(!current)return;
 
- const finished=current;
+  const finished=current;
 
- // Eliminar únicamente la pregunta dominada.
- queue=queue.filter(q=>q!==finished);
- mastered++;
+  queue=queue.filter(q=>q!==finished);
+  mastered++;
 
- // Si todavía quedan preguntas nuevas,
- // introducir una inmediatamente en su posición.
- if(pending.length>0){
-  const newItem=pending.shift();
-  queue.push(createQuestion(newItem,finished.slot));
- }
+  if(pending.length>0){
+    const newItem=pending.shift();
 
- previous=finished;
- current=null;
+    queue.push(
+      createQuestion(newItem,finished.slot)
+    );
+  }
 
- updateStats();
- updateSlots();
+  previous=finished;
+  current=null;
 
- // Si quedan preguntas activas, continuar.
- if(queue.length>0){
+  updateStats();
+  updateSlots();
+
+  if(queue.length===0){
+    finishGame();
+    return;
+  }
+
   selectNext();
   render();
-  return;
- }
 
- finishGame();
+  if(mastered>0 && mastered%10===0){
+    showCelebration(
+      "¡BRAVISSIMO!",
+      "Has dominado "+mastered+" preguntas. ¡Continúa!",
+      "🏆",
+      false
+    );
+  }
 }
 
-/* =================================================
-   ESTADÍSTICAS
-================================================= */
+/* ============================================
+   15. ESTADÍSTICAS
+============================================ */
 
 function updateStats(){
- $("mastered").textContent=mastered;
- $("total").textContent=TOTAL;
- $("streak").textContent=globalStreak;
+  $("mastered").textContent=mastered;
+  $("total").textContent=TOTAL;
+  $("streak").textContent=globalStreak;
 
- const attempts=correctAnswers+wrongAnswers;
- const accuracy=attempts===0
-  ?100
-  :Math.round(correctAnswers/attempts*100);
+  const attempts=correctAnswers+wrongAnswers;
 
- $("accuracy").textContent=accuracy+"%";
+  const accuracy=attempts===0
+    ?100
+    :Math.round(correctAnswers/attempts*100);
 
- const percent=Math.round(mastered/TOTAL*100);
- $("percent").textContent=percent+"%";
- $("bar").style.width=percent+"%";
+  $("accuracy").textContent=accuracy+"%";
+
+  const percent=Math.round(mastered/TOTAL*100);
+
+  $("percent").textContent=percent+"%";
+  $("bar").style.width=percent+"%";
 }
 
-/* =================================================
-   TRES POSICIONES PERMANENTES
-================================================= */
+/* ============================================
+   16. INDICADORES DE LAS TRES PREGUNTAS
+============================================ */
 
 function updateSlots(){
- slotsEl.innerHTML="";
+  slotsEl.replaceChildren();
 
- for(let slot=1;slot<=3;slot++){
-  const q=queue.find(item=>item.slot===slot);
-  const div=document.createElement("div");
+  for(let slot=1;slot<=3;slot++){
+    const q=queue.find(item=>item.slot===slot);
 
-  div.className="slot"+(current&&current.slot===slot?" active":"");
+    const div=document.createElement("div");
+    div.className="slot";
 
-  const title=document.createElement("b");
-  title.textContent="PREGUNTA "+slot;
+    if(current && current.slot===slot){
+      div.classList.add("active");
+    }
 
-  const detail=document.createElement("small");
-  detail.textContent=q
-   ?q.streak+"/3 aciertos"
-   :"Completada";
+    const title=document.createElement("b");
+    title.textContent="PREGUNTA "+slot;
 
-  const mini=document.createElement("div");
-  mini.className="mini";
+    const detail=document.createElement("small");
+    detail.textContent=q
+      ?q.streak+"/3 aciertos"
+      :"Completada";
 
-  const fill=document.createElement("div");
-  fill.style.width=q?(q.streak/3*100)+"%":"100%";
-  mini.appendChild(fill);
+    const mini=document.createElement("div");
+    mini.className="mini";
 
-  div.append(title,detail,mini);
-  slotsEl.appendChild(div);
- }
+    const fill=document.createElement("div");
+    fill.style.width=q
+      ?(q.streak/3*100)+"%"
+      :"100%";
+
+    mini.appendChild(fill);
+    div.append(title,detail,mini);
+    slotsEl.appendChild(div);
+  }
 }
 
-/* =================================================
-   FINAL
-================================================= */
+/* ============================================
+   17. CELEBRACIÓN Y FINAL
+============================================ */
 
-function showCelebration(title,message,emoji){
- $("celebrationTitle").textContent=title;
- $("celebrationText").textContent=message;
- $("emoji").textContent=emoji;
- $("celebration").classList.add("show");
+function showCelebration(title,message,emoji,final=true){
+  $("celebrationTitle").textContent=title;
+  $("celebrationText").textContent=message;
+  $("emoji").textContent=emoji;
+
+  $("continue").textContent=final
+    ?"VOLVER A EMPEZAR"
+    :"CONTINUAR";
+
+  $("celebration").classList.add("show");
 }
 
 function finishGame(){
- if(completed)return;
- completed=true;
- current=null;
+  if(completed)return;
 
- updateStats();
- updateSlots();
+  completed=true;
+  current=null;
 
- showCelebration(
-  "¡BANCO COMPLETADO!",
-  "Has dominado las "+TOTAL+
-  " preguntas de AVERE en presente. ¡Complimenti!",
-  "🏆"
- );
+  updateStats();
+  updateSlots();
 
- $("continue").textContent="VOLVER A EMPEZAR";
- $("continue").onclick=()=>initialize();
+  showCelebration(
+    "¡BANCO COMPLETADO!",
+    "Has dominado las "+TOTAL+
+    " preguntas de AVERE en presente. ¡Complimenti!",
+    "🏆",
+    true
+  );
 }
 
-/* =================================================
-   EVENTOS
-================================================= */
+/* ============================================
+   18. EVENTOS
+============================================ */
 
 $("check").addEventListener("click",checkTyped);
 
 typedEl.addEventListener("keydown",event=>{
- if(event.key==="Enter"){
-  event.preventDefault();
-  checkTyped();
- }
+  if(event.key==="Enter"){
+    event.preventDefault();
+    checkTyped();
+  }
 });
 
 typedEl.addEventListener("focus",()=>{
- setTimeout(()=>{
-  typedEl.scrollIntoView({behavior:"smooth",block:"center"});
- },250);
+  setTimeout(()=>{
+    typedEl.scrollIntoView({
+      behavior:"smooth",
+      block:"center"
+    });
+  },250);
 });
 
 $("restart").addEventListener("click",()=>{
- if(confirm("¿Quieres reiniciar todo el entrenamiento?")){
-  $("celebration").classList.remove("show");
-  initialize();
- }
+  if(confirm("¿Quieres reiniciar todo el entrenamiento?")){
+    initialize();
+  }
 });
 
 $("sound").addEventListener("click",()=>{
- soundEnabled=!soundEnabled;
- $("sound").textContent=soundEnabled?"🔊 Sonido ON":"🔇 Sonido OFF";
- if(!soundEnabled && "speechSynthesis" in window){
-  window.speechSynthesis.cancel();
- }
+  soundEnabled=!soundEnabled;
+
+  $("sound").textContent=soundEnabled
+    ?"🔊 Sonido ON"
+    :"🔇 Sonido OFF";
+
+  if(!soundEnabled && "speechSynthesis" in window){
+    window.speechSynthesis.cancel();
+  }
 });
 
 $("continue").addEventListener("click",()=>{
- $("celebration").classList.remove("show");
- initialize();
+  if(timer!==null){
+    clearTimeout(timer);
+    timer=null;
+  }
+  initialize();
 });
 
-/* =================================================
-   INICIAR
-================================================= */
+/* ============================================
+   19. EJECUCIÓN
+============================================ */
 
 initialize();
 
