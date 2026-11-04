@@ -3,191 +3,444 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#080d18">
-<title>ITALIANO INFINITE | Master</title>
+<title>ITALIANO INFINITE — Master Engine</title>
 
 <style>
-:root {
+:root{
  --bg:#080d18;
- --panel:#111a2b;
- --panel2:#18243a;
- --text:#f3f6ff;
- --muted:#94a3b8;
- --green:#35e6a0;
- --blue:#54a9ff;
+ --panel:#111b2c;
+ --panel2:#192840;
+ --border:#2b3b55;
+ --text:#f2f6ff;
+ --muted:#92a4bd;
+ --green:#39e6a0;
+ --blue:#57a9ff;
  --gold:#ffd166;
- --red:#ff6379;
+ --red:#ff627b;
+ --radius:17px;
 }
+
 *{box-sizing:border-box}
+
+html{
+ min-height:100%;
+ width:100%;
+ scroll-behavior:smooth;
+}
+
 body{
- margin:0;background:var(--bg);color:var(--text);
- font-family:Inter,system-ui,-apple-system,sans-serif;
+ margin:0;
+ width:100%;
+ min-height:100vh;
  min-height:100dvh;
+ background:var(--bg);
+ color:var(--text);
+ font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+ overflow-x:hidden;
+ -webkit-tap-highlight-color:transparent;
 }
+
 button,input{font:inherit}
+
+button{touch-action:manipulation}
+
 .app{
- width:min(100%,680px);margin:auto;
- padding:15px 16px calc(35px + env(safe-area-inset-bottom));
+ width:100%;
+ max-width:680px;
+ margin:0 auto;
+ padding:
+ max(12px,env(safe-area-inset-top))
+ 14px
+ max(35px,env(safe-area-inset-bottom));
 }
-header{text-align:center;padding:13px 0 18px}
+
+header{text-align:center;padding:12px 0 15px}
+
 .logo{
- font-size:12px;letter-spacing:5px;
- color:var(--green);font-weight:900;
+ font-size:10px;
+ font-weight:900;
+ letter-spacing:4px;
+ color:var(--green);
 }
-h1{font-size:27px;margin:8px 0 3px;letter-spacing:1px}
+
+h1{
+ font-size:clamp(23px,6vw,30px);
+ letter-spacing:1px;
+ margin:8px 0 3px;
+}
+
 .subtitle{font-size:12px;color:var(--muted)}
+
 .stats{
- display:grid;grid-template-columns:repeat(4,1fr);
- gap:8px;margin:12px 0;
+ display:grid;
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:7px;
+ margin:12px 0;
 }
+
 .stat{
- background:var(--panel);padding:12px 5px;
- border-radius:13px;text-align:center;
- border:1px solid #26344c;
+ min-width:0;
+ background:var(--panel);
+ border:1px solid var(--border);
+ border-radius:13px;
+ padding:11px 3px;
+ text-align:center;
 }
-.stat strong{display:block;font-size:22px}
-.stat span{font-size:10px;color:var(--muted)}
-.progress-wrap{margin:17px 0}
+
+.stat strong{
+ display:block;
+ font-size:clamp(18px,5vw,24px);
+ font-weight:850;
+ font-variant-numeric:tabular-nums;
+}
+
+.stat span{
+ font-size:9px;
+ letter-spacing:.4px;
+ color:var(--muted);
+}
+
+.progress-section{margin:15px 0}
+
 .progress-info{
- display:flex;justify-content:space-between;
- font-size:12px;color:var(--muted);margin-bottom:8px
+ display:flex;
+ justify-content:space-between;
+ gap:10px;
+ font-size:11px;
+ color:var(--muted);
+ margin-bottom:7px;
 }
+
 .progress{
- height:9px;background:#202b40;
- border-radius:20px;overflow:hidden;
+ height:9px;
+ background:#202d43;
+ border-radius:20px;
+ overflow:hidden;
 }
+
 .bar{
- height:100%;width:0%;
- background:linear-gradient(90deg,#35e6a0,#54a9ff);
- transition:width .4s;
+ width:0%;
+ height:100%;
+ background:linear-gradient(90deg,var(--green),var(--blue));
+ border-radius:20px;
+ transition:width .35s;
 }
+
 .slots{
- display:grid;grid-template-columns:repeat(3,1fr);
- gap:8px;margin:15px 0;
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:7px;
+ margin:15px 0;
 }
+
 .slot{
- background:var(--panel);border:1px solid #26344c;
- border-radius:12px;padding:10px 4px;text-align:center;
+ min-width:0;
+ background:var(--panel);
+ border:1px solid var(--border);
+ border-radius:12px;
+ padding:10px 5px;
+ text-align:center;
 }
+
 .slot.active{border-color:var(--green)}
-.slot.done{border-color:var(--gold);background:#292719}
-.slot b{font-size:13px;display:block}
-.slot small{font-size:10px;color:var(--muted)}
-.slot .mini{
- height:4px;background:#26344c;
- border-radius:10px;margin-top:8px;overflow:hidden
+.slot.done{border-color:var(--gold)}
+
+.slot b{
+ font-size:11px;
+ display:block;
+ overflow:hidden;
+ text-overflow:ellipsis;
 }
-.slot .mini div{height:100%;background:var(--green);width:0%}
+
+.slot small{
+ display:block;
+ color:var(--muted);
+ font-size:10px;
+ margin-top:4px;
+}
+
+.mini{
+ height:4px;
+ background:#29384f;
+ border-radius:10px;
+ overflow:hidden;
+ margin-top:8px;
+}
+
+.mini div{
+ height:100%;
+ background:var(--green);
+ transition:width .3s;
+}
+
 .question{
- background:linear-gradient(145deg,#17243a,#101827);
- border:1px solid #2b3b56;
- border-radius:23px;padding:23px 18px;
- margin-top:15px;
+ width:100%;
+ background:linear-gradient(145deg,#17253c,#101a2a);
+ border:1px solid var(--border);
+ border-radius:22px;
+ padding:22px 17px;
+ margin-top:14px;
 }
+
+.question-top{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ gap:8px;
+}
+
 .mode{
- font-size:10px;letter-spacing:2px;
- color:var(--green);font-weight:900;
- text-transform:uppercase;
+ font-size:10px;
+ letter-spacing:1.7px;
+ font-weight:900;
+ color:var(--green);
 }
-.counter{float:right;color:var(--muted);font-size:11px}
+
+.counter{
+ font-size:11px;
+ color:var(--muted);
+}
+
 .prompt{
- font-size:clamp(23px,6vw,34px);
- line-height:1.2;font-weight:850;
- text-align:center;margin:28px 0 9px;
+ font-size:clamp(24px,6.5vw,36px);
+ font-weight:850;
+ line-height:1.2;
+ text-align:center;
+ overflow-wrap:anywhere;
+ margin:29px 0 9px;
 }
+
 .translation{
- color:var(--muted);text-align:center;
- font-size:13px;min-height:19px;
+ min-height:20px;
+ font-size:13px;
+ text-align:center;
+ color:var(--muted);
 }
+
 .instruction{
- text-align:center;color:var(--muted);
- font-size:11px;margin:18px 0 13px;
+ text-align:center;
+ font-size:11px;
+ color:var(--muted);
+ margin:23px 0 12px;
 }
-.answers{display:grid;gap:10px}
+
+.answers{
+ display:grid;
+ grid-template-columns:1fr;
+ gap:10px;
+ width:100%;
+}
+
 .answer{
- border:1px solid #34445e;
- background:#1a2940;color:white;
- border-radius:13px;padding:16px 12px;
- font-size:16px;font-weight:700;
- cursor:pointer;text-align:left;
- transition:.15s;
+ width:100%;
+ min-width:0;
+ min-height:55px;
+ padding:14px;
+ border:1px solid #354863;
+ border-radius:13px;
+ background:#1c2b43;
+ color:var(--text);
+ font-size:16px;
+ font-weight:750;
+ text-align:left;
+ overflow-wrap:anywhere;
+ cursor:pointer;
+ transition:background .15s,border-color .15s;
 }
-.answer:active{transform:scale(.98)}
+
+.answer:active{transform:scale(.99)}
+
 .answer.correct{
- background:#104b39;border-color:var(--green);
+ background:#104735;
+ border-color:var(--green);
 }
+
 .answer.wrong{
- background:#542332;border-color:var(--red);
+ background:#542433;
+ border-color:var(--red);
 }
+
 .answer:disabled{opacity:.9}
-.write-area{display:none;gap:9px}
-.write-area input{
- width:100%;min-width:0;
- background:#080f1d;border:2px solid #354966;
- border-radius:13px;padding:17px;
- color:white;font-size:19px;outline:none;
+
+.write-area{
+ display:none;
+ width:100%;
+ min-width:0;
+ gap:10px;
+ grid-template-columns:minmax(0,1fr);
 }
+
+.write-area input{
+ width:100%;
+ min-width:0;
+ min-height:57px;
+ padding:15px;
+ border:2px solid #354863;
+ border-radius:13px;
+ background:#080f1c;
+ color:white;
+ font-size:19px;
+ outline:none;
+}
+
 .write-area input:focus{border-color:var(--green)}
+
 .check{
- border:0;background:var(--green);
- color:#052217;font-weight:900;
- border-radius:13px;padding:16px;
+ width:100%;
+ min-height:54px;
+ border:0;
+ border-radius:13px;
+ background:var(--green);
+ color:#062518;
+ font-weight:950;
+ font-size:15px;
  cursor:pointer;
 }
+
 .feedback{
- min-height:66px;margin-top:14px;
- border-radius:12px;padding:12px;
- text-align:center;font-size:13px;
- display:flex;flex-direction:column;
- justify-content:center;gap:5px;
+ min-height:67px;
+ margin-top:14px;
+ padding:12px;
+ border-radius:12px;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ justify-content:center;
+ text-align:center;
+ gap:5px;
+ font-size:12px;
+ line-height:1.5;
 }
-.feedback.good{background:#103c30;color:#80ffd0}
-.feedback.bad{background:#49212d;color:#ffadba}
-.feedback.neutral{background:#1a2940;color:#c6d5ec}
+
 .feedback strong{font-size:17px}
-.hidden{display:none!important}
-.celebration{
- position:fixed;inset:0;background:#050b16ed;
- display:none;align-items:center;justify-content:center;
- z-index:20;padding:20px;text-align:center;
-}
-.celebration.show{display:flex}
-.celebration-box{
- background:#17243a;border:1px solid var(--gold);
- padding:35px 22px;border-radius:25px;width:100%;
- max-width:400px;
-}
-.celebration h2{font-size:34px;color:var(--gold)}
-.celebration p{line-height:1.6;color:#d6e0ef}
-.celebration button{
- background:var(--gold);border:0;
- border-radius:12px;padding:15px 25px;
- font-weight:900;
-}
+
+.feedback.neutral{background:#1a2940;color:#c9d8ec}
+.feedback.good{background:#103d30;color:#91ffce}
+.feedback.bad{background:#49222f;color:#ffadbc}
+
 .bottom{
- display:flex;justify-content:space-between;
- align-items:center;gap:10px;margin-top:17px;
+ display:flex;
+ justify-content:space-between;
+ flex-wrap:wrap;
+ gap:9px;
+ margin-top:17px;
 }
+
 .secondary{
- background:var(--panel);color:var(--muted);
- border:1px solid #34445e;padding:10px 13px;
- border-radius:10px;font-size:11px;
+ min-height:42px;
+ padding:9px 13px;
+ background:var(--panel);
+ color:var(--muted);
+ border:1px solid var(--border);
+ border-radius:10px;
+ font-size:11px;
+ cursor:pointer;
 }
+
 .keyboard-note{
- color:var(--muted);font-size:10px;
- text-align:center;margin-top:14px;
+ margin-top:17px;
+ text-align:center;
+ color:var(--muted);
+ font-size:10px;
+ line-height:1.6;
 }
+
+.hidden{display:none!important}
+
+/* CELEBRACIÓN */
+
+.celebration{
+ position:fixed;
+ inset:0;
+ z-index:50;
+ display:none;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ background:#050a14ed;
+ overflow-y:auto;
+}
+
+.celebration.show{display:flex}
+
+.celebration-box{
+ width:100%;
+ max-width:390px;
+ padding:30px 20px;
+ text-align:center;
+ border:1px solid var(--gold);
+ border-radius:23px;
+ background:#17253c;
+}
+
+.celebration-icon{font-size:60px}
+
+.celebration-box h2{
+ color:var(--gold);
+ font-size:30px;
+ margin:12px 0;
+}
+
+.celebration-box p{
+ color:#d7e3f4;
+ font-size:14px;
+ line-height:1.7;
+}
+
+.celebration-box button{
+ width:100%;
+ min-height:53px;
+ border:0;
+ border-radius:12px;
+ background:var(--gold);
+ color:#251b05;
+ font-weight:950;
+ margin-top:15px;
+}
+
+/* MOVILES PEQUEÑOS */
+
 @media(max-width:380px){
- .app{padding-left:11px;padding-right:11px}
- .question{padding:18px 13px}
- .answer{padding:14px 10px;font-size:14px}
- .stat strong{font-size:19px}
+ .app{padding-left:10px;padding-right:10px}
+ .question{padding:17px 12px}
+ .prompt{font-size:25px;margin-top:22px}
+ .answer{font-size:14px;padding:13px}
+ .stat{padding:9px 2px}
+ .stat span{font-size:8px}
+}
+
+/* PANTALLAS BAJAS */
+
+@media(max-height:650px){
+ header{padding:5px 0}
+ h1{font-size:22px}
+ .stats{margin:7px 0}
+ .progress-section{margin:9px 0}
+ .question{margin-top:8px;padding-top:14px;padding-bottom:14px}
+ .prompt{margin-top:16px}
+ .instruction{margin-top:15px}
+}
+
+/* ACCESIBILIDAD */
+
+button:focus-visible,input:focus-visible{
+ outline:2px solid var(--blue);
+ outline-offset:3px;
+}
+
+@media(prefers-reduced-motion:reduce){
+ *,*::before,*::after{
+  scroll-behavior:auto!important;
+  transition:none!important;
+ }
 }
 </style>
 </head>
 
 <body>
+
 <div class="app">
 
 <header>
@@ -197,30 +450,49 @@ h1{font-size:27px;margin:8px 0 3px;letter-spacing:1px}
 </header>
 
 <section class="stats">
- <div class="stat"><strong id="completed">0</strong><span>DOMINADAS</span></div>
- <div class="stat"><strong id="total">0</strong><span>BANCO</span></div>
- <div class="stat"><strong id="accuracy">100%</strong><span>PRECISIÓN</span></div>
- <div class="stat"><strong id="streak">0</strong><span>RACHA GLOBAL</span></div>
+ <div class="stat">
+  <strong id="completed">0</strong>
+  <span>DOMINADAS</span>
+ </div>
+ <div class="stat">
+  <strong id="total">0</strong>
+  <span>BANCO</span>
+ </div>
+ <div class="stat">
+  <strong id="accuracy">100%</strong>
+  <span>PRECISIÓN</span>
+ </div>
+ <div class="stat">
+  <strong id="streak">0</strong>
+  <span>RACHA</span>
+ </div>
 </section>
 
-<div class="progress-wrap">
+<div class="progress-section">
  <div class="progress-info">
-  <span>PROGRESO DEL BANCO</span>
+  <span>PROGRESO TOTAL</span>
   <b id="percentage">0%</b>
  </div>
- <div class="progress"><div class="bar" id="bar"></div></div>
+ <div class="progress">
+  <div class="bar" id="bar"></div>
+ </div>
 </div>
 
 <div class="slots" id="slots"></div>
 
 <section class="question">
- <div>
+
+ <div class="question-top">
   <span class="mode" id="mode">SELECT · 01</span>
   <span class="counter" id="counter">1 / 3</span>
  </div>
 
  <div class="prompt" id="prompt">I am hungry</div>
- <div class="translation" id="translation">¿Cómo se dice en italiano?</div>
+
+ <div class="translation" id="translation">
+  Tengo hambre
+ </div>
+
  <div class="instruction" id="instruction">
   Selecciona la traducción correcta
  </div>
@@ -228,17 +500,25 @@ h1{font-size:27px;margin:8px 0 3px;letter-spacing:1px}
  <div class="answers" id="answers"></div>
 
  <div class="write-area" id="writeArea">
-  <input id="typed" type="text"
+  <input
+   id="typed"
+   type="text"
    placeholder="Scrivi in italiano..."
-   autocomplete="off" autocapitalize="none"
-   spellcheck="false">
-  <button class="check" id="check">COMPROBAR →</button>
+   autocomplete="off"
+   autocapitalize="none"
+   spellcheck="false"
+   enterkeyhint="done"
+  >
+  <button class="check" id="check">
+   COMPROBAR →
+  </button>
  </div>
 
- <div class="feedback neutral" id="feedback">
+ <div class="feedback neutral" id="feedback" aria-live="polite">
   <strong>ANDIAMO!</strong>
   Tres aciertos consecutivos por pregunta.
  </div>
+
 </section>
 
 <div class="bottom">
@@ -247,14 +527,15 @@ h1{font-size:27px;margin:8px 0 3px;letter-spacing:1px}
 </div>
 
 <div class="keyboard-note">
- Las dos primeras preguntas son de selección.
- La tercera es de escritura. El teclado no bloquea el progreso.
+ Dos preguntas de selección + una de escritura.
+ Tres aciertos consecutivos por cada pregunta.
 </div>
+
 </div>
 
 <div class="celebration" id="celebration">
  <div class="celebration-box">
-  <div style="font-size:55px" id="celebrationIcon">🏆</div>
+  <div class="celebration-icon" id="celebrationIcon">🏆</div>
   <h2 id="celebrationTitle">BRAVISSIMO!</h2>
   <p id="celebrationText"></p>
   <button id="continue">CONTINUAR →</button>
@@ -264,34 +545,38 @@ h1{font-size:27px;margin:8px 0 3px;letter-spacing:1px}
 <script>
 "use strict";
 
-/* =========================================
-   1. BANCO PRINCIPAL
-   Formato: inglés | italiano | español
-========================================= */
+/* ==========================================
+   1. BASE DE DATOS
+========================================== */
 
-const bank = [];
-const seen = new Set();
+const bank=[];
+const seen=new Set();
 
 function add(en,it,es,group="EXPRESIONES"){
- const key=en+"|"+it;
+ const key=en.toLowerCase()+"|"+it.toLowerCase();
  if(seen.has(key))return;
  seen.add(key);
- bank.push({id:bank.length,en,it,es,group});
+ bank.push({
+  id:bank.length,
+  en,it,es,group
+ });
 }
 
 function addMany(items,group){
  items.forEach(x=>add(x[0],x[1],x[2],group));
 }
 
-/* AVERE: tener */
+/* ==========================================
+   2. AVERE
+========================================== */
 
 addMany([
 ["I have","ho","Yo tengo"],
-["You have (informal)","hai","Tú tienes"],
+["You have","hai","Tú tienes"],
 ["He has","ha","Él tiene"],
 ["She has","ha","Ella tiene"],
 ["We have","abbiamo","Nosotros tenemos"],
-["You have (plural)","avete","Vosotros tienen / ustedes tienen"],
+["You have (plural)","avete","Ustedes tienen"],
 ["They have","hanno","Ellos tienen"],
 ["I don't have","non ho","No tengo"],
 ["You don't have","non hai","No tienes"],
@@ -302,21 +587,29 @@ addMany([
 ["You had","avevi","Tú tenías"],
 ["He had","aveva","Él tenía"],
 ["We had","avevamo","Nosotros teníamos"],
+["You had (plural)","avevate","Ustedes tenían"],
 ["They had","avevano","Ellos tenían"],
 ["I will have","avrò","Yo tendré"],
 ["You will have","avrai","Tú tendrás"],
 ["He will have","avrà","Él tendrá"],
 ["We will have","avremo","Nosotros tendremos"],
+["You will have (plural)","avrete","Ustedes tendrán"],
 ["They will have","avranno","Ellos tendrán"],
 ["I would have","avrei","Yo tendría"],
+["You would have","avresti","Tú tendrías"],
+["He would have","avrebbe","Él tendría"],
+["We would have","avremmo","Nosotros tendríamos"],
+["They would have","avrebbero","Ellos tendrían"],
 ["I have had","ho avuto","He tenido"]
 ],"AVERE");
 
-/* SER / ESTAR: ESSERE */
+/* ==========================================
+   3. ESSERE
+========================================== */
 
 addMany([
 ["I am","sono","Yo soy / estoy"],
-["You are (informal)","sei","Tú eres / estás"],
+["You are","sei","Tú eres / estás"],
 ["He is","è","Él es / está"],
 ["She is","è","Ella es / está"],
 ["We are","siamo","Nosotros somos / estamos"],
@@ -331,77 +624,132 @@ addMany([
 ["You were","eri","Tú eras / estabas"],
 ["He was","era","Él era / estaba"],
 ["We were","eravamo","Nosotros éramos / estábamos"],
+["You were (plural)","eravate","Ustedes eran / estaban"],
 ["They were","erano","Ellos eran / estaban"],
 ["I will be","sarò","Yo seré / estaré"],
 ["You will be","sarai","Tú serás / estarás"],
 ["He will be","sarà","Él será / estará"],
 ["We will be","saremo","Nosotros seremos / estaremos"],
+["You will be (plural)","sarete","Ustedes serán / estarán"],
 ["They will be","saranno","Ellos serán / estarán"],
 ["I would be","sarei","Yo sería / estaría"],
-["I have been","sono stato","He sido / estado"]
+["You would be","saresti","Tú serías / estarías"],
+["He would be","sarebbe","Él sería / estaría"],
+["We would be","saremmo","Nosotros seríamos / estaríamos"],
+["They would be","sarebbero","Ellos serían / estarían"]
 ],"ESSERE");
 
-/* VERBOS ESENCIALES */
-
-const verbs=[
- ["to eat","mangiare","comer",["mangio","mangi","mangia","mangiamo","mangiate","mangiano"]],
- ["to drink","bere","beber",["bevo","bevi","beve","beviamo","bevete","bevono"]],
- ["to speak","parlare","hablar",["parlo","parli","parla","parliamo","parlate","parlano"]],
- ["to work","lavorare","trabajar",["lavoro","lavori","lavora","lavoriamo","lavorate","lavorano"]],
- ["to study","studiare","estudiar",["studio","studi","studia","studiamo","studiate","studiano"]],
- ["to live","vivere","vivir",["vivo","vivi","vive","viviamo","vivete","vivono"]],
- ["to sleep","dormire","dormir",["dormo","dormi","dorme","dormiamo","dormite","dormono"]],
- ["to understand","capire","entender",["capisco","capisci","capisce","capiamo","capite","capiscono"]],
- ["to prefer","preferire","preferir",["preferisco","preferisci","preferisce","preferiamo","preferite","preferiscono"]],
- ["to open","aprire","abrir",["apro","apri","apre","apriamo","aprite","aprono"]],
- ["to finish","finire","terminar",["finisco","finisci","finisce","finiamo","finite","finiscono"]],
- ["to wait","aspettare","esperar",["aspetto","aspetti","aspetta","aspettiamo","aspettate","aspettano"]],
- ["to buy","comprare","comprar",["compro","compri","compra","compriamo","comprate","comprano"]],
- ["to look","guardare","mirar",["guardo","guardi","guarda","guardiamo","guardate","guardano"]],
- ["to listen","ascoltare","escuchar",["ascolto","ascolti","ascolta","ascoltiamo","ascoltate","ascoltano"]],
- ["to arrive","arrivare","llegar",["arrivo","arrivi","arriva","arriviamo","arrivate","arrivano"]],
- ["to call","chiamare","llamar",["chiamo","chiami","chiama","chiamiamo","chiamate","chiamano"]],
- ["to take","prendere","tomar",["prendo","prendi","prende","prendiamo","prendete","prendono"]],
- ["to write","scrivere","escribir",["scrivo","scrivi","scrive","scriviamo","scrivete","scrivono"]],
- ["to read","leggere","leer",["leggo","leggi","legge","leggiamo","leggete","leggono"]],
- ["to go","andare","ir",["vado","vai","va","andiamo","andate","vanno"]],
- ["to do","fare","hacer",["faccio","fai","fa","facciamo","fate","fanno"]],
- ["to say","dire","decir",["dico","dici","dice","diciamo","dite","dicono"]],
- ["to come","venire","venir",["vengo","vieni","viene","veniamo","venite","vengono"]],
- ["to want","volere","querer",["voglio","vuoi","vuole","vogliamo","volete","vogliono"]],
- ["to be able to","potere","poder",["posso","puoi","può","possiamo","potete","possono"]],
- ["to have to","dovere","deber",["devo","devi","deve","dobbiamo","dovete","devono"]],
- ["to know","sapere","saber",["so","sai","sa","sappiamo","sapete","sanno"]],
- ["to know someone","conoscere","conocer",["conosco","conosci","conosce","conosciamo","conoscete","conoscono"]],
- ["to give","dare","dar",["do","dai","dà","diamo","date","danno"]],
- ["to stay","stare","estar / quedarse",["sto","stai","sta","stiamo","state","stanno"]],
- ["to see","vedere","ver",["vedo","vedi","vede","vediamo","vedete","vedono"]],
- ["to hear","sentire","sentir",["sento","senti","sente","sentiamo","sentite","sentono"]],
- ["to put","mettere","poner",["metto","metti","mette","mettiamo","mettete","mettono"]],
- ["to leave","partire","partir",["parto","parti","parte","partiamo","partite","partono"]],
- ["to find","trovare","encontrar",["trovo","trovi","trova","troviamo","trovate","trovano"]],
- ["to think","pensare","pensar",["penso","pensi","pensa","pensiamo","pensate","pensano"]],
- ["to love","amare","amar",["amo","ami","ama","amiamo","amate","amano"]],
- ["to help","aiutare","ayudar",["aiuto","aiuti","aiuta","aiutiamo","aiutate","aiutano"]],
- ["to learn","imparare","aprender",["imparo","impari","impara","impariamo","imparate","imparano"]]
-];
+/* ==========================================
+   4. CONJUGACIONES DE VERBOS
+========================================== */
 
 const persons=[
- ["I","yo"],["You","tú"],["He / She","él / ella"],
- ["We","nosotros"],["You (plural)","ustedes"],["They","ellos"]
+ ["I","yo"],
+ ["You","tú"],
+ ["He / She","él / ella"],
+ ["We","nosotros"],
+ ["You (plural)","ustedes"],
+ ["They","ellos"]
+];
+
+const verbs=[
+["to eat","mangiare","comer",["mangio","mangi","mangia","mangiamo","mangiate","mangiano"]],
+["to drink","bere","beber",["bevo","bevi","beve","beviamo","bevete","bevono"]],
+["to speak","parlare","hablar",["parlo","parli","parla","parliamo","parlate","parlano"]],
+["to work","lavorare","trabajar",["lavoro","lavori","lavora","lavoriamo","lavorate","lavorano"]],
+["to study","studiare","estudiar",["studio","studi","studia","studiamo","studiate","studiano"]],
+["to live","vivere","vivir",["vivo","vivi","vive","viviamo","vivete","vivono"]],
+["to sleep","dormire","dormir",["dormo","dormi","dorme","dormiamo","dormite","dormono"]],
+["to understand","capire","entender",["capisco","capisci","capisce","capiamo","capite","capiscono"]],
+["to prefer","preferire","preferir",["preferisco","preferisci","preferisce","preferiamo","preferite","preferiscono"]],
+["to open","aprire","abrir",["apro","apri","apre","apriamo","aprite","aprono"]],
+["to finish","finire","terminar",["finisco","finisci","finisce","finiamo","finite","finiscono"]],
+["to wait","aspettare","esperar",["aspetto","aspetti","aspetta","aspettiamo","aspettate","aspettano"]],
+["to buy","comprare","comprar",["compro","compri","compra","compriamo","comprate","comprano"]],
+["to look","guardare","mirar",["guardo","guardi","guarda","guardiamo","guardate","guardano"]],
+["to listen","ascoltare","escuchar",["ascolto","ascolti","ascolta","ascoltiamo","ascoltate","ascoltano"]],
+["to arrive","arrivare","llegar",["arrivo","arrivi","arriva","arriviamo","arrivate","arrivano"]],
+["to call","chiamare","llamar",["chiamo","chiami","chiama","chiamiamo","chiamate","chiamano"]],
+["to take","prendere","tomar",["prendo","prendi","prende","prendiamo","prendete","prendono"]],
+["to write","scrivere","escribir",["scrivo","scrivi","scrive","scriviamo","scrivete","scrivono"]],
+["to read","leggere","leer",["leggo","leggi","legge","leggiamo","leggete","leggono"]],
+["to go","andare","ir",["vado","vai","va","andiamo","andate","vanno"]],
+["to do","fare","hacer",["faccio","fai","fa","facciamo","fate","fanno"]],
+["to say","dire","decir",["dico","dici","dice","diciamo","dite","dicono"]],
+["to come","venire","venir",["vengo","vieni","viene","veniamo","venite","vengono"]],
+["to want","volere","querer",["voglio","vuoi","vuole","vogliamo","volete","vogliono"]],
+["to be able to","potere","poder",["posso","puoi","può","possiamo","potete","possono"]],
+["to have to","dovere","deber",["devo","devi","deve","dobbiamo","dovete","devono"]],
+["to know","sapere","saber",["so","sai","sa","sappiamo","sapete","sanno"]],
+["to know someone","conoscere","conocer",["conosco","conosci","conosce","conosciamo","conoscete","conoscono"]],
+["to give","dare","dar",["do","dai","dà","diamo","date","danno"]],
+["to stay","stare","estar",["sto","stai","sta","stiamo","state","stanno"]],
+["to see","vedere","ver",["vedo","vedi","vede","vediamo","vedete","vedono"]],
+["to hear","sentire","sentir",["sento","senti","sente","sentiamo","sentite","sentono"]],
+["to put","mettere","poner",["metto","metti","mette","mettiamo","mettete","mettono"]],
+["to leave","partire","partir",["parto","parti","parte","partiamo","partite","partono"]],
+["to find","trovare","encontrar",["trovo","trovi","trova","troviamo","trovate","trovano"]],
+["to think","pensare","pensar",["penso","pensi","pensa","pensiamo","pensate","pensano"]],
+["to love","amare","amar",["amo","ami","ama","amiamo","amate","amano"]],
+["to help","aiutare","ayudar",["aiuto","aiuti","aiuta","aiutiamo","aiutate","aiutano"]],
+["to learn","imparare","aprender",["imparo","impari","impara","impariamo","imparate","imparano"]],
+["to pay","pagare","pagar",["pago","paghi","paga","paghiamo","pagate","pagano"]],
+["to play","giocare","jugar",["gioco","giochi","gioca","giochiamo","giocate","giocano"]],
+["to search","cercare","buscar",["cerco","cerchi","cerca","cerchiamo","cercate","cercano"]],
+["to know","conoscere","conocer",["conosco","conosci","conosce","conosciamo","conoscete","conoscono"]],
+["to ask","chiedere","preguntar",["chiedo","chiedi","chiede","chiediamo","chiedete","chiedono"]],
+["to answer","rispondere","responder",["rispondo","rispondi","risponde","rispondiamo","rispondete","rispondono"]],
+["to run","correre","correr",["corro","corri","corre","corriamo","correte","corrono"]],
+["to drive","guidare","conducir",["guido","guidi","guida","guidiamo","guidate","guidano"]],
+["to sell","vendere","vender",["vendo","vendi","vende","vendiamo","vendete","vendono"]],
+["to believe","credere","creer",["credo","credi","crede","crediamo","credete","credono"]],
+["to laugh","ridere","reír",["rido","ridi","ride","ridiamo","ridete","ridono"]],
+["to smile","sorridere","sonreír",["sorrido","sorridi","sorride","sorridiamo","sorridete","sorridono"]],
+["to choose","scegliere","elegir",["scelgo","scegli","sceglie","scegliamo","scegliete","scelgono"]],
+["to lose","perdere","perder",["perdo","perdi","perde","perdiamo","perdete","perdono"]],
+["to win","vincere","ganar",["vinco","vinci","vince","vinciamo","vincete","vincono"]],
+["to bring","portare","llevar",["porto","porti","porta","portiamo","portate","portano"]],
+["to return","tornare","regresar",["torno","torni","torna","torniamo","tornate","tornano"]],
+["to travel","viaggiare","viajar",["viaggio","viaggi","viaggia","viaggiamo","viaggiate","viaggiano"]],
+["to teach","insegnare","enseñar",["insegno","insegni","insegna","insegniamo","insegnate","insegnano"]],
+["to receive","ricevere","recibir",["ricevo","ricevi","riceve","riceviamo","ricevete","ricevono"]],
+["to decide","decidere","decidir",["decido","decidi","decide","decidiamo","decidete","decidono"]],
+["to spend","spendere","gastar",["spendo","spendi","spende","spendiamo","spendete","spendono"]],
+["to use","usare","usar",["uso","usi","usa","usiamo","usate","usano"]],
+["to change","cambiare","cambiar",["cambio","cambi","cambia","cambiamo","cambiate","cambiano"]],
+["to remember","ricordare","recordar",["ricordo","ricordi","ricorda","ricordiamo","ricordate","ricordano"]],
+["to forget","dimenticare","olvidar",["dimentico","dimentichi","dimentica","dimentichiamo","dimenticate","dimenticano"]],
+["to need","servire","necesitar",["servo","servi","serve","serviamo","servite","servono"]],
+["to become","diventare","convertirse",["divento","diventi","diventa","diventiamo","diventate","diventano"]],
+["to walk","camminare","caminar",["cammino","cammini","cammina","camminiamo","camminate","camminano"]],
+["to dance","ballare","bailar",["ballo","balli","balla","balliamo","ballate","ballano"]],
+["to cook","cucinare","cocinar",["cucino","cucini","cucina","cuciniamo","cucinate","cucinano"]],
+["to wash","lavare","lavar",["lavo","lavi","lava","laviamo","lavate","lavano"]],
+["to clean","pulire","limpiar",["pulisco","pulisci","pulisce","puliamo","pulite","puliscono"]],
+["to hear","udire","oír",["odo","odi","ode","udiamo","udite","odono"]]
 ];
 
 verbs.forEach(v=>{
- v[3].forEach((conj,i)=>{
-  add(persons[i][0]+" "+v[0],conj,
-      persons[i][1]+" "+v[2], "VERBOS");
+ v[3].forEach((form,i)=>{
+  add(
+   persons[i][0]+" "+v[0],
+   form,
+   persons[i][1]+" "+v[2],
+   "VERBOS"
+  );
  });
 });
 
-/* FRASES COTIDIANAS CORTAS */
+/* ==========================================
+   5. FRASES COTIDIANAS
+========================================== */
 
 addMany([
 ["I am hungry","ho fame","Tengo hambre"],
+["You are hungry","hai fame","Tienes hambre"],
+["He is hungry","ha fame","Él tiene hambre"],
+["We are hungry","abbiamo fame","Tenemos hambre"],
+["They are hungry","hanno fame","Tienen hambre"],
 ["I am thirsty","ho sete","Tengo sed"],
 ["I am sleepy","ho sonno","Tengo sueño"],
 ["I am cold","ho freddo","Tengo frío"],
@@ -410,7 +758,7 @@ addMany([
 ["I am right","ho ragione","Tengo razón"],
 ["I am wrong","ho torto","Estoy equivocado"],
 ["I am in a hurry","ho fretta","Tengo prisa"],
-["I am twenty years old","ho vent'anni","Tengo veinte años"],
+["I have twenty years","ho vent'anni","Tengo veinte años"],
 ["I have a car","ho una macchina","Tengo un auto"],
 ["I have a house","ho una casa","Tengo una casa"],
 ["I have a dog","ho un cane","Tengo un perro"],
@@ -431,6 +779,9 @@ addMany([
 ["I have enough money","ho abbastanza soldi","Tengo suficiente dinero"],
 ["I have no idea","non ne ho idea","No tengo ni idea"],
 ["I have to go","devo andare","Tengo que irme"],
+["You have to eat","devi mangiare","Tienes que comer"],
+["He has to work","deve lavorare","Él tiene que trabajar"],
+["We have to study","dobbiamo studiare","Tenemos que estudiar"],
 ["I want to eat","voglio mangiare","Quiero comer"],
 ["I want to drink","voglio bere","Quiero beber"],
 ["I want to sleep","voglio dormire","Quiero dormir"],
@@ -477,7 +828,7 @@ addMany([
 ["See you tomorrow","ci vediamo domani","Nos vemos mañana"],
 ["See you later","a dopo","Hasta luego"],
 ["Good morning","buongiorno","Buenos días"],
-["Good evening","buonasera","Buenas tardes / noches"],
+["Good evening","buonasera","Buenas tardes"],
 ["Good night","buonanotte","Buenas noches"],
 ["Goodbye","arrivederci","Adiós"],
 ["Hello","ciao","Hola"],
@@ -532,10 +883,29 @@ addMany([
 ["I am happy with you","sono felice con te","Soy feliz contigo"],
 ["I need you","ho bisogno di te","Te necesito"],
 ["I trust you","mi fido di te","Confío en ti"],
-["I am proud of you","sono orgoglioso di te","Estoy orgulloso de ti"]
+["I am proud of you","sono orgoglioso di te","Estoy orgulloso de ti"],
+["I love this","amo questo","Amo esto"],
+["I am hungry now","adesso ho fame","Ahora tengo hambre"],
+["I am very tired","sono molto stanco","Estoy muy cansado"],
+["I want more","ne voglio ancora","Quiero más"],
+["I have already eaten","ho già mangiato","Ya he comido"],
+["I haven't eaten yet","non ho ancora mangiato","Todavía no he comido"],
+["I am going out","sto uscendo","Estoy saliendo"],
+["I am coming back","sto tornando","Estoy regresando"],
+["I will call you","ti chiamerò","Te llamaré"],
+["I will see you","ti vedrò","Te veré"],
+["I don't remember","non ricordo","No recuerdo"],
+["I don't care","non mi importa","No me importa"],
+["It is important","è importante","Es importante"],
+["It is possible","è possibile","Es posible"],
+["It is impossible","è impossibile","Es imposible"],
+["I am sure","sono sicuro","Estoy seguro"],
+["I am not sure","non sono sicuro","No estoy seguro"]
 ],"FRASES");
 
-/* SUSTANTIVOS FRECUENTES */
+/* ==========================================
+   6. SUSTANTIVOS
+========================================== */
 
 addMany([
 ["The house","la casa","La casa"],
@@ -607,12 +977,54 @@ addMany([
 ["The train","il treno","El tren"],
 ["The bus","l'autobus","El autobús"],
 ["The plane","l'aereo","El avión"],
-["The money (plural)","i soldi","El dinero"],
 ["The clothes","i vestiti","La ropa"],
-["The shoes","le scarpe","Los zapatos"]
+["The shoes","le scarpe","Los zapatos"],
+["The key","la chiave","La llave"],
+["The money","i soldi","El dinero"],
+["The computer","il computer","La computadora"],
+["The internet","internet","Internet"],
+["The music","la musica","La música"],
+["The movie","il film","La película"],
+["The mountain","la montagna","La montaña"],
+["The sea","il mare","El mar"],
+["The river","il fiume","El río"],
+["The sun","il sole","El sol"],
+["The moon","la luna","La luna"],
+["The star","la stella","La estrella"],
+["The tree","l'albero","El árbol"],
+["The flower","il fiore","La flor"],
+["The animal","l'animale","El animal"],
+["The city center","il centro","El centro"],
+["The market","il mercato","El mercado"],
+["The hotel","l'albergo","El hotel"],
+["The airport","l'aeroporto","El aeropuerto"],
+["The station","la stazione","La estación"],
+["The bathroom","il bagno","El baño"],
+["The kitchen","la cucina","La cocina"],
+["The garden","il giardino","El jardín"],
+["The country house","la casa di campagna","La casa de campo"],
+["The breakfast","la colazione","El desayuno"],
+["The lunch","il pranzo","El almuerzo"],
+["The dinner","la cena","La cena"],
+["The cheese","il formaggio","El queso"],
+["The egg","l'uovo","El huevo"],
+["The rice","il riso","El arroz"],
+["The potato","la patata","La papa"],
+["The tomato","il pomodoro","El tomate"],
+["The onion","la cipolla","La cebolla"],
+["The salt","il sale","La sal"],
+["The sugar","lo zucchero","El azúcar"],
+["The oil","l'olio","El aceite"],
+["The chicken","il pollo","El pollo"],
+["The soup","la zuppa","La sopa"],
+["The dessert","il dolce","El postre"],
+["The beer","la birra","La cerveza"],
+["The juice","il succo","El jugo"]
 ],"SUSTANTIVOS");
 
-/* ADJETIVOS Y CONTRARIOS */
+/* ==========================================
+   7. ADJETIVOS
+========================================== */
 
 addMany([
 ["Good","buono","Bueno"],
@@ -647,14 +1059,28 @@ addMany([
 ["Interesting","interessante","Interesante"],
 ["Intelligent","intelligente","Inteligente"],
 ["Kind","gentile","Amable"],
-["Beautiful (feminine)","bella","Hermosa"],
 ["Ready","pronto","Listo"],
 ["Free","libero","Libre"],
 ["Busy","occupato","Ocupado"],
-["Happy (feminine)","felice","Feliz"]
+["Beautiful (feminine)","bella","Hermosa"],
+["Good (feminine)","buona","Buena"],
+["Bad (feminine)","cattiva","Mala"],
+["Small (feminine)","piccola","Pequeña"],
+["Big (feminine)","grande","Grande"],
+["Happy (feminine)","felice","Feliz"],
+["Strong (feminine)","forte","Fuerte"],
+["Cold (feminine)","fredda","Fría"],
+["Hot (feminine)","calda","Caliente"],
+["New (feminine)","nuova","Nueva"],
+["Old (feminine)","vecchia","Vieja"],
+["Young (feminine)","giovane","Joven"],
+["Beautiful (plural)","belli","Hermosos"],
+["Beautiful (feminine plural)","belle","Hermosas"]
 ],"ADJETIVOS");
 
-/* PRONOMBRES, POSESIVOS Y CONECTORES */
+/* ==========================================
+   8. PRONOMBRES Y CONECTORES
+========================================== */
 
 addMany([
 ["I","io","Yo"],
@@ -671,7 +1097,7 @@ addMany([
 ["Us","ci","Nos"],
 ["My","mio","Mío"],
 ["Your","tuo","Tuyo"],
-["His","suo","Suyo"],
+["His / her","suo","Suyo"],
 ["Our","nostro","Nuestro"],
 ["Your (plural)","vostro","Vuestro"],
 ["Their","loro","De ellos"],
@@ -706,53 +1132,87 @@ addMany([
 ["After","dopo","Después"],
 ["Between","tra","Entre"],
 ["Near","vicino","Cerca"],
-["Far","lontano","Lejos"]
+["Far","lontano","Lejos"],
+["Here","qui","Aquí"],
+["There","lì","Allí"],
+["Inside","dentro","Dentro"],
+["Outside","fuori","Fuera"],
+["Together","insieme","Juntos"],
+["Alone","solo","Solo"],
+["Again","ancora","Otra vez"],
+["Already","già","Ya"],
+["Still","ancora","Todavía"],
+["Only","soltanto","Solamente"],
+["Almost","quasi","Casi"],
+["Really","davvero","Realmente"],
+["Perhaps","forse","Quizás"],
+["Also","anche","También"],
+["Then","allora","Entonces"],
+["Therefore","quindi","Por lo tanto"],
+["However","tuttavia","Sin embargo"],
+["First","prima","Primero"],
+["Finally","finalmente","Finalmente"]
 ],"GRAMATICA");
 
-/* NÚMEROS */
+/* ==========================================
+   9. NÚMEROS
+========================================== */
 
-const numbers=[
-["one","uno","Uno"],["two","due","Dos"],
-["three","tre","Tres"],["four","quattro","Cuatro"],
-["five","cinque","Cinco"],["six","sei","Seis"],
-["seven","sette","Siete"],["eight","otto","Ocho"],
-["nine","nove","Nueve"],["ten","dieci","Diez"],
-["eleven","undici","Once"],["twelve","dodici","Doce"],
-["thirteen","tredici","Trece"],["fourteen","quattordici","Catorce"],
-["fifteen","quindici","Quince"],["sixteen","sedici","Dieciséis"],
-["seventeen","diciassette","Diecisiete"],
-["eighteen","diciotto","Dieciocho"],
-["nineteen","diciannove","Diecinueve"],
-["twenty","venti","Veinte"],
-["thirty","trenta","Treinta"],
-["forty","quaranta","Cuarenta"],
-["fifty","cinquanta","Cincuenta"],
-["sixty","sessanta","Sesenta"],
-["seventy","settanta","Setenta"],
-["eighty","ottanta","Ochenta"],
-["ninety","novanta","Noventa"],
-["one hundred","cento","Cien"],
-["one thousand","mille","Mil"],
-["one million","un milione","Un millón"]
-];
-addMany(numbers,"NUMEROS");
+addMany([
+["One","uno","Uno"],
+["Two","due","Dos"],
+["Three","tre","Tres"],
+["Four","quattro","Cuatro"],
+["Five","cinque","Cinco"],
+["Six","sei","Seis"],
+["Seven","sette","Siete"],
+["Eight","otto","Ocho"],
+["Nine","nove","Nueve"],
+["Ten","dieci","Diez"],
+["Eleven","undici","Once"],
+["Twelve","dodici","Doce"],
+["Thirteen","tredici","Trece"],
+["Fourteen","quattordici","Catorce"],
+["Fifteen","quindici","Quince"],
+["Sixteen","sedici","Dieciséis"],
+["Seventeen","diciassette","Diecisiete"],
+["Eighteen","diciotto","Dieciocho"],
+["Nineteen","diciannove","Diecinueve"],
+["Twenty","venti","Veinte"],
+["Thirty","trenta","Treinta"],
+["Forty","quaranta","Cuarenta"],
+["Fifty","cinquanta","Cincuenta"],
+["Sixty","sessanta","Sesenta"],
+["Seventy","settanta","Setenta"],
+["Eighty","ottanta","Ochenta"],
+["Ninety","novanta","Noventa"],
+["One hundred","cento","Cien"],
+["One thousand","mille","Mil"],
+["One million","un milione","Un millón"]
+],"NUMEROS");
 
-/* =========================================
-  2. MOTOR DE APRENDIZAJE
-========================================= */
+/* ==========================================
+   10. BANCO Y MOTOR
+========================================== */
+
+const TOTAL_INITIAL=bank.length;
+const originalBank=[...bank];
 
 let queue=[];
 let current=null;
 let forced=null;
 let previous=null;
+
+let mastered=0;
 let totalCorrect=0;
 let totalWrong=0;
 let globalStreak=0;
-let mastered=0;
 let soundOn=true;
 let locked=false;
+let celebrationPending=false;
 
-function shuffle(a){
+function shuffle(array){
+ const a=[...array];
  for(let i=a.length-1;i>0;i--){
   const j=Math.floor(Math.random()*(i+1));
   [a[i],a[j]]=[a[j],a[i]];
@@ -764,17 +1224,68 @@ function makeQuestion(item,slot){
  return {item,slot,streak:0};
 }
 
+/* ==========================================
+   11. INICIALIZACIÓN
+========================================== */
+
 function initialize(){
  queue=[];
- const shuffled=shuffle([...bank]);
- for(let i=0;i<3;i++)
-  queue.push(makeQuestion(shuffled[i],i));
- bank.splice(0,3);
+
+ for(let i=0;i<3;i++){
+  const index=Math.floor(Math.random()*bank.length);
+  const item=bank.splice(index,1)[0];
+  queue.push(makeQuestion(item,i));
+ }
+
  previous=null;
+ forced=null;
+
+ current=queue[0];
+
  render();
 }
 
-/* Se evita repetir la pregunta acertada inmediatamente */
+/* ==========================================
+   12. NORMALIZACIÓN
+========================================== */
+
+function normalize(value){
+ return String(value)
+  .toLowerCase()
+  .trim()
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g,"")
+  .replace(/[’‘`´]/g,"'")
+  .replace(/[.,!?¿¡]/g,"")
+  .replace(/\s+/g," ");
+}
+
+/* ==========================================
+   13. ALTERNATIVAS
+========================================== */
+
+function alternatives(item){
+ const candidates=originalBank.filter(x=>
+  x.id!==item.id &&
+  normalize(x.it)!==normalize(item.it)
+ );
+
+ const unique=new Map();
+
+ candidates.forEach(x=>{
+  if(!unique.has(normalize(x.it))){
+   unique.set(normalize(x.it),x.it);
+  }
+ });
+
+ const distractors=shuffle([...unique.values()]).slice(0,3);
+
+ return shuffle([item.it,...distractors]);
+}
+
+/* ==========================================
+   14. SELECCIONAR SIGUIENTE
+========================================== */
 
 function selectNext(){
  if(forced){
@@ -782,108 +1293,117 @@ function selectNext(){
   forced=null;
   return;
  }
- let candidates=queue.filter(q=>q.streak<3 && q!==previous);
- if(!candidates.length)
+
+ let candidates=queue.filter(q=>
+  q.streak<3 && q!==previous
+ );
+
+ if(!candidates.length){
   candidates=queue.filter(q=>q.streak<3);
+ }
 
  if(!candidates.length){
   current=null;
   return;
  }
- current=candidates[Math.floor(Math.random()*candidates.length)];
+
+ current=candidates[
+  Math.floor(Math.random()*candidates.length)
+ ];
 }
 
-/* =========================================
-  3. PREGUNTAS Y ALTERNATIVAS
-========================================= */
-
-function normalize(s){
- return s.toLowerCase().trim()
- .normalize("NFD")
- .replace(/[\u0300-\u036f]/g,"")
- .replace(/[’‘`´]/g,"'")
- .replace(/[.,!?¿¡]/g,"")
- .replace(/\s+/g," ");
-}
-
-function alternatives(item){
- const others=bank.concat(queue.map(q=>q.item))
- .filter(x=>x.it!==item.it);
- const selected=shuffle(others).slice(0,3);
- return shuffle([item,...selected]);
-}
+/* ==========================================
+   15. DIBUJAR INTERFAZ
+========================================== */
 
 function render(){
  if(!current)return;
+
  locked=false;
+
+ const isWrite=current.slot===2;
 
  document.getElementById("prompt").textContent=current.item.en;
  document.getElementById("translation").textContent=
- current.item.es+" · "+current.item.group;
+  current.item.es+" · "+current.item.group;
 
  document.getElementById("counter").textContent=
- current.slot===0?"1 / 3":
- current.slot===1?"2 / 3":"3 / 3";
+  (current.slot+1)+" / 3";
 
- const isWrite=current.slot===2;
  document.getElementById("mode").textContent=
- isWrite?"WRITE · 03":"SELECT · 0"+(current.slot+1);
+  isWrite?"WRITE · 03":"SELECT · 0"+(current.slot+1);
 
  document.getElementById("instruction").textContent=
- isWrite?"Escribe la traducción en italiano":
- "Pulsa la respuesta correcta en italiano";
+  isWrite
+   ?"Escribe la respuesta en italiano"
+   :"Selecciona la respuesta correcta";
 
  const answers=document.getElementById("answers");
  const write=document.getElementById("writeArea");
+
  answers.innerHTML="";
  answers.style.display=isWrite?"none":"grid";
  write.style.display=isWrite?"grid":"none";
 
- if(!isWrite){
-  alternatives(current.item).forEach(option=>{
-   const b=document.createElement("button");
-   b.className="answer";
-   b.textContent=option.it;
-   b.onclick=()=>check(option.it,b);
-   answers.appendChild(b);
-  });
+ if(isWrite){
+  document.getElementById("typed").value="";
  }else{
-  const input=document.getElementById("typed");
-  input.value="";
+  alternatives(current.item).forEach(option=>{
+   const button=document.createElement("button");
+   button.type="button";
+   button.className="answer";
+   button.textContent=option;
+
+   button.addEventListener("click",()=>{
+    check(option,button);
+   });
+
+   answers.appendChild(button);
+  });
  }
 
- document.getElementById("feedback").className="feedback neutral";
- document.getElementById("feedback").innerHTML=
- `<strong>${current.streak}/3 CORRECTAS</strong>
-  Necesitas ${3-current.streak} acierto(s) consecutivo(s).`;
+ const feedback=document.getElementById("feedback");
+ feedback.className="feedback neutral";
+ feedback.innerHTML=
+  `<strong>${current.streak}/3 CORRECTAS</strong>
+   Necesitas ${3-current.streak} acierto(s) consecutivo(s).`;
 
  updateStats();
  updateSlots();
 }
 
-/* =========================================
-  4. CORRECCIÓN
-========================================= */
+/* ==========================================
+   16. COMPROBAR RESPUESTAS
+========================================== */
 
-function check(answer,button){
- if(locked||!current)return;
+function check(answer,button=null){
+ if(locked || !current)return;
+
  locked=true;
 
- const correct=normalize(answer)===normalize(current.item.it);
+ const correct=
+  normalize(answer)===normalize(current.item.it);
+
  const feedback=document.getElementById("feedback");
 
  if(correct){
+
   totalCorrect++;
   globalStreak++;
   current.streak++;
+
   previous=current;
 
-  if(button)button.classList.add("correct");
+  if(button){
+   button.classList.add("correct");
+  }
+
   feedback.className="feedback good";
   feedback.innerHTML=
    `<strong>✓ PERFETTO!</strong>
-   ${current.item.it} — ${current.item.es}
-   <br>Racha: ${current.streak}/3`;
+    ${current.item.it}
+    <br>${current.item.es}
+    <br>Racha: ${current.streak}/3`;
 
   playTone(true);
   updateStats();
@@ -896,22 +1416,27 @@ function check(answer,button){
     locked=false;
     selectNext();
     render();
-   },550);
+   },500);
   }
 
  }else{
+
   totalWrong++;
   globalStreak=0;
+
   current.streak=0;
   forced=current;
 
-  if(button)button.classList.add("wrong");
+  if(button){
+   button.classList.add("wrong");
+  }
+
   feedback.className="feedback bad";
   feedback.innerHTML=
    `<strong>✗ RIPROVA!</strong>
-   Correcto: ${current.item.it}
-   <br>${current.item.es}
-   <br>La misma pregunta vuelve inmediatamente.`;
+    Respuesta correcta: ${current.item.it}
+    <br>${current.item.es}
+    <br>Esta misma pregunta volverá inmediatamente.`;
 
   playTone(false);
   updateStats();
@@ -921,165 +1446,327 @@ function check(answer,button){
    current=forced;
    forced=null;
    render();
-  },950);
+  },1000);
  }
 }
 
+/* ==========================================
+   17. DOMINAR UNA PREGUNTA
+========================================== */
+
 function masterQuestion(){
+ if(!current)return;
+
  const finished=current;
+
  queue=queue.filter(q=>q!==finished);
  mastered++;
 
- if(bank.length){
-  const next=bank.splice(
-   Math.floor(Math.random()*bank.length),1
-  )[0];
+ if(bank.length>0){
+  const index=Math.floor(Math.random()*bank.length);
+  const next=bank.splice(index,1)[0];
+
   queue.push(makeQuestion(next,finished.slot));
  }
 
- if(queue.length===0){
-  showCelebration("¡BANCO COMPLETADO!",
-   "Has dominado todas las preguntas. Sei un campione!",
-   "🏆");
+ updateStats();
+
+ if(mastered===TOTAL_INITIAL){
+  current=null;
+  updateSlots();
+
+  showCelebration(
+   "¡BANCO COMPLETADO!",
+   "Has dominado todo el banco de italiano. Sei un campione!",
+   "🏆"
+  );
+
   return;
  }
 
- const milestones=[5,10,25,50,100,250,500,1000];
+ const milestones=[
+  5,10,20,25,50,75,100,150,200,
+  250,300,400,500,750,1000
+ ];
 
  if(milestones.includes(mastered)){
-  showCelebration("¡NUEVO NIVEL!",
-   `Has dominado ${mastered} preguntas. Cada una tiene tres aciertos consecutivos. ¡Continúa!`,
-   "🎉");
+  showCelebration(
+   "¡NUEVO NIVEL!",
+   `Has dominado ${mastered} preguntas. Has conseguido tres aciertos consecutivos en cada una. ¡Continúa!`,
+   "🎉"
+  );
  }
 
+ previous=finished;
  selectNext();
  render();
 }
 
-/* =========================================
-  5. ESTADÍSTICAS
-========================================= */
+/* ==========================================
+   18. ESTADÍSTICAS
+========================================== */
 
 function updateStats(){
+
  document.getElementById("completed").textContent=mastered;
- document.getElementById("total").textContent=
- mastered+bank.length+queue.length;
 
- const accuracy=totalCorrect+totalWrong?
- Math.round(totalCorrect/(totalCorrect+totalWrong)*100):100;
+ document.getElementById("total").textContent=TOTAL_INITIAL;
 
- document.getElementById("accuracy").textContent=accuracy+"%";
- document.getElementById("streak").textContent=globalStreak;
+ const attempts=totalCorrect+totalWrong;
 
- const total=bank.length+queue.length+mastered;
- const percent=total?Math.round(mastered/total*100):100;
+ const accuracy=attempts?
+  Math.round(totalCorrect/attempts*100):100;
 
- document.getElementById("percentage").textContent=percent+"%";
- document.getElementById("bar").style.width=percent+"%";
+ document.getElementById("accuracy").textContent=
+  accuracy+"%";
+
+ document.getElementById("streak").textContent=
+  globalStreak;
+
+ const percentage=TOTAL_INITIAL?
+  Math.round(mastered/TOTAL_INITIAL*100):100;
+
+ document.getElementById("percentage").textContent=
+  percentage+"%";
+
+ document.getElementById("bar").style.width=
+  percentage+"%";
 }
 
+/* ==========================================
+   19. TRES PREGUNTAS ACTIVAS
+========================================== */
+
 function updateSlots(){
+
  const container=document.getElementById("slots");
  container.innerHTML="";
 
- queue.forEach((q)=>{
+ queue.forEach(q=>{
   const div=document.createElement("div");
-  div.className="slot"+(q===current?" active":"")+
-  (q.streak===3?" done":"");
 
-  div.innerHTML=`
-   <b>${q.streak===3?"✓":"PREGUNTA "+(q.slot+1)}</b>
-   <small>${q.streak}/3 aciertos</small>
-   <div class="mini"><div style="width:${q.streak/3*100}%"></div></div>
-  `;
+  div.className="slot"+
+   (q===current?" active":"")+
+   (q.streak===3?" done":"");
+
+  const title=document.createElement("b");
+  title.textContent=
+   q.streak===3?"✓ DOMINADA":"PREGUNTA "+(q.slot+1);
+
+  const detail=document.createElement("small");
+  detail.textContent=q.streak+"/3 aciertos";
+
+  const mini=document.createElement("div");
+  mini.className="mini";
+
+  const fill=document.createElement("div");
+  fill.style.width=(q.streak/3*100)+"%";
+
+  mini.appendChild(fill);
+  div.append(title,detail,mini);
   container.appendChild(div);
  });
 }
 
-/* =========================================
-  6. CELEBRACIONES Y SONIDO
-========================================= */
+/* ==========================================
+   20. CELEBRACIONES
+========================================== */
 
 function showCelebration(title,message,emoji){
+
  document.getElementById("celebrationTitle").textContent=title;
  document.getElementById("celebrationText").textContent=message;
  document.getElementById("celebrationIcon").textContent=emoji;
+
  document.getElementById("celebration").classList.add("show");
+ celebrationPending=true;
 }
 
-document.getElementById("continue").onclick=()=>{
+document.getElementById("continue").addEventListener("click",()=>{
  document.getElementById("celebration").classList.remove("show");
-};
+ celebrationPending=false;
+
+ if(!current && mastered===TOTAL_INITIAL){
+  document.getElementById("prompt").textContent="BRAVISSIMO!";
+  document.getElementById("translation").textContent=
+   "Has completado el banco.";
+ }
+});
+
+/* ==========================================
+   21. SONIDOS
+========================================== */
 
 function playTone(good){
  if(!soundOn)return;
+
  try{
-  const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  const AudioContextClass=
+   window.AudioContext||window.webkitAudioContext;
+
+  if(!AudioContextClass)return;
+
+  const ctx=new AudioContextClass();
   const oscillator=ctx.createOscillator();
   const gain=ctx.createGain();
+
   oscillator.connect(gain);
   gain.connect(ctx.destination);
-  oscillator.frequency.value=good?660:180;
+
   oscillator.type="sine";
-  gain.gain.value=.08;
+  oscillator.frequency.value=good?660:180;
+
+  gain.gain.setValueAtTime(.08,ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(
+   .001,ctx.currentTime+.18
+  );
+
   oscillator.start();
-  gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.18);
   oscillator.stop(ctx.currentTime+.18);
- }catch(e){}
+
+  oscillator.onended=()=>ctx.close();
+
+ }catch(error){
+  // El entrenamiento continúa aunque el audio no esté disponible.
+ }
 }
 
-/* =========================================
-  7. TECLADO Y BOTONES
-========================================= */
+/* ==========================================
+   22. RESPUESTA ESCRITA
+========================================== */
 
 function submitTyped(){
- if(locked||!current||current.slot!==2)return;
+ if(locked || !current || current.slot!==2)return;
+
  const value=document.getElementById("typed").value;
+
  if(!value.trim()){
   document.getElementById("typed").focus();
   return;
  }
+
  check(value);
 }
 
-document.getElementById("check").onclick=submitTyped;
+document.getElementById("check").addEventListener(
+ "click",submitTyped
+);
 
-document.getElementById("typed").addEventListener("keydown",e=>{
- if(e.key==="Enter"){
-  e.preventDefault();
-  submitTyped();
- }
-});
-
-document.getElementById("sound").onclick=()=>{
- soundOn=!soundOn;
- document.getElementById("sound").textContent=
- soundOn?"🔊 Sonido: ON":"🔇 Sonido: OFF";
-};
-
-document.getElementById("restart").onclick=()=>{
- if(!confirm("¿Reiniciar todo el entrenamiento?"))return;
-
- location.reload();
-};
-
-/* Mantener visible la escritura en móviles */
-
-if(window.visualViewport){
- window.visualViewport.addEventListener("resize",()=>{
-  if(document.activeElement===document.getElementById("typed")){
-   setTimeout(()=>{
-    document.getElementById("typed").scrollIntoView({
-     behavior:"smooth",block:"center"
-    });
-   },100);
+document.getElementById("typed").addEventListener(
+ "keydown",event=>{
+  if(event.key==="Enter"){
+   event.preventDefault();
+   submitTyped();
   }
+ }
+);
+
+/* ==========================================
+   23. TECLADO ANDROID
+========================================== */
+
+const typedInput=document.getElementById("typed");
+
+let scrollFrame=null;
+
+function keepInputVisible(){
+
+ if(!window.visualViewport)return;
+ if(document.activeElement!==typedInput)return;
+
+ if(scrollFrame)cancelAnimationFrame(scrollFrame);
+
+ scrollFrame=requestAnimationFrame(()=>{
+
+  const viewport=window.visualViewport;
+  const rect=typedInput.getBoundingClientRect();
+
+  const visibleBottom=
+   viewport.offsetTop+viewport.height;
+
+  const visibleTop=viewport.offsetTop;
+
+  let movement=0;
+
+  if(rect.bottom>visibleBottom-25){
+   movement=rect.bottom-visibleBottom+40;
+  }else if(rect.top<visibleTop+15){
+   movement=rect.top-visibleTop-15;
+  }
+
+  if(movement!==0){
+   window.scrollBy({
+    top:movement,
+    behavior:"smooth"
+   });
+  }
+
  });
 }
 
-/* =========================================
-  8. INICIO
-========================================= */
+typedInput.addEventListener("focus",()=>{
+ setTimeout(keepInputVisible,150);
+ setTimeout(keepInputVisible,350);
+ setTimeout(keepInputVisible,650);
+});
+
+if(window.visualViewport){
+ window.visualViewport.addEventListener(
+  "resize",keepInputVisible
+ );
+
+ window.visualViewport.addEventListener(
+  "scroll",keepInputVisible
+ );
+}
+
+/* ==========================================
+   24. SONIDO ON / OFF
+========================================== */
+
+document.getElementById("sound").addEventListener(
+ "click",()=>{
+  soundOn=!soundOn;
+
+  document.getElementById("sound").textContent=
+   soundOn?"🔊 Sonido: ON":"🔇 Sonido: OFF";
+ }
+);
+
+/* ==========================================
+   25. REINICIO SEGURO
+========================================== */
+
+document.getElementById("restart").addEventListener(
+ "click",()=>{
+  const confirmed=confirm(
+   "¿Deseas reiniciar el entrenamiento y comenzar desde cero?"
+  );
+
+  if(!confirmed)return;
+
+  bank.splice(0,bank.length,...originalBank);
+
+  mastered=0;
+  totalCorrect=0;
+  totalWrong=0;
+  globalStreak=0;
+
+  current=null;
+  previous=null;
+  forced=null;
+  queue=[];
+  locked=false;
+
+  document.getElementById("celebration").classList.remove("show");
+
+  initialize();
+ }
+);
+
+/* ==========================================
+   26. ARRANQUE
+========================================== */
 
 initialize();
 
