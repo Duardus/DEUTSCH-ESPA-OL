@@ -1,0 +1,1088 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080d18">
+<title>ITALIANO INFINITE | Master</title>
+
+<style>
+:root {
+ --bg:#080d18;
+ --panel:#111a2b;
+ --panel2:#18243a;
+ --text:#f3f6ff;
+ --muted:#94a3b8;
+ --green:#35e6a0;
+ --blue:#54a9ff;
+ --gold:#ffd166;
+ --red:#ff6379;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;background:var(--bg);color:var(--text);
+ font-family:Inter,system-ui,-apple-system,sans-serif;
+ min-height:100dvh;
+}
+button,input{font:inherit}
+.app{
+ width:min(100%,680px);margin:auto;
+ padding:15px 16px calc(35px + env(safe-area-inset-bottom));
+}
+header{text-align:center;padding:13px 0 18px}
+.logo{
+ font-size:12px;letter-spacing:5px;
+ color:var(--green);font-weight:900;
+}
+h1{font-size:27px;margin:8px 0 3px;letter-spacing:1px}
+.subtitle{font-size:12px;color:var(--muted)}
+.stats{
+ display:grid;grid-template-columns:repeat(4,1fr);
+ gap:8px;margin:12px 0;
+}
+.stat{
+ background:var(--panel);padding:12px 5px;
+ border-radius:13px;text-align:center;
+ border:1px solid #26344c;
+}
+.stat strong{display:block;font-size:22px}
+.stat span{font-size:10px;color:var(--muted)}
+.progress-wrap{margin:17px 0}
+.progress-info{
+ display:flex;justify-content:space-between;
+ font-size:12px;color:var(--muted);margin-bottom:8px
+}
+.progress{
+ height:9px;background:#202b40;
+ border-radius:20px;overflow:hidden;
+}
+.bar{
+ height:100%;width:0%;
+ background:linear-gradient(90deg,#35e6a0,#54a9ff);
+ transition:width .4s;
+}
+.slots{
+ display:grid;grid-template-columns:repeat(3,1fr);
+ gap:8px;margin:15px 0;
+}
+.slot{
+ background:var(--panel);border:1px solid #26344c;
+ border-radius:12px;padding:10px 4px;text-align:center;
+}
+.slot.active{border-color:var(--green)}
+.slot.done{border-color:var(--gold);background:#292719}
+.slot b{font-size:13px;display:block}
+.slot small{font-size:10px;color:var(--muted)}
+.slot .mini{
+ height:4px;background:#26344c;
+ border-radius:10px;margin-top:8px;overflow:hidden
+}
+.slot .mini div{height:100%;background:var(--green);width:0%}
+.question{
+ background:linear-gradient(145deg,#17243a,#101827);
+ border:1px solid #2b3b56;
+ border-radius:23px;padding:23px 18px;
+ margin-top:15px;
+}
+.mode{
+ font-size:10px;letter-spacing:2px;
+ color:var(--green);font-weight:900;
+ text-transform:uppercase;
+}
+.counter{float:right;color:var(--muted);font-size:11px}
+.prompt{
+ font-size:clamp(23px,6vw,34px);
+ line-height:1.2;font-weight:850;
+ text-align:center;margin:28px 0 9px;
+}
+.translation{
+ color:var(--muted);text-align:center;
+ font-size:13px;min-height:19px;
+}
+.instruction{
+ text-align:center;color:var(--muted);
+ font-size:11px;margin:18px 0 13px;
+}
+.answers{display:grid;gap:10px}
+.answer{
+ border:1px solid #34445e;
+ background:#1a2940;color:white;
+ border-radius:13px;padding:16px 12px;
+ font-size:16px;font-weight:700;
+ cursor:pointer;text-align:left;
+ transition:.15s;
+}
+.answer:active{transform:scale(.98)}
+.answer.correct{
+ background:#104b39;border-color:var(--green);
+}
+.answer.wrong{
+ background:#542332;border-color:var(--red);
+}
+.answer:disabled{opacity:.9}
+.write-area{display:none;gap:9px}
+.write-area input{
+ width:100%;min-width:0;
+ background:#080f1d;border:2px solid #354966;
+ border-radius:13px;padding:17px;
+ color:white;font-size:19px;outline:none;
+}
+.write-area input:focus{border-color:var(--green)}
+.check{
+ border:0;background:var(--green);
+ color:#052217;font-weight:900;
+ border-radius:13px;padding:16px;
+ cursor:pointer;
+}
+.feedback{
+ min-height:66px;margin-top:14px;
+ border-radius:12px;padding:12px;
+ text-align:center;font-size:13px;
+ display:flex;flex-direction:column;
+ justify-content:center;gap:5px;
+}
+.feedback.good{background:#103c30;color:#80ffd0}
+.feedback.bad{background:#49212d;color:#ffadba}
+.feedback.neutral{background:#1a2940;color:#c6d5ec}
+.feedback strong{font-size:17px}
+.hidden{display:none!important}
+.celebration{
+ position:fixed;inset:0;background:#050b16ed;
+ display:none;align-items:center;justify-content:center;
+ z-index:20;padding:20px;text-align:center;
+}
+.celebration.show{display:flex}
+.celebration-box{
+ background:#17243a;border:1px solid var(--gold);
+ padding:35px 22px;border-radius:25px;width:100%;
+ max-width:400px;
+}
+.celebration h2{font-size:34px;color:var(--gold)}
+.celebration p{line-height:1.6;color:#d6e0ef}
+.celebration button{
+ background:var(--gold);border:0;
+ border-radius:12px;padding:15px 25px;
+ font-weight:900;
+}
+.bottom{
+ display:flex;justify-content:space-between;
+ align-items:center;gap:10px;margin-top:17px;
+}
+.secondary{
+ background:var(--panel);color:var(--muted);
+ border:1px solid #34445e;padding:10px 13px;
+ border-radius:10px;font-size:11px;
+}
+.keyboard-note{
+ color:var(--muted);font-size:10px;
+ text-align:center;margin-top:14px;
+}
+@media(max-width:380px){
+ .app{padding-left:11px;padding-right:11px}
+ .question{padding:18px 13px}
+ .answer{padding:14px 10px;font-size:14px}
+ .stat strong{font-size:19px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+ <div class="logo">THE ITALIAN LANGUAGE ENGINE</div>
+ <h1>ITALIANO INFINITE</h1>
+ <div class="subtitle">Aprende rápido. Recuerda para siempre.</div>
+</header>
+
+<section class="stats">
+ <div class="stat"><strong id="completed">0</strong><span>DOMINADAS</span></div>
+ <div class="stat"><strong id="total">0</strong><span>BANCO</span></div>
+ <div class="stat"><strong id="accuracy">100%</strong><span>PRECISIÓN</span></div>
+ <div class="stat"><strong id="streak">0</strong><span>RACHA GLOBAL</span></div>
+</section>
+
+<div class="progress-wrap">
+ <div class="progress-info">
+  <span>PROGRESO DEL BANCO</span>
+  <b id="percentage">0%</b>
+ </div>
+ <div class="progress"><div class="bar" id="bar"></div></div>
+</div>
+
+<div class="slots" id="slots"></div>
+
+<section class="question">
+ <div>
+  <span class="mode" id="mode">SELECT · 01</span>
+  <span class="counter" id="counter">1 / 3</span>
+ </div>
+
+ <div class="prompt" id="prompt">I am hungry</div>
+ <div class="translation" id="translation">¿Cómo se dice en italiano?</div>
+ <div class="instruction" id="instruction">
+  Selecciona la traducción correcta
+ </div>
+
+ <div class="answers" id="answers"></div>
+
+ <div class="write-area" id="writeArea">
+  <input id="typed" type="text"
+   placeholder="Scrivi in italiano..."
+   autocomplete="off" autocapitalize="none"
+   spellcheck="false">
+  <button class="check" id="check">COMPROBAR →</button>
+ </div>
+
+ <div class="feedback neutral" id="feedback">
+  <strong>ANDIAMO!</strong>
+  Tres aciertos consecutivos por pregunta.
+ </div>
+</section>
+
+<div class="bottom">
+ <button class="secondary" id="restart">↻ Reiniciar</button>
+ <button class="secondary" id="sound">🔊 Sonido: ON</button>
+</div>
+
+<div class="keyboard-note">
+ Las dos primeras preguntas son de selección.
+ La tercera es de escritura. El teclado no bloquea el progreso.
+</div>
+</div>
+
+<div class="celebration" id="celebration">
+ <div class="celebration-box">
+  <div style="font-size:55px" id="celebrationIcon">🏆</div>
+  <h2 id="celebrationTitle">BRAVISSIMO!</h2>
+  <p id="celebrationText"></p>
+  <button id="continue">CONTINUAR →</button>
+ </div>
+</div>
+
+<script>
+"use strict";
+
+/* =========================================
+   1. BANCO PRINCIPAL
+   Formato: inglés | italiano | español
+========================================= */
+
+const bank = [];
+const seen = new Set();
+
+function add(en,it,es,group="EXPRESIONES"){
+ const key=en+"|"+it;
+ if(seen.has(key))return;
+ seen.add(key);
+ bank.push({id:bank.length,en,it,es,group});
+}
+
+function addMany(items,group){
+ items.forEach(x=>add(x[0],x[1],x[2],group));
+}
+
+/* AVERE: tener */
+
+addMany([
+["I have","ho","Yo tengo"],
+["You have (informal)","hai","Tú tienes"],
+["He has","ha","Él tiene"],
+["She has","ha","Ella tiene"],
+["We have","abbiamo","Nosotros tenemos"],
+["You have (plural)","avete","Vosotros tienen / ustedes tienen"],
+["They have","hanno","Ellos tienen"],
+["I don't have","non ho","No tengo"],
+["You don't have","non hai","No tienes"],
+["He doesn't have","non ha","Él no tiene"],
+["We don't have","non abbiamo","No tenemos"],
+["They don't have","non hanno","No tienen"],
+["I had","avevo","Yo tenía"],
+["You had","avevi","Tú tenías"],
+["He had","aveva","Él tenía"],
+["We had","avevamo","Nosotros teníamos"],
+["They had","avevano","Ellos tenían"],
+["I will have","avrò","Yo tendré"],
+["You will have","avrai","Tú tendrás"],
+["He will have","avrà","Él tendrá"],
+["We will have","avremo","Nosotros tendremos"],
+["They will have","avranno","Ellos tendrán"],
+["I would have","avrei","Yo tendría"],
+["I have had","ho avuto","He tenido"]
+],"AVERE");
+
+/* SER / ESTAR: ESSERE */
+
+addMany([
+["I am","sono","Yo soy / estoy"],
+["You are (informal)","sei","Tú eres / estás"],
+["He is","è","Él es / está"],
+["She is","è","Ella es / está"],
+["We are","siamo","Nosotros somos / estamos"],
+["You are (plural)","siete","Ustedes son / están"],
+["They are","sono","Ellos son / están"],
+["I am not","non sono","No soy / estoy"],
+["You are not","non sei","No eres / estás"],
+["He is not","non è","Él no es / está"],
+["We are not","non siamo","No somos / estamos"],
+["They are not","non sono","No son / están"],
+["I was","ero","Yo era / estaba"],
+["You were","eri","Tú eras / estabas"],
+["He was","era","Él era / estaba"],
+["We were","eravamo","Nosotros éramos / estábamos"],
+["They were","erano","Ellos eran / estaban"],
+["I will be","sarò","Yo seré / estaré"],
+["You will be","sarai","Tú serás / estarás"],
+["He will be","sarà","Él será / estará"],
+["We will be","saremo","Nosotros seremos / estaremos"],
+["They will be","saranno","Ellos serán / estarán"],
+["I would be","sarei","Yo sería / estaría"],
+["I have been","sono stato","He sido / estado"]
+],"ESSERE");
+
+/* VERBOS ESENCIALES */
+
+const verbs=[
+ ["to eat","mangiare","comer",["mangio","mangi","mangia","mangiamo","mangiate","mangiano"]],
+ ["to drink","bere","beber",["bevo","bevi","beve","beviamo","bevete","bevono"]],
+ ["to speak","parlare","hablar",["parlo","parli","parla","parliamo","parlate","parlano"]],
+ ["to work","lavorare","trabajar",["lavoro","lavori","lavora","lavoriamo","lavorate","lavorano"]],
+ ["to study","studiare","estudiar",["studio","studi","studia","studiamo","studiate","studiano"]],
+ ["to live","vivere","vivir",["vivo","vivi","vive","viviamo","vivete","vivono"]],
+ ["to sleep","dormire","dormir",["dormo","dormi","dorme","dormiamo","dormite","dormono"]],
+ ["to understand","capire","entender",["capisco","capisci","capisce","capiamo","capite","capiscono"]],
+ ["to prefer","preferire","preferir",["preferisco","preferisci","preferisce","preferiamo","preferite","preferiscono"]],
+ ["to open","aprire","abrir",["apro","apri","apre","apriamo","aprite","aprono"]],
+ ["to finish","finire","terminar",["finisco","finisci","finisce","finiamo","finite","finiscono"]],
+ ["to wait","aspettare","esperar",["aspetto","aspetti","aspetta","aspettiamo","aspettate","aspettano"]],
+ ["to buy","comprare","comprar",["compro","compri","compra","compriamo","comprate","comprano"]],
+ ["to look","guardare","mirar",["guardo","guardi","guarda","guardiamo","guardate","guardano"]],
+ ["to listen","ascoltare","escuchar",["ascolto","ascolti","ascolta","ascoltiamo","ascoltate","ascoltano"]],
+ ["to arrive","arrivare","llegar",["arrivo","arrivi","arriva","arriviamo","arrivate","arrivano"]],
+ ["to call","chiamare","llamar",["chiamo","chiami","chiama","chiamiamo","chiamate","chiamano"]],
+ ["to take","prendere","tomar",["prendo","prendi","prende","prendiamo","prendete","prendono"]],
+ ["to write","scrivere","escribir",["scrivo","scrivi","scrive","scriviamo","scrivete","scrivono"]],
+ ["to read","leggere","leer",["leggo","leggi","legge","leggiamo","leggete","leggono"]],
+ ["to go","andare","ir",["vado","vai","va","andiamo","andate","vanno"]],
+ ["to do","fare","hacer",["faccio","fai","fa","facciamo","fate","fanno"]],
+ ["to say","dire","decir",["dico","dici","dice","diciamo","dite","dicono"]],
+ ["to come","venire","venir",["vengo","vieni","viene","veniamo","venite","vengono"]],
+ ["to want","volere","querer",["voglio","vuoi","vuole","vogliamo","volete","vogliono"]],
+ ["to be able to","potere","poder",["posso","puoi","può","possiamo","potete","possono"]],
+ ["to have to","dovere","deber",["devo","devi","deve","dobbiamo","dovete","devono"]],
+ ["to know","sapere","saber",["so","sai","sa","sappiamo","sapete","sanno"]],
+ ["to know someone","conoscere","conocer",["conosco","conosci","conosce","conosciamo","conoscete","conoscono"]],
+ ["to give","dare","dar",["do","dai","dà","diamo","date","danno"]],
+ ["to stay","stare","estar / quedarse",["sto","stai","sta","stiamo","state","stanno"]],
+ ["to see","vedere","ver",["vedo","vedi","vede","vediamo","vedete","vedono"]],
+ ["to hear","sentire","sentir",["sento","senti","sente","sentiamo","sentite","sentono"]],
+ ["to put","mettere","poner",["metto","metti","mette","mettiamo","mettete","mettono"]],
+ ["to leave","partire","partir",["parto","parti","parte","partiamo","partite","partono"]],
+ ["to find","trovare","encontrar",["trovo","trovi","trova","troviamo","trovate","trovano"]],
+ ["to think","pensare","pensar",["penso","pensi","pensa","pensiamo","pensate","pensano"]],
+ ["to love","amare","amar",["amo","ami","ama","amiamo","amate","amano"]],
+ ["to help","aiutare","ayudar",["aiuto","aiuti","aiuta","aiutiamo","aiutate","aiutano"]],
+ ["to learn","imparare","aprender",["imparo","impari","impara","impariamo","imparate","imparano"]]
+];
+
+const persons=[
+ ["I","yo"],["You","tú"],["He / She","él / ella"],
+ ["We","nosotros"],["You (plural)","ustedes"],["They","ellos"]
+];
+
+verbs.forEach(v=>{
+ v[3].forEach((conj,i)=>{
+  add(persons[i][0]+" "+v[0],conj,
+      persons[i][1]+" "+v[2], "VERBOS");
+ });
+});
+
+/* FRASES COTIDIANAS CORTAS */
+
+addMany([
+["I am hungry","ho fame","Tengo hambre"],
+["I am thirsty","ho sete","Tengo sed"],
+["I am sleepy","ho sonno","Tengo sueño"],
+["I am cold","ho freddo","Tengo frío"],
+["I am hot","ho caldo","Tengo calor"],
+["I am afraid","ho paura","Tengo miedo"],
+["I am right","ho ragione","Tengo razón"],
+["I am wrong","ho torto","Estoy equivocado"],
+["I am in a hurry","ho fretta","Tengo prisa"],
+["I am twenty years old","ho vent'anni","Tengo veinte años"],
+["I have a car","ho una macchina","Tengo un auto"],
+["I have a house","ho una casa","Tengo una casa"],
+["I have a dog","ho un cane","Tengo un perro"],
+["I have a cat","ho un gatto","Tengo un gato"],
+["I have money","ho soldi","Tengo dinero"],
+["I have time","ho tempo","Tengo tiempo"],
+["I have a question","ho una domanda","Tengo una pregunta"],
+["I have an idea","ho un'idea","Tengo una idea"],
+["I have a problem","ho un problema","Tengo un problema"],
+["I have a friend","ho un amico","Tengo un amigo"],
+["I have a girlfriend","ho una ragazza","Tengo una novia"],
+["I have a boyfriend","ho un ragazzo","Tengo un novio"],
+["I have a family","ho una famiglia","Tengo una familia"],
+["I have work","ho lavoro","Tengo trabajo"],
+["I have nothing","non ho niente","No tengo nada"],
+["I have everything","ho tutto","Tengo todo"],
+["I have little time","ho poco tempo","Tengo poco tiempo"],
+["I have enough money","ho abbastanza soldi","Tengo suficiente dinero"],
+["I have no idea","non ne ho idea","No tengo ni idea"],
+["I have to go","devo andare","Tengo que irme"],
+["I want to eat","voglio mangiare","Quiero comer"],
+["I want to drink","voglio bere","Quiero beber"],
+["I want to sleep","voglio dormire","Quiero dormir"],
+["I want to learn Italian","voglio imparare l'italiano","Quiero aprender italiano"],
+["I can do it","posso farlo","Puedo hacerlo"],
+["I cannot come","non posso venire","No puedo venir"],
+["I need help","ho bisogno di aiuto","Necesito ayuda"],
+["I like it","mi piace","Me gusta"],
+["I love you","ti amo","Te amo"],
+["I miss you","mi manchi","Te extraño"],
+["I understand","capisco","Entiendo"],
+["I don't understand","non capisco","No entiendo"],
+["I don't know","non lo so","No lo sé"],
+["I know","lo so","Lo sé"],
+["I am happy","sono felice","Estoy feliz"],
+["I am tired","sono stanco","Estoy cansado"],
+["I am ready","sono pronto","Estoy listo"],
+["I am alone","sono solo","Estoy solo"],
+["I am busy","sono occupato","Estoy ocupado"],
+["I am at home","sono a casa","Estoy en casa"],
+["I am here","sono qui","Estoy aquí"],
+["I am there","sono lì","Estoy allí"],
+["I am Italian","sono italiano","Soy italiano"],
+["I am Peruvian","sono peruviano","Soy peruano"],
+["This is mine","questo è mio","Esto es mío"],
+["That is yours","quello è tuo","Eso es tuyo"],
+["Where are you?","dove sei?","¿Dónde estás?"],
+["Where do you live?","dove vivi?","¿Dónde vives?"],
+["What do you want?","che cosa vuoi?","¿Qué quieres?"],
+["What are you doing?","che cosa fai?","¿Qué haces?"],
+["What is your name?","come ti chiami?","¿Cómo te llamas?"],
+["How are you?","come stai?","¿Cómo estás?"],
+["How much is it?","quanto costa?","¿Cuánto cuesta?"],
+["What time is it?","che ore sono?","¿Qué hora es?"],
+["Do you speak Italian?","parli italiano?","¿Hablas italiano?"],
+["Do you understand?","capisci?","¿Entiendes?"],
+["Are you hungry?","hai fame?","¿Tienes hambre?"],
+["Are you tired?","sei stanco?","¿Estás cansado?"],
+["I am coming","sto arrivando","Estoy llegando"],
+["I am working","sto lavorando","Estoy trabajando"],
+["I am eating","sto mangiando","Estoy comiendo"],
+["I am studying","sto studiando","Estoy estudiando"],
+["I am waiting","sto aspettando","Estoy esperando"],
+["See you tomorrow","ci vediamo domani","Nos vemos mañana"],
+["See you later","a dopo","Hasta luego"],
+["Good morning","buongiorno","Buenos días"],
+["Good evening","buonasera","Buenas tardes / noches"],
+["Good night","buonanotte","Buenas noches"],
+["Goodbye","arrivederci","Adiós"],
+["Hello","ciao","Hola"],
+["Please","per favore","Por favor"],
+["Thank you","grazie","Gracias"],
+["You're welcome","prego","De nada"],
+["Excuse me","scusi","Disculpe"],
+["Sorry","mi dispiace","Lo siento"],
+["Yes","sì","Sí"],
+["No","no","No"],
+["Maybe","forse","Quizás"],
+["Of course","certo","Por supuesto"],
+["Always","sempre","Siempre"],
+["Never","mai","Nunca"],
+["Sometimes","a volte","A veces"],
+["Today","oggi","Hoy"],
+["Tomorrow","domani","Mañana"],
+["Yesterday","ieri","Ayer"],
+["Now","adesso","Ahora"],
+["Later","dopo","Después"],
+["Very good","molto bene","Muy bien"],
+["I am fine","sto bene","Estoy bien"],
+["Not bad","non c'è male","No está mal"],
+["That's enough","basta così","Es suficiente"],
+["Let's go","andiamo","Vamos"],
+["Come here","vieni qui","Ven aquí"],
+["Wait a moment","aspetta un momento","Espera un momento"],
+["Be careful","fai attenzione","Ten cuidado"],
+["Don't worry","non ti preoccupare","No te preocupes"],
+["I agree","sono d'accordo","Estoy de acuerdo"],
+["I don't agree","non sono d'accordo","No estoy de acuerdo"],
+["It depends","dipende","Depende"],
+["I think so","penso di sì","Creo que sí"],
+["I don't think so","non credo","No lo creo"],
+["I remember","ricordo","Recuerdo"],
+["I forgot","ho dimenticato","He olvidado"],
+["I am learning","sto imparando","Estoy aprendiendo"],
+["I speak Spanish","parlo spagnolo","Hablo español"],
+["I speak a little Italian","parlo un po' italiano","Hablo un poco de italiano"],
+["I don't speak Italian well","non parlo bene italiano","No hablo bien italiano"],
+["Can you help me?","puoi aiutarmi?","¿Puedes ayudarme?"],
+["Can I come in?","posso entrare?","¿Puedo entrar?"],
+["Can I have water?","posso avere dell'acqua?","¿Puedo tener agua?"],
+["I am going home","vado a casa","Voy a casa"],
+["I am going to work","vado al lavoro","Voy al trabajo"],
+["I am going to eat","vado a mangiare","Voy a comer"],
+["I want this","voglio questo","Quiero esto"],
+["I want that","voglio quello","Quiero aquello"],
+["I don't want it","non lo voglio","No lo quiero"],
+["Give me this","dammi questo","Dame esto"],
+["I am looking for you","ti sto cercando","Te estoy buscando"],
+["I am happy with you","sono felice con te","Soy feliz contigo"],
+["I need you","ho bisogno di te","Te necesito"],
+["I trust you","mi fido di te","Confío en ti"],
+["I am proud of you","sono orgoglioso di te","Estoy orgulloso de ti"]
+],"FRASES");
+
+/* SUSTANTIVOS FRECUENTES */
+
+addMany([
+["The house","la casa","La casa"],
+["The car","la macchina","El auto"],
+["The dog","il cane","El perro"],
+["The cat","il gatto","El gato"],
+["The man","l'uomo","El hombre"],
+["The woman","la donna","La mujer"],
+["The child","il bambino","El niño"],
+["The girl","la ragazza","La chica"],
+["The boy","il ragazzo","El chico"],
+["The friend","l'amico","El amigo"],
+["The family","la famiglia","La familia"],
+["The mother","la madre","La madre"],
+["The father","il padre","El padre"],
+["The brother","il fratello","El hermano"],
+["The sister","la sorella","La hermana"],
+["The son","il figlio","El hijo"],
+["The daughter","la figlia","La hija"],
+["The food","il cibo","La comida"],
+["The water","l'acqua","El agua"],
+["The milk","il latte","La leche"],
+["The bread","il pane","El pan"],
+["The coffee","il caffè","El café"],
+["The wine","il vino","El vino"],
+["The meat","la carne","La carne"],
+["The fish","il pesce","El pescado"],
+["The fruit","la frutta","La fruta"],
+["The apple","la mela","La manzana"],
+["The book","il libro","El libro"],
+["The phone","il telefono","El teléfono"],
+["The money","il denaro","El dinero"],
+["The time","il tempo","El tiempo"],
+["The day","il giorno","El día"],
+["The night","la notte","La noche"],
+["The morning","la mattina","La mañana"],
+["The evening","la sera","La tarde"],
+["The city","la città","La ciudad"],
+["The country","il paese","El país"],
+["The street","la strada","La calle"],
+["The school","la scuola","La escuela"],
+["The university","l'università","La universidad"],
+["The job","il lavoro","El trabajo"],
+["The room","la stanza","La habitación"],
+["The door","la porta","La puerta"],
+["The window","la finestra","La ventana"],
+["The table","il tavolo","La mesa"],
+["The chair","la sedia","La silla"],
+["The bed","il letto","La cama"],
+["The hand","la mano","La mano"],
+["The head","la testa","La cabeza"],
+["The heart","il cuore","El corazón"],
+["The eye","l'occhio","El ojo"],
+["The mouth","la bocca","La boca"],
+["The body","il corpo","El cuerpo"],
+["The world","il mondo","El mundo"],
+["The language","la lingua","El idioma"],
+["The word","la parola","La palabra"],
+["The question","la domanda","La pregunta"],
+["The answer","la risposta","La respuesta"],
+["The problem","il problema","El problema"],
+["The idea","l'idea","La idea"],
+["The truth","la verità","La verdad"],
+["The love","l'amore","El amor"],
+["The life","la vita","La vida"],
+["The bookshop","la libreria","La librería"],
+["The shop","il negozio","La tienda"],
+["The restaurant","il ristorante","El restaurante"],
+["The train","il treno","El tren"],
+["The bus","l'autobus","El autobús"],
+["The plane","l'aereo","El avión"],
+["The money (plural)","i soldi","El dinero"],
+["The clothes","i vestiti","La ropa"],
+["The shoes","le scarpe","Los zapatos"]
+],"SUSTANTIVOS");
+
+/* ADJETIVOS Y CONTRARIOS */
+
+addMany([
+["Good","buono","Bueno"],
+["Bad","cattivo","Malo"],
+["Beautiful","bello","Hermoso"],
+["Ugly","brutto","Feo"],
+["Big","grande","Grande"],
+["Small","piccolo","Pequeño"],
+["Long","lungo","Largo"],
+["Short","corto","Corto"],
+["New","nuovo","Nuevo"],
+["Old","vecchio","Viejo"],
+["Young","giovane","Joven"],
+["Happy","felice","Feliz"],
+["Sad","triste","Triste"],
+["Tired","stanco","Cansado"],
+["Hungry","affamato","Hambriento"],
+["Thirsty","assetato","Sediento"],
+["Easy","facile","Fácil"],
+["Difficult","difficile","Difícil"],
+["Fast","veloce","Rápido"],
+["Slow","lento","Lento"],
+["Hot","caldo","Caliente"],
+["Cold","freddo","Frío"],
+["Expensive","costoso","Costoso"],
+["Cheap","economico","Económico"],
+["Rich","ricco","Rico"],
+["Poor","povero","Pobre"],
+["Strong","forte","Fuerte"],
+["Weak","debole","Débil"],
+["Important","importante","Importante"],
+["Interesting","interessante","Interesante"],
+["Intelligent","intelligente","Inteligente"],
+["Kind","gentile","Amable"],
+["Beautiful (feminine)","bella","Hermosa"],
+["Ready","pronto","Listo"],
+["Free","libero","Libre"],
+["Busy","occupato","Ocupado"],
+["Happy (feminine)","felice","Feliz"]
+],"ADJETIVOS");
+
+/* PRONOMBRES, POSESIVOS Y CONECTORES */
+
+addMany([
+["I","io","Yo"],
+["You","tu","Tú"],
+["He","lui","Él"],
+["She","lei","Ella"],
+["We","noi","Nosotros"],
+["You (plural)","voi","Ustedes"],
+["They","loro","Ellos"],
+["Me","mi","Me"],
+["You (object)","ti","Te"],
+["Him / it","lo","Lo"],
+["Her","la","La"],
+["Us","ci","Nos"],
+["My","mio","Mío"],
+["Your","tuo","Tuyo"],
+["His","suo","Suyo"],
+["Our","nostro","Nuestro"],
+["Your (plural)","vostro","Vuestro"],
+["Their","loro","De ellos"],
+["This","questo","Este / esto"],
+["That","quello","Aquel / aquello"],
+["Everything","tutto","Todo"],
+["Nothing","niente","Nada"],
+["Something","qualcosa","Algo"],
+["Someone","qualcuno","Alguien"],
+["Who","chi","Quién"],
+["What","che cosa","Qué"],
+["Where","dove","Dónde"],
+["When","quando","Cuándo"],
+["Why","perché","Por qué"],
+["How","come","Cómo"],
+["Which","quale","Cuál"],
+["How much","quanto","Cuánto"],
+["And","e","Y"],
+["But","ma","Pero"],
+["Because","perché","Porque"],
+["Or","o","O"],
+["If","se","Si"],
+["Although","anche se","Aunque"],
+["With","con","Con"],
+["Without","senza","Sin"],
+["For","per","Para / por"],
+["From","da","Desde / de"],
+["In","in","En"],
+["On","su","Sobre"],
+["Under","sotto","Debajo"],
+["Before","prima","Antes"],
+["After","dopo","Después"],
+["Between","tra","Entre"],
+["Near","vicino","Cerca"],
+["Far","lontano","Lejos"]
+],"GRAMATICA");
+
+/* NÚMEROS */
+
+const numbers=[
+["one","uno","Uno"],["two","due","Dos"],
+["three","tre","Tres"],["four","quattro","Cuatro"],
+["five","cinque","Cinco"],["six","sei","Seis"],
+["seven","sette","Siete"],["eight","otto","Ocho"],
+["nine","nove","Nueve"],["ten","dieci","Diez"],
+["eleven","undici","Once"],["twelve","dodici","Doce"],
+["thirteen","tredici","Trece"],["fourteen","quattordici","Catorce"],
+["fifteen","quindici","Quince"],["sixteen","sedici","Dieciséis"],
+["seventeen","diciassette","Diecisiete"],
+["eighteen","diciotto","Dieciocho"],
+["nineteen","diciannove","Diecinueve"],
+["twenty","venti","Veinte"],
+["thirty","trenta","Treinta"],
+["forty","quaranta","Cuarenta"],
+["fifty","cinquanta","Cincuenta"],
+["sixty","sessanta","Sesenta"],
+["seventy","settanta","Setenta"],
+["eighty","ottanta","Ochenta"],
+["ninety","novanta","Noventa"],
+["one hundred","cento","Cien"],
+["one thousand","mille","Mil"],
+["one million","un milione","Un millón"]
+];
+addMany(numbers,"NUMEROS");
+
+/* =========================================
+  2. MOTOR DE APRENDIZAJE
+========================================= */
+
+let queue=[];
+let current=null;
+let forced=null;
+let previous=null;
+let totalCorrect=0;
+let totalWrong=0;
+let globalStreak=0;
+let mastered=0;
+let soundOn=true;
+let locked=false;
+
+function shuffle(a){
+ for(let i=a.length-1;i>0;i--){
+  const j=Math.floor(Math.random()*(i+1));
+  [a[i],a[j]]=[a[j],a[i]];
+ }
+ return a;
+}
+
+function makeQuestion(item,slot){
+ return {item,slot,streak:0};
+}
+
+function initialize(){
+ queue=[];
+ const shuffled=shuffle([...bank]);
+ for(let i=0;i<3;i++)
+  queue.push(makeQuestion(shuffled[i],i));
+ bank.splice(0,3);
+ previous=null;
+ render();
+}
+
+/* Se evita repetir la pregunta acertada inmediatamente */
+
+function selectNext(){
+ if(forced){
+  current=forced;
+  forced=null;
+  return;
+ }
+ let candidates=queue.filter(q=>q.streak<3 && q!==previous);
+ if(!candidates.length)
+  candidates=queue.filter(q=>q.streak<3);
+
+ if(!candidates.length){
+  current=null;
+  return;
+ }
+ current=candidates[Math.floor(Math.random()*candidates.length)];
+}
+
+/* =========================================
+  3. PREGUNTAS Y ALTERNATIVAS
+========================================= */
+
+function normalize(s){
+ return s.toLowerCase().trim()
+ .normalize("NFD")
+ .replace(/[\u0300-\u036f]/g,"")
+ .replace(/[’‘`´]/g,"'")
+ .replace(/[.,!?¿¡]/g,"")
+ .replace(/\s+/g," ");
+}
+
+function alternatives(item){
+ const others=bank.concat(queue.map(q=>q.item))
+ .filter(x=>x.it!==item.it);
+ const selected=shuffle(others).slice(0,3);
+ return shuffle([item,...selected]);
+}
+
+function render(){
+ if(!current)return;
+ locked=false;
+
+ document.getElementById("prompt").textContent=current.item.en;
+ document.getElementById("translation").textContent=
+ current.item.es+" · "+current.item.group;
+
+ document.getElementById("counter").textContent=
+ current.slot===0?"1 / 3":
+ current.slot===1?"2 / 3":"3 / 3";
+
+ const isWrite=current.slot===2;
+ document.getElementById("mode").textContent=
+ isWrite?"WRITE · 03":"SELECT · 0"+(current.slot+1);
+
+ document.getElementById("instruction").textContent=
+ isWrite?"Escribe la traducción en italiano":
+ "Pulsa la respuesta correcta en italiano";
+
+ const answers=document.getElementById("answers");
+ const write=document.getElementById("writeArea");
+ answers.innerHTML="";
+ answers.style.display=isWrite?"none":"grid";
+ write.style.display=isWrite?"grid":"none";
+
+ if(!isWrite){
+  alternatives(current.item).forEach(option=>{
+   const b=document.createElement("button");
+   b.className="answer";
+   b.textContent=option.it;
+   b.onclick=()=>check(option.it,b);
+   answers.appendChild(b);
+  });
+ }else{
+  const input=document.getElementById("typed");
+  input.value="";
+ }
+
+ document.getElementById("feedback").className="feedback neutral";
+ document.getElementById("feedback").innerHTML=
+ `<strong>${current.streak}/3 CORRECTAS</strong>
+  Necesitas ${3-current.streak} acierto(s) consecutivo(s).`;
+
+ updateStats();
+ updateSlots();
+}
+
+/* =========================================
+  4. CORRECCIÓN
+========================================= */
+
+function check(answer,button){
+ if(locked||!current)return;
+ locked=true;
+
+ const correct=normalize(answer)===normalize(current.item.it);
+ const feedback=document.getElementById("feedback");
+
+ if(correct){
+  totalCorrect++;
+  globalStreak++;
+  current.streak++;
+  previous=current;
+
+  if(button)button.classList.add("correct");
+  feedback.className="feedback good";
+  feedback.innerHTML=
+   `<strong>✓ PERFETTO!</strong>
+   ${current.item.it} — ${current.item.es}
+   <br>Racha: ${current.streak}/3`;
+
+  playTone(true);
+  updateStats();
+  updateSlots();
+
+  if(current.streak===3){
+   setTimeout(masterQuestion,650);
+  }else{
+   setTimeout(()=>{
+    locked=false;
+    selectNext();
+    render();
+   },550);
+  }
+
+ }else{
+  totalWrong++;
+  globalStreak=0;
+  current.streak=0;
+  forced=current;
+
+  if(button)button.classList.add("wrong");
+  feedback.className="feedback bad";
+  feedback.innerHTML=
+   `<strong>✗ RIPROVA!</strong>
+   Correcto: ${current.item.it}
+   <br>${current.item.es}
+   <br>La misma pregunta vuelve inmediatamente.`;
+
+  playTone(false);
+  updateStats();
+  updateSlots();
+
+  setTimeout(()=>{
+   current=forced;
+   forced=null;
+   render();
+  },950);
+ }
+}
+
+function masterQuestion(){
+ const finished=current;
+ queue=queue.filter(q=>q!==finished);
+ mastered++;
+
+ if(bank.length){
+  const next=bank.splice(
+   Math.floor(Math.random()*bank.length),1
+  )[0];
+  queue.push(makeQuestion(next,finished.slot));
+ }
+
+ if(queue.length===0){
+  showCelebration("¡BANCO COMPLETADO!",
+   "Has dominado todas las preguntas. Sei un campione!",
+   "🏆");
+  return;
+ }
+
+ const milestones=[5,10,25,50,100,250,500,1000];
+
+ if(milestones.includes(mastered)){
+  showCelebration("¡NUEVO NIVEL!",
+   `Has dominado ${mastered} preguntas. Cada una tiene tres aciertos consecutivos. ¡Continúa!`,
+   "🎉");
+ }
+
+ selectNext();
+ render();
+}
+
+/* =========================================
+  5. ESTADÍSTICAS
+========================================= */
+
+function updateStats(){
+ document.getElementById("completed").textContent=mastered;
+ document.getElementById("total").textContent=
+ mastered+bank.length+queue.length;
+
+ const accuracy=totalCorrect+totalWrong?
+ Math.round(totalCorrect/(totalCorrect+totalWrong)*100):100;
+
+ document.getElementById("accuracy").textContent=accuracy+"%";
+ document.getElementById("streak").textContent=globalStreak;
+
+ const total=bank.length+queue.length+mastered;
+ const percent=total?Math.round(mastered/total*100):100;
+
+ document.getElementById("percentage").textContent=percent+"%";
+ document.getElementById("bar").style.width=percent+"%";
+}
+
+function updateSlots(){
+ const container=document.getElementById("slots");
+ container.innerHTML="";
+
+ queue.forEach((q)=>{
+  const div=document.createElement("div");
+  div.className="slot"+(q===current?" active":"")+
+  (q.streak===3?" done":"");
+
+  div.innerHTML=`
+   <b>${q.streak===3?"✓":"PREGUNTA "+(q.slot+1)}</b>
+   <small>${q.streak}/3 aciertos</small>
+   <div class="mini"><div style="width:${q.streak/3*100}%"></div></div>
+  `;
+  container.appendChild(div);
+ });
+}
+
+/* =========================================
+  6. CELEBRACIONES Y SONIDO
+========================================= */
+
+function showCelebration(title,message,emoji){
+ document.getElementById("celebrationTitle").textContent=title;
+ document.getElementById("celebrationText").textContent=message;
+ document.getElementById("celebrationIcon").textContent=emoji;
+ document.getElementById("celebration").classList.add("show");
+}
+
+document.getElementById("continue").onclick=()=>{
+ document.getElementById("celebration").classList.remove("show");
+};
+
+function playTone(good){
+ if(!soundOn)return;
+ try{
+  const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  const oscillator=ctx.createOscillator();
+  const gain=ctx.createGain();
+  oscillator.connect(gain);
+  gain.connect(ctx.destination);
+  oscillator.frequency.value=good?660:180;
+  oscillator.type="sine";
+  gain.gain.value=.08;
+  oscillator.start();
+  gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.18);
+  oscillator.stop(ctx.currentTime+.18);
+ }catch(e){}
+}
+
+/* =========================================
+  7. TECLADO Y BOTONES
+========================================= */
+
+function submitTyped(){
+ if(locked||!current||current.slot!==2)return;
+ const value=document.getElementById("typed").value;
+ if(!value.trim()){
+  document.getElementById("typed").focus();
+  return;
+ }
+ check(value);
+}
+
+document.getElementById("check").onclick=submitTyped;
+
+document.getElementById("typed").addEventListener("keydown",e=>{
+ if(e.key==="Enter"){
+  e.preventDefault();
+  submitTyped();
+ }
+});
+
+document.getElementById("sound").onclick=()=>{
+ soundOn=!soundOn;
+ document.getElementById("sound").textContent=
+ soundOn?"🔊 Sonido: ON":"🔇 Sonido: OFF";
+};
+
+document.getElementById("restart").onclick=()=>{
+ if(!confirm("¿Reiniciar todo el entrenamiento?"))return;
+
+ location.reload();
+};
+
+/* Mantener visible la escritura en móviles */
+
+if(window.visualViewport){
+ window.visualViewport.addEventListener("resize",()=>{
+  if(document.activeElement===document.getElementById("typed")){
+   setTimeout(()=>{
+    document.getElementById("typed").scrollIntoView({
+     behavior:"smooth",block:"center"
+    });
+   },100);
+  }
+ });
+}
+
+/* =========================================
+  8. INICIO
+========================================= */
+
+initialize();
+
+</script>
+</body>
+</html>
