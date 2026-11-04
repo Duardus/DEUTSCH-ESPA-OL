@@ -6,308 +6,185 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#080d18">
 <title>AVERE MASTER — Italiano</title>
-
 <style>
-:root {
-  --bg:#080d18;
-  --panel:#111c2e;
-  --panel2:#1a2b43;
-  --border:#30445f;
-  --text:#f3f6ff;
-  --muted:#91a3bd;
-  --green:#35e6a0;
-  --red:#ff627b;
-  --gold:#ffd166;
-  --blue:#62aaff;
+:root{
+  --bg:#080d18;--panel:#111c2e;--panel2:#1a2b43;
+  --border:#30445f;--text:#f3f6ff;--muted:#91a3bd;
+  --green:#35e6a0;--red:#ff627b;--gold:#ffd166;--blue:#62aaff;
 }
 *{box-sizing:border-box}
 html{min-height:100%;scroll-behavior:smooth}
 body{
-  margin:0;
-  min-height:100vh;
-  min-height:100dvh;
-  background:var(--bg);
-  color:var(--text);
-  font-family:system-ui,-apple-system,sans-serif;
+  margin:0;min-height:100vh;min-height:100dvh;
+  background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,sans-serif
 }
 button,input{font:inherit}
 button{touch-action:manipulation;cursor:pointer}
 .app{
-  max-width:650px;
-  width:100%;
-  margin:auto;
-  padding:max(12px,env(safe-area-inset-top)) 13px
-    max(40px,env(safe-area-inset-bottom));
+  max-width:680px;width:100%;margin:auto;
+  padding:max(12px,env(safe-area-inset-top)) 13px max(40px,env(safe-area-inset-bottom))
 }
-header{text-align:center;padding:12px 0 17px}
-.logo{
-  font-size:10px;
-  letter-spacing:4px;
-  color:var(--green);
-  font-weight:900;
-}
+header{text-align:center;padding:12px 0 15px}
+.logo{font-size:10px;letter-spacing:4px;color:var(--green);font-weight:900}
 h1{font-size:28px;margin:8px 0}
 .subtitle{font-size:12px;color:var(--muted)}
 .stats{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:7px;
-  margin:13px 0;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;margin:13px 0
 }
 .stat{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:13px;
-  padding:11px 3px;
-  text-align:center;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:13px;padding:10px 3px;text-align:center;min-width:0
 }
-.stat strong{
-  display:block;
-  font-size:21px;
-  font-variant-numeric:tabular-nums;
-}
+.stat strong{display:block;font-size:21px;font-variant-numeric:tabular-nums}
 .stat span{font-size:9px;color:var(--muted)}
 .progress-info{
-  display:flex;
-  justify-content:space-between;
-  color:var(--muted);
-  font-size:11px;
-  margin-bottom:7px;
+  display:flex;justify-content:space-between;gap:8px;
+  color:var(--muted);font-size:11px;margin-bottom:7px
 }
-.progress{
-  height:9px;
-  background:#26364d;
-  border-radius:20px;
-  overflow:hidden;
-}
+.progress{height:9px;background:#26364d;border-radius:20px;overflow:hidden}
 .bar{
-  height:100%;
-  width:0;
+  height:100%;width:0;
   background:linear-gradient(90deg,var(--green),var(--blue));
-  transition:width .3s;
+  transition:width .3s
 }
+.stage{
+  margin-top:15px;padding:13px 14px;background:var(--panel);
+  border:1px solid var(--border);border-radius:13px
+}
+.stage-top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.stage-name{font-weight:900;font-size:12px;color:var(--green)}
+.stage-count{font-size:10px;color:var(--muted)}
+.stage-description{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px}
 .slots{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:7px;
-  margin:17px 0;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;margin:15px 0
 }
 .slot{
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:11px 4px;
-  text-align:center;
-  min-width:0;
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:12px;padding:11px 4px;text-align:center;min-width:0
 }
 .slot.active{border-color:var(--green)}
 .slot b{font-size:11px}
-.slot small{
-  display:block;
-  color:var(--muted);
-  font-size:10px;
-  margin-top:5px;
-}
-.mini{
-  height:4px;
-  background:#29384f;
-  border-radius:10px;
-  margin-top:8px;
-  overflow:hidden;
-}
-.mini div{
-  height:100%;
-  background:var(--green);
-  transition:width .2s;
-}
+.slot small{display:block;color:var(--muted);font-size:10px;margin-top:5px}
+.mini{height:4px;background:#29384f;border-radius:10px;margin-top:8px;overflow:hidden}
+.mini div{height:100%;background:var(--green);transition:width .2s}
 .question{
   background:linear-gradient(145deg,#182740,#101a2a);
-  border:1px solid var(--border);
-  border-radius:22px;
-  padding:23px 16px;
+  border:1px solid var(--border);border-radius:22px;padding:22px 16px
 }
-.top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:8px;
-}
-.mode{
-  color:var(--green);
-  font-size:10px;
-  letter-spacing:1px;
-  font-weight:900;
-}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mode{color:var(--green);font-size:10px;letter-spacing:1px;font-weight:900}
 .counter{font-size:11px;color:var(--muted)}
 .prompt{
-  font-size:clamp(25px,7vw,37px);
-  font-weight:850;
-  text-align:center;
-  line-height:1.2;
-  overflow-wrap:anywhere;
-  margin:32px 0 9px;
+  font-size:clamp(24px,6.8vw,35px);font-weight:850;text-align:center;
+  line-height:1.2;overflow-wrap:anywhere;margin:27px 0 9px
 }
-.translation{
-  text-align:center;
-  color:var(--muted);
-  font-size:14px;
-  min-height:21px;
-}
-.instruction{
-  text-align:center;
-  font-size:11px;
-  color:var(--muted);
-  margin:25px 0 13px;
-}
-.answers{display:grid;grid-template-columns:1fr;gap:10px}
+.translation{text-align:center;color:var(--muted);font-size:13px;min-height:20px}
+.instruction{text-align:center;font-size:11px;color:var(--muted);margin:22px 0 13px}
+.answers{display:grid;grid-template-columns:1fr;gap:9px}
 .answer{
-  width:100%;
-  min-height:55px;
-  background:var(--panel2);
-  border:1px solid var(--border);
-  border-radius:13px;
-  padding:13px;
-  color:var(--text);
-  font-size:16px;
-  font-weight:750;
-  text-align:left;
-  overflow-wrap:anywhere;
+  width:100%;min-height:53px;background:var(--panel2);
+  border:1px solid var(--border);border-radius:13px;padding:12px;
+  color:var(--text);font-size:16px;font-weight:750;text-align:left;
+  overflow-wrap:anywhere
 }
 .answer.correct{background:#104735;border-color:var(--green)}
 .answer.wrong{background:#542433;border-color:var(--red)}
 .answer:disabled{opacity:1}
 .write{display:none;grid-template-columns:minmax(0,1fr);gap:10px}
 .write input{
-  width:100%;
-  min-width:0;
-  height:58px;
-  padding:14px;
-  background:#080f1c;
-  border:2px solid var(--border);
-  border-radius:13px;
-  color:white;
-  font-size:19px;
-  outline:none;
+  width:100%;min-width:0;height:57px;padding:14px;
+  background:#080f1c;border:2px solid var(--border);
+  border-radius:13px;color:white;font-size:19px;outline:none
 }
 .write input:focus{border-color:var(--green)}
 .check{
-  min-height:55px;
-  border:0;
-  border-radius:13px;
-  background:var(--green);
-  color:#062518;
-  font-weight:950;
+  min-height:54px;border:0;border-radius:13px;
+  background:var(--green);color:#062518;font-weight:950
 }
 .feedback{
-  min-height:65px;
-  margin-top:15px;
-  padding:12px;
-  border-radius:12px;
-  text-align:center;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:5px;
-  font-size:12px;
-  line-height:1.5;
+  min-height:65px;margin-top:14px;padding:12px;border-radius:12px;
+  text-align:center;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:5px;
+  font-size:12px;line-height:1.5
 }
 .feedback strong{font-size:17px}
 .neutral{background:#1a2940;color:#d0ddef}
 .good{background:#103d30;color:#91ffce}
 .bad{background:#49222f;color:#ffadbc}
-.controls{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  margin-top:16px;
-}
+.controls{display:flex;justify-content:space-between;gap:9px;margin-top:15px}
 .secondary{
-  min-height:43px;
-  padding:9px 14px;
-  background:var(--panel);
-  color:var(--muted);
-  border:1px solid var(--border);
-  border-radius:10px;
-  font-size:11px;
+  min-height:43px;padding:9px 12px;background:var(--panel);
+  color:var(--muted);border:1px solid var(--border);
+  border-radius:10px;font-size:11px
 }
-.note{
-  text-align:center;
-  color:var(--muted);
-  font-size:10px;
-  line-height:1.7;
-  margin-top:17px;
-}
+.note{text-align:center;color:var(--muted);font-size:10px;line-height:1.7;margin-top:15px}
+.save-status{text-align:center;color:var(--muted);font-size:10px;margin-top:8px}
 .celebration{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:20;
-  background:#050a14ed;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  overflow-y:auto;
+  display:none;position:fixed;inset:0;z-index:20;background:#050a14ed;
+  align-items:center;justify-content:center;padding:20px;overflow-y:auto
 }
 .celebration.show{display:flex}
 .celebration-box{
-  max-width:390px;
-  width:100%;
-  padding:28px 20px;
-  border:1px solid var(--gold);
-  border-radius:23px;
-  background:#17253c;
-  text-align:center;
+  max-width:390px;width:100%;padding:27px 20px;
+  border:1px solid var(--gold);border-radius:23px;
+  background:#17253c;text-align:center
 }
-.emoji{font-size:65px}
-.celebration-box h2{color:var(--gold);font-size:29px}
-.celebration-box p{line-height:1.7;color:#d7e3f4}
+.emoji{font-size:60px}
+.celebration-box h2{color:var(--gold);font-size:27px}
+.celebration-box p{line-height:1.7;color:#d7e3f4;font-size:13px}
 .celebration-box button{
-  width:100%;
-  min-height:53px;
-  background:var(--gold);
-  border:0;
-  border-radius:12px;
-  font-weight:950;
+  width:100%;min-height:53px;background:var(--gold);
+  border:0;border-radius:12px;font-weight:950
 }
 @media(max-width:380px){
   .app{padding-left:10px;padding-right:10px}
   .question{padding:18px 12px}
-  .prompt{font-size:26px;margin-top:24px}
+  .prompt{font-size:25px;margin-top:22px}
   .answer{font-size:14px}
   .stat strong{font-size:19px}
 }
 @media(max-height:650px){
   header{padding:4px 0}
   .stats{margin:7px 0}
-  .question{padding-top:14px;padding-bottom:14px}
-  .prompt{margin-top:17px}
-  .instruction{margin-top:15px}
+  .question{padding-top:13px;padding-bottom:13px}
+  .prompt{margin-top:15px}
+  .instruction{margin-top:13px}
 }
 </style>
 </head>
-
 <body>
 <div class="app">
-
 <header>
   <div class="logo">ITALIAN LANGUAGE TRAINING</div>
   <h1>AVERE MASTER</h1>
-  <div class="subtitle">Un verbo · Todas las personas · Presente</div>
+  <div class="subtitle">Un verbo · Tutti i tempi · Dominio progressivo</div>
 </header>
 
 <section class="stats">
   <div class="stat"><strong id="mastered">0</strong><span>DOMINADAS</span></div>
-  <div class="stat"><strong id="total">0</strong><span>TOTAL</span></div>
+  <div class="stat"><strong id="total">0</strong><span>TOTAL DEL CURSO</span></div>
+  <div class="stat"><strong id="remaining">0</strong><span>PENDIENTES</span></div>
   <div class="stat"><strong id="accuracy">100%</strong><span>PRECISIÓN</span></div>
   <div class="stat"><strong id="streak">0</strong><span>RACHA GLOBAL</span></div>
+  <div class="stat"><strong id="coverage">0/14</strong><span>TIEMPOS DOMINADOS</span></div>
 </section>
 
 <div class="progress-info">
-  <span>DOMINIO DEL BANCO</span>
+  <span>DOMINIO TOTAL DE AVERE</span>
   <b id="percent">0%</b>
 </div>
 <div class="progress"><div class="bar" id="bar"></div></div>
+
+<section class="stage">
+  <div class="stage-top">
+    <span class="stage-name" id="stageName">BLOQUE 1</span>
+    <span class="stage-count" id="stageCount">0 / 0</span>
+  </div>
+  <div class="stage-description" id="stageDescription"></div>
+</section>
 
 <div class="slots" id="slots"></div>
 
@@ -316,23 +193,15 @@ h1{font-size:28px;margin:8px 0}
     <span class="mode" id="mode">ALTERNATIVAS · INTENTO 1</span>
     <span class="counter" id="counter">0 / 3</span>
   </div>
-
   <div class="prompt" id="prompt"></div>
   <div class="translation" id="translation"></div>
   <div class="instruction" id="instruction"></div>
-
   <div class="answers" id="answers"></div>
-
   <div class="write" id="write">
-    <input id="typed" type="text"
-      placeholder="Scrivi in italiano..."
-      autocomplete="off"
-      autocapitalize="none"
-      spellcheck="false"
-      enterkeyhint="done">
+    <input id="typed" type="text" placeholder="Scrivi in italiano..."
+      autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="done">
     <button class="check" id="check">COMPROBAR →</button>
   </div>
-
   <div class="feedback neutral" id="feedback" aria-live="polite">
     <strong>ANDIAMO!</strong>
     Tres aciertos consecutivos por pregunta.
@@ -340,16 +209,15 @@ h1{font-size:28px;margin:8px 0}
 </section>
 
 <div class="controls">
-  <button class="secondary" id="restart">↻ Reiniciar</button>
+  <button class="secondary" id="restart">↻ Borrar progreso</button>
   <button class="secondary" id="sound">🔊 Sonido ON</button>
 </div>
-
 <div class="note">
-  Primer acierto: alternativas · Segundo acierto: alternativas.<br>
-  Tercer acierto: escribir sin pistas.<br>
-  Al dominar una pregunta, entra una nueva automáticamente.
+  Dos intentos con alternativas · Tercer intento escrito.<br>
+  Un error reinicia únicamente la racha de esa pregunta.<br>
+  Tu progreso se guarda automáticamente en este dispositivo.
 </div>
-
+<div class="save-status" id="saveStatus">Progreso guardado automáticamente</div>
 </div>
 
 <div class="celebration" id="celebration">
@@ -357,253 +225,300 @@ h1{font-size:28px;margin:8px 0}
     <div class="emoji" id="emoji">🏆</div>
     <h2 id="celebrationTitle">BRAVISSIMO!</h2>
     <p id="celebrationText"></p>
-    <button id="continue">VOLVER A EMPEZAR</button>
+    <button id="continue">CONTINUAR</button>
   </div>
 </div>
 
 <script>
 "use strict";
 
-/* ============================================
-   1. PERSONAS Y CONJUGACIÓN DE AVERE
-============================================ */
+/* =========================================================
+   1. BASE DE DATOS: 84 COMPLEMENTOS DIFERENTES.
+   Cada palabra se utiliza una sola vez en el banco.
+   Cada una se asigna a una persona y un tiempo verbal.
+========================================================= */
+
+const vocabulary = [
+  ["un'auto","un auto"],
+  ["una casa","una casa"],
+  ["un cane","un perro"],
+  ["un gatto","un gato"],
+  ["un libro","un libro"],
+  ["un telefono","un teléfono"],
+  ["un amico","un amigo"],
+  ["una sorella","una hermana"],
+  ["un fratello","un hermano"],
+  ["una famiglia","una familia"],
+  ["un bambino","un niño"],
+  ["una domanda","una pregunta"],
+  ["un'idea","una idea"],
+  ["un problema","un problema"],
+  ["un lavoro","un trabajo"],
+  ["soldi","dinero"],
+  ["tempo","tiempo"],
+  ["una chiave","una llave"],
+  ["una bicicletta","una bicicleta"],
+  ["un computer","una computadora"],
+  ["un biglietto","un boleto"],
+  ["una stanza","una habitación"],
+  ["un giardino","un jardín"],
+  ["un passaporto","un pasaporte"],
+  ["un caffè","un café"],
+  ["acqua","agua"],
+  ["un tavolo","una mesa"],
+  ["una televisione","un televisor"],
+  ["un orologio","un reloj"],
+  ["un portafoglio","una billetera"],
+  ["un sogno","un sueño"],
+  ["un nome","un nombre"],
+  ["un piano","un plan"],
+  ["una foto","una foto"],
+  ["un messaggio","un mensaje"],
+  ["un appuntamento","una cita"],
+  ["una possibilità","una posibilidad"],
+  ["un'occasione","una oportunidad"],
+  ["una scelta","una elección"],
+  ["un motivo","un motivo"],
+  ["un obiettivo","un objetivo"],
+  ["poco tempo","poco tiempo"],
+  ["tempo libero","tiempo libre"],
+  ["abbastanza soldi","suficiente dinero"],
+  ["niente soldi","nada de dinero"],
+  ["molti amici","muchos amigos"],
+  ["molte idee","muchas ideas"],
+  ["molte domande","muchas preguntas"],
+  ["molto lavoro","mucho trabajo"],
+  ["molto tempo","mucho tiempo"],
+  ["fame","hambre"],
+  ["sete","sed"],
+  ["sonno","sueño"],
+  ["paura","miedo"],
+  ["freddo","frío"],
+  ["caldo","calor"],
+  ["ragione","razón"],
+  ["pazienza","paciencia"],
+  ["fortuna","suerte"],
+  ["voglia","ganas"],
+  ["un bisogno","una necesidad"],
+  ["un dubbio","una duda"],
+  ["speranza","esperanza"],
+  ["rispetto","respeto"],
+  ["esperienza","experiencia"],
+  ["energia","energía"],
+  ["coraggio","valor"],
+  ["successo","éxito"],
+  ["un biglietto da visita","una tarjeta de visita"],
+  ["una buona notizia","una buena noticia"],
+  ["un'opinione","una opinión"],
+  ["una soluzione","una solución"],
+  ["un appuntamento medico","una cita médica"],
+  ["un forte desiderio","un deseo intenso"],
+  ["un grande talento","un gran talento"],
+  ["una responsabilità","una responsabilidad"],
+  ["un vantaggio","una ventaja"],
+  ["uno svantaggio","una desventaja"],
+  ["un ricordo","un recuerdo"],
+  ["un segreto","un secreto"],
+  ["una promessa","una promesa"],
+  ["un'opportunità","una oportunidad"],
+  ["una certezza","una certeza"],
+  ["un limite","un límite"]
+];
+
+/* =========================================================
+   2. SEIS PERSONAS GRAMATICALES
+========================================================= */
 
 const persons = [
+  {key:"io",it:"io",es:"Yo"},
+  {key:"tu",it:"tu",es:"Tú"},
+  {key:"lui",it:"lui",es:"Él"},
+  {key:"noi",it:"noi",es:"Nosotros"},
+  {key:"voi",it:"voi",es:"Ustedes"},
+  {key:"loro",it:"loro",es:"Ellos"}
+];
+
+/* =========================================================
+   3. TODOS LOS TIEMPOS Y SUS FORMAS
+   Se incluyen los tiempos principales del indicativo,
+   condicional y subjuntivo.
+========================================================= */
+
+const tenses = [
   {
-    en:"I",
-    es:"Yo",
-    have:"have",
-    italian:"ho",
-    spanish:"tengo"
+    key:"presente",name:"Presente",stage:0,
+    group:"Presente",
+    es:["tengo","tienes","tiene","tenemos","tienen","tienen"],
+    it:["ho","hai","ha","abbiamo","avete","hanno"]
   },
   {
-    en:"You",
-    es:"Tú",
-    have:"have",
-    italian:"hai",
-    spanish:"tienes"
+    key:"passato_prossimo",name:"Passato prossimo",stage:1,
+    group:"Pasados",
+    es:["he tenido","has tenido","ha tenido","hemos tenido","han tenido","han tenido"],
+    it:["ho avuto","hai avuto","ha avuto","abbiamo avuto","avete avuto","hanno avuto"]
   },
   {
-    en:"He",
-    es:"Él",
-    have:"has",
-    italian:"ha",
-    spanish:"tiene"
+    key:"imperfetto",name:"Imperfetto",stage:1,
+    group:"Pasados",
+    es:["tenía","tenías","tenía","teníamos","tenían","tenían"],
+    it:["avevo","avevi","aveva","avevamo","avevate","avevano"]
   },
   {
-    en:"She",
-    es:"Ella",
-    have:"has",
-    italian:"ha",
-    spanish:"tiene"
+    key:"trapassato_prossimo",name:"Trapassato prossimo",stage:1,
+    group:"Pasados",
+    es:["había tenido","habías tenido","había tenido","habíamos tenido","habían tenido","habían tenido"],
+    it:["avevo avuto","avevi avuto","aveva avuto","avevamo avuto","avevate avuto","avevano avuto"]
   },
   {
-    en:"We",
-    es:"Nosotros",
-    have:"have",
-    italian:"abbiamo",
-    spanish:"tenemos"
+    key:"passato_remoto",name:"Passato remoto",stage:1,
+    group:"Pasados",
+    es:["tuve","tuviste","tuvo","tuvimos","tuvieron","tuvieron"],
+    it:["ebbi","avesti","ebbe","avemmo","aveste","ebbero"]
   },
   {
-    en:"You (plural)",
-    es:"Ustedes",
-    have:"have",
-    italian:"avete",
-    spanish:"tienen"
+    key:"trapassato_remoto",name:"Trapassato remoto",stage:1,
+    group:"Pasados",
+    es:["hube tenido","hubiste tenido","hubo tenido","hubimos tenido","hubieron tenido","hubieron tenido"],
+    it:["ebbi avuto","avesti avuto","ebbe avuto","avemmo avuto","aveste avuto","ebbero avuto"]
   },
   {
-    en:"They",
-    es:"Ellos",
-    have:"have",
-    italian:"hanno",
-    spanish:"tienen"
+    key:"futuro_semplice",name:"Futuro semplice",stage:2,
+    group:"Futuros",
+    es:["tendré","tendrás","tendrá","tendremos","tendrán","tendrán"],
+    it:["avrò","avrai","avrà","avremo","avrete","avranno"]
+  },
+  {
+    key:"futuro_anteriore",name:"Futuro anteriore",stage:2,
+    group:"Futuros",
+    es:["habré tenido","habrás tenido","habrá tenido","habremos tenido","habrán tenido","habrán tenido"],
+    it:["avrò avuto","avrai avuto","avrà avuto","avremo avuto","avrete avuto","avranno avuto"]
+  },
+  {
+    key:"condizionale_presente",name:"Condizionale presente",stage:3,
+    group:"Condicional",
+    es:["tendría","tendrías","tendría","tendríamos","tendrían","tendrían"],
+    it:["avrei","avresti","avrebbe","avremmo","avreste","avrebbero"]
+  },
+  {
+    key:"condizionale_passato",name:"Condizionale passato",stage:3,
+    group:"Condicional",
+    es:["habría tenido","habrías tenido","habría tenido","habríamos tenido","habrían tenido","habrían tenido"],
+    it:["avrei avuto","avresti avuto","avrebbe avuto","avremmo avuto","avreste avuto","avrebbero avuto"]
+  },
+  {
+    key:"congiuntivo_presente",name:"Congiuntivo presente",stage:4,
+    group:"Subjuntivo",
+    es:["que tenga","que tengas","que tenga","que tengamos","que tengáis","que tengan"],
+    it:["che abbia","che abbia","che abbia","che abbiamo","che abbiate","che abbiano"]
+  },
+  {
+    key:"congiuntivo_passato",name:"Congiuntivo passato",stage:4,
+    group:"Subjuntivo",
+    es:["que haya tenido","que hayas tenido","que haya tenido","que hayamos tenido","que hayáis tenido","que hayan tenido"],
+    it:["che abbia avuto","che abbia avuto","che abbia avuto","che abbiamo avuto","che abbiate avuto","che abbiano avuto"]
+  },
+  {
+    key:"congiuntivo_imperfetto",name:"Congiuntivo imperfetto",stage:4,
+    group:"Subjuntivo",
+    es:["que tuviera","que tuvieras","que tuviera","que tuviéramos","que tuvierais","que tuvieran"],
+    it:["che avessi","che avessi","che avesse","che avessimo","che aveste","che avessero"]
+  },
+  {
+    key:"congiuntivo_trapassato",name:"Congiuntivo trapassato",stage:4,
+    group:"Subjuntivo",
+    es:["que hubiera tenido","que hubieras tenido","que hubiera tenido","que hubiéramos tenido","que hubierais tenido","que hubieran tenido"],
+    it:["che avessi avuto","che avessi avuto","che avesse avuto","che avessimo avuto","che aveste avuto","che avessero avuto"]
   }
 ];
 
-/* ============================================
-   2. COMPLEMENTOS
-   Cada respuesta tiene máximo dos palabras.
-============================================ */
+/* =========================================================
+   4. BLOQUES PROGRESIVOS
+   No se mezclan todos los tiempos desde el principio.
+========================================================= */
 
-const complements = [
-  ["a car","un'auto","un auto"],
-  ["a house","una casa","una casa"],
-  ["a dog","un cane","un perro"],
-  ["a cat","un gatto","un gato"],
-  ["a book","un libro","un libro"],
-  ["a phone","un telefono","un teléfono"],
-  ["a friend","un amico","un amigo"],
-  ["a sister","una sorella","una hermana"],
-  ["a brother","un fratello","un hermano"],
-  ["a family","una famiglia","una familia"],
-  ["a child","un bambino","un niño"],
-  ["a question","una domanda","una pregunta"],
-  ["an idea","un'idea","una idea"],
-  ["a problem","un problema","un problema"],
-  ["a job","un lavoro","un trabajo"],
-  ["money","soldi","dinero"],
-  ["time","tempo","tiempo"],
-  ["a key","una chiave","una llave"],
-  ["a bicycle","una bicicletta","una bicicleta"],
-  ["a computer","un computer","una computadora"],
-  ["a ticket","un biglietto","un boleto"],
-  ["a room","una stanza","una habitación"],
-  ["a garden","un giardino","un jardín"],
-  ["a passport","un passaporto","un pasaporte"],
-  ["a coffee","un caffè","un café"],
-  ["water","acqua","agua"],
-  ["a table","un tavolo","una mesa"],
-  ["a television","una televisione","un televisor"],
-  ["a watch","un orologio","un reloj"],
-  ["a wallet","un portafoglio","una billetera"],
-  ["a dream","un sogno","un sueño"],
-  ["a name","un nome","un nombre"],
-  ["a plan","un piano","un plan"],
-  ["a photo","una foto","una fotografía"],
-  ["a message","un messaggio","un mensaje"],
-  ["an appointment","un appuntamento","una cita"],
-  ["a possibility","una possibilità","una posibilidad"],
-  ["a chance","un'occasione","una oportunidad"],
-  ["a choice","una scelta","una elección"],
-  ["a reason","un motivo","un motivo"],
-  ["a goal","un obiettivo","un objetivo"],
-  ["little time","poco tempo","poco tiempo"],
-  ["free time","tempo libero","tiempo libre"],
-  ["enough money","abbastanza soldi","suficiente dinero"],
-  ["no money","niente soldi","nada de dinero"],
-  ["many friends","molti amici","muchos amigos"],
-  ["many ideas","molte idee","muchas ideas"],
-  ["many questions","molte domande","muchas preguntas"],
-  ["a lot of work","molto lavoro","mucho trabajo"],
-  ["a lot of time","molto tempo","mucho tiempo"],
-  ["hunger","fame","hambre"],
-  ["thirst","sete","sed"],
-  ["sleep","sonno","sueño"],
-  ["fear","paura","miedo"],
-  ["cold","freddo","frío"],
-  ["heat","caldo","calor"],
-  ["reason","ragione","razón"],
-  ["patience","pazienza","paciencia"],
-  ["luck","fortuna","suerte"],
-  ["desire","voglia","ganas"],
-  ["a need","un bisogno","una necesidad"],
-  ["a doubt","un dubbio","una duda"],
-  ["hope","speranza","esperanza"],
-  ["respect","rispetto","respeto"],
-  ["experience","esperienza","experiencia"],
-  ["energy","energia","energía"],
-  ["courage","coraggio","valor"],
-  ["success","successo","éxito"],
-  ["a big problem","un grosso problema","un gran problema"],
-  ["a good idea","una buona idea","una buena idea"],
-  ["a new car","una macchina nuova","un auto nuevo"],
-  ["a beautiful house","una bella casa","una casa bonita"],
-  ["a good reason","una buona ragione","una buena razón"],
-  ["a difficult question","una domanda difficile","una pregunta difícil"],
-  ["many books","molti libri","muchos libros"],
-  ["many things","molte cose","muchas cosas"],
-  ["a good job","un buon lavoro","un buen trabajo"],
-  ["a good friend","un buon amico","un buen amigo"],
-  ["a big house","una casa grande","una casa grande"],
-  ["a small car","una macchina piccola","un auto pequeño"],
-  ["many dreams","molti sogni","muchos sueños"],
-  ["many choices","molte scelte","muchas opciones"]
+const stages = [
+  {
+    name:"BLOQUE 1 · FUNDAMENTOS",
+    description:"Presente: ho, hai, ha, abbiamo, avete, hanno. Domina primero las seis formas esenciales."
+  },
+  {
+    name:"BLOQUE 2 · PASADOS",
+    description:"Passato prossimo, imperfetto, trapassato prossimo, passato remoto y trapassato remoto. Aprende a distinguir acción terminada, hábito y anterioridad."
+  },
+  {
+    name:"BLOQUE 3 · FUTUROS",
+    description:"Futuro semplice y futuro anteriore. Expresa lo que tendrás y lo que ya habrás tenido."
+  },
+  {
+    name:"BLOQUE 4 · CONDICIONAL",
+    description:"Condizionale presente y passato. Practica lo que tendrías y lo que habrías tenido."
+  },
+  {
+    name:"BLOQUE 5 · SUBJUNTIVO",
+    description:"Congiuntivo presente, passato, imperfetto y trapassato. Domina las formas que expresan duda, deseo, posibilidad y anterioridad."
+  }
 ];
 
-/* ============================================
-   3. CONSTRUIR EL BANCO
-   Las frases especiales se expresan naturalmente
-   en inglés, pero conservan AVERE en italiano.
-============================================ */
+/* =========================================================
+   5. CONSTRUCCIÓN DEL BANCO
+   84 preguntas = 14 tiempos × 6 personas.
+   Cada complemento aparece una sola vez.
+========================================================= */
 
-const bank = [];
-let nextId = 1;
+const bank=[];
+let vocabularyIndex=0;
 
-for(const person of persons){
-  for(const item of complements){
+for(const tense of tenses){
+  for(let p=0;p<persons.length;p++){
+    const word=vocabulary[vocabularyIndex++];
+    const person=persons[p];
+
     bank.push({
-      id:nextId++,
-      prompt:person.en+" "+person.have+" "+item[0],
-      answer:person.italian+" "+item[1],
-      translation:person.es+" "+person.spanish+" "+item[2],
-      person:person.en
+      id:tense.key+"_"+person.key,
+      tenseKey:tense.key,
+      tenseName:tense.name,
+      stage:tense.stage,
+      personKey:person.key,
+      personIndex:p,
+      prompt:person.es+" "+tense.es[p]+" "+word[1],
+      answer:tense.it[p]+" "+word[0],
+      translation:tense.name+" · "+person.it,
+      wordIt:word[0],
+      wordEs:word[1]
     });
   }
-}
-
-/* ============================================
-   4. FRASES IDIOMÁTICAS CON AVERE
-============================================ */
-
-const idioms = [
-  {
-    en:["I am hungry","You are hungry","He is hungry","She is hungry","We are hungry","You are hungry","They are hungry"],
-    es:["Yo tengo hambre","Tú tienes hambre","Él tiene hambre","Ella tiene hambre","Nosotros tenemos hambre","Ustedes tienen hambre","Ellos tienen hambre"],
-    it:"fame"
-  },
-  {
-    en:["I am thirsty","You are thirsty","He is thirsty","She is thirsty","We are thirsty","You are thirsty","They are thirsty"],
-    es:["Yo tengo sed","Tú tienes sed","Él tiene sed","Ella tiene sed","Nosotros tenemos sed","Ustedes tienen sed","Ellos tienen sed"],
-    it:"sete"
-  },
-  {
-    en:["I am sleepy","You are sleepy","He is sleepy","She is sleepy","We are sleepy","You are sleepy","They are sleepy"],
-    es:["Yo tengo sueño","Tú tienes sueño","Él tiene sueño","Ella tiene sueño","Nosotros tenemos sueño","Ustedes tienen sueño","Ellos tienen sueño"],
-    it:"sonno"
-  },
-  {
-    en:["I am afraid","You are afraid","He is afraid","She is afraid","We are afraid","You are afraid","They are afraid"],
-    es:["Yo tengo miedo","Tú tienes miedo","Él tiene miedo","Ella tiene miedo","Nosotros tenemos miedo","Ustedes tienen miedo","Ellos tienen miedo"],
-    it:"paura"
-  },
-  {
-    en:["I am cold","You are cold","He is cold","She is cold","We are cold","You are cold","They are cold"],
-    es:["Yo tengo frío","Tú tienes frío","Él tiene frío","Ella tiene frío","Nosotros tenemos frío","Ustedes tienen frío","Ellos tienen frío"],
-    it:"freddo"
-  },
-  {
-    en:["I am hot","You are hot","He is hot","She is hot","We are hot","You are hot","They are hot"],
-    es:["Yo tengo calor","Tú tienes calor","Él tiene calor","Ella tiene calor","Nosotros tenemos calor","Ustedes tienen calor","Ellos tienen calor"],
-    it:"caldo"
-  }
-];
-
-for(const idiom of idioms){
-  persons.forEach((person,index)=>{
-    bank.push({
-      id:nextId++,
-      prompt:idiom.en[index],
-      answer:person.italian+" "+idiom.it,
-      translation:idiom.es[index],
-      person:person.en
-    });
-  });
 }
 
 const TOTAL=bank.length;
+const bankById=new Map(bank.map(item=>[item.id,item]));
+const tenseByKey=new Map(tenses.map(item=>[item.key,item]));
 
-/* ============================================
-   5. ESTADO
-============================================ */
+/* =========================================================
+   6. PERSISTENCIA
+   Guardado local automático, independiente de la sesión.
+========================================================= */
+
+const STORAGE_KEY="avere_master_progress_v4";
 
 let pending=[];
 let queue=[];
 let current=null;
-let previous=null;
-let forced=null;
+let previousId=null;
+let forcedId=null;
 
-let mastered=0;
+let masteredIds=[];
 let correctAnswers=0;
 let wrongAnswers=0;
 let globalStreak=0;
-
 let soundEnabled=true;
 let locked=false;
 let completed=false;
 let timer=null;
+let celebrationFinal=false;
+let activeStage=0;
+let masteredTenses=[];
 
 const $=id=>document.getElementById(id);
-
 const promptEl=$("prompt");
 const translationEl=$("translation");
 const answersEl=$("answers");
@@ -611,10 +526,6 @@ const writeEl=$("write");
 const typedEl=$("typed");
 const feedbackEl=$("feedback");
 const slotsEl=$("slots");
-
-/* ============================================
-   6. UTILIDADES
-============================================ */
 
 function shuffle(array){
   const result=[...array];
@@ -626,15 +537,548 @@ function shuffle(array){
 }
 
 function normalize(value){
-  return value
-    .toLowerCase()
-    .trim()
+  return String(value)
+    .toLowerCase().trim()
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g,"")
     .replace(/[’']/g,"'")
     .replace(/[.,!?;:]/g,"")
     .replace(/\s+/g," ");
 }
+
+function getItem(q){
+  return q ? bankById.get(q.id) : null;
+}
+
+function getStageItems(stage){
+  return bank.filter(item=>item.stage===stage);
+}
+
+function saveProgress(){
+  const data={
+    version:4,
+    pending,
+    queue,
+    current:current?{...current}:null,
+    previousId,
+    forcedId,
+    masteredIds,
+    correctAnswers,
+    wrongAnswers,
+    globalStreak,
+    activeStage,
+    masteredTenses,
+    soundEnabled,
+    completed
+  };
+
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
+    $("saveStatus").textContent="✓ Progreso guardado automáticamente";
+  }catch(error){
+    $("saveStatus").textContent="No se pudo guardar: revisa el almacenamiento del navegador";
+    console.error("Error guardando progreso:",error);
+  }
+}
+
+function loadProgress(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return false;
+
+    const data=JSON.parse(raw);
+    if(!data || data.version!==4)return false;
+
+    const validIds=new Set(bank.map(item=>item.id));
+
+    masteredIds=Array.isArray(data.masteredIds)
+      ?data.masteredIds.filter(id=>validIds.has(id)):[];
+    pending=Array.isArray(data.pending)
+      ?data.pending.filter(id=>validIds.has(id) && !masteredIds.includes(id)):[];
+    queue=Array.isArray(data.queue)
+      ?data.queue.filter(q=>q && validIds.has(q.id) && !masteredIds.includes(q.id))
+      :[];
+
+    current=data.current && validIds.has(data.current.id) &&
+      !masteredIds.includes(data.current.id)
+      ?{id:data.current.id,slot:data.current.slot,streak:data.current.streak}:null;
+
+    previousId=validIds.has(data.previousId)?data.previousId:null;
+    forcedId=validIds.has(data.forcedId)?data.forcedId:null;
+
+    correctAnswers=Math.max(0,Number(data.correctAnswers)||0);
+    wrongAnswers=Math.max(0,Number(data.wrongAnswers)||0);
+    globalStreak=Math.max(0,Number(data.globalStreak)||0);
+    activeStage=Math.min(stages.length-1,Math.max(0,Number(data.activeStage)||0));
+    masteredTenses=Array.isArray(data.masteredTenses)?data.masteredTenses:[];
+    soundEnabled=data.soundEnabled!==false;
+    completed=data.completed===true;
+
+    // Si se interrumpió una pregunta, se recupera su posición.
+    if(!current && queue.length){
+      current=queue[0];
+    }
+    return true;
+  }catch(error){
+    console.error("No se pudo recuperar el progreso:",error);
+    return false;
+  }
+}
+
+function clearSavedProgress(){
+  try{localStorage.removeItem(STORAGE_KEY)}catch(error){}
+}
+
+/* =========================================================
+   7. INICIALIZACIÓN Y RECUPERACIÓN
+========================================================= */
+
+function initializeFresh(){
+  pending=shuffle(bank.filter(item=>item.stage===0).map(item=>item.id));
+  queue=[];
+  current=null;
+  previousId=null;
+  forcedId=null;
+  masteredIds=[];
+  correctAnswers=0;
+  wrongAnswers=0;
+  globalStreak=0;
+  activeStage=0;
+  masteredTenses=[];
+  completed=false;
+  locked=false;
+
+  fillSlots();
+  selectNext();
+  updateAll();
+  render();
+  saveProgress();
+}
+
+function restoreOrStart(){
+  const restored=loadProgress();
+
+  if(!restored){
+    initializeFresh();
+    return;
+  }
+
+  // Corrige estados incompletos sin reiniciar el avance.
+  if(masteredIds.length>=TOTAL){
+    completed=true;
+    current=null;
+  }else{
+    if(queue.length===0 && pending.length===0){
+      advanceStageIfNeeded();
+    }
+    if(!current)selectNext();
+  }
+
+  $("sound").textContent=soundEnabled?"🔊 Sonido ON":"🔇 Sonido OFF";
+  updateAll();
+
+  if(completed){
+    finishGame();
+  }else{
+    render();
+  }
+
+  saveProgress();
+}
+
+function fillSlots(){
+  for(let slot=1;slot<=3;slot++){
+    if(queue.some(q=>q.slot===slot))continue;
+    if(pending.length===0)break;
+    queue.push({id:pending.shift(),slot,streak:0});
+  }
+}
+
+/* =========================================================
+   8. PROGRESIÓN ENTRE BLOQUES
+========================================================= */
+
+function advanceStageIfNeeded(){
+  if(queue.length>0)return;
+
+  const remainingInStage=bank.some(item=>
+    item.stage===activeStage &&
+    !masteredIds.includes(item.id) &&
+    pending.includes(item.id)
+  );
+
+  if(remainingInStage)return;
+
+  if(activeStage<stages.length-1){
+    activeStage++;
+    pending=shuffle(
+      bank.filter(item=>item.stage===activeStage &&
+        !masteredIds.includes(item.id)).map(item=>item.id)
+    );
+    fillSlots();
+  }
+}
+
+function checkStageCompletion(){
+  const unfinished=bank.some(item=>
+    item.stage===activeStage && !masteredIds.includes(item.id)
+  );
+
+  if(!unfinished && activeStage<stages.length-1){
+    const next=activeStage+1;
+    activeStage=next;
+    pending=shuffle(
+      bank.filter(item=>item.stage===activeStage &&
+        !masteredIds.includes(item.id)).map(item=>item.id)
+    );
+    fillSlots();
+    showCelebration(
+      "¡BLOQUE SUPERADO!",
+      "Has terminado "+stages[activeStage-1].name+
+      ". Ahora comienza: "+stages[activeStage].name+".",
+      "🚀",
+      false
+    );
+  }
+}
+
+/* =========================================================
+   9. SELECCIÓN
+========================================================= */
+
+function selectNext(){
+  if(forcedId){
+    const forced=queue.find(q=>q.id===forcedId);
+    forcedId=null;
+    if(forced){
+      current=forced;
+      return;
+    }
+  }
+
+  if(queue.length===0){
+    current=null;
+    return;
+  }
+
+  let candidates=queue.filter(q=>q.id!==previousId);
+  if(candidates.length===0)candidates=queue;
+
+  current=candidates[Math.floor(Math.random()*candidates.length)];
+}
+
+/* =========================================================
+   10. INTERFAZ DE PREGUNTA
+========================================================= */
+
+function render(){
+  if(!current){
+    finishGame();
+    return;
+  }
+
+  locked=false;
+  const item=getItem(current);
+  if(!item){
+    finishGame();
+    return;
+  }
+
+  const isWriting=current.streak===2;
+
+  promptEl.textContent=item.prompt;
+  translationEl.textContent=item.translation;
+  $("counter").textContent=current.streak+" / 3";
+
+  $("mode").textContent=isWriting
+    ?"ESCRIBE · TERCER INTENTO"
+    :"ALTERNATIVAS · INTENTO "+(current.streak+1);
+
+  $("instruction").textContent=isWriting
+    ?"Escribe la conjugación completa en italiano, sin pistas."
+    :"Traduce la frase al italiano y selecciona la respuesta.";
+
+  answersEl.replaceChildren();
+  answersEl.style.display=isWriting?"none":"grid";
+  writeEl.style.display=isWriting?"grid":"none";
+
+  if(isWriting){
+    typedEl.value="";
+    typedEl.disabled=false;
+    $("check").disabled=false;
+  }else{
+    renderOptions(item);
+  }
+
+  showFeedback(
+    "neutral",
+    "RACHA "+current.streak+"/3",
+    isWriting
+      ?"Recuerda la forma verbal y escribe la frase completa."
+      :"Necesitas tres respuestas correctas consecutivas para dominar esta pregunta."
+  );
+
+  updateSlots();
+  updateStats();
+  saveProgress();
+}
+
+function renderOptions(item){
+  const distractors=shuffle(
+    bank.filter(other=>
+      other.id!==item.id &&
+      normalize(other.answer)!==normalize(item.answer)
+    )
+  ).slice(0,3);
+
+  const options=shuffle([
+    {text:item.answer,correct:true},
+    ...distractors.map(other=>({text:other.answer,correct:false}))
+  ]);
+
+  options.forEach(option=>{
+    const button=document.createElement("button");
+    button.type="button";
+    button.className="answer";
+    button.textContent=option.text;
+    button.addEventListener("click",()=>checkAnswer(option.correct,button));
+    answersEl.appendChild(button);
+  });
+}
+
+/* =========================================================
+   11. RESPUESTAS
+========================================================= */
+
+function checkAnswer(isCorrect,button=null){
+  if(locked || !current || completed)return;
+  locked=true;
+
+  if(button){
+    const buttons=[...answersEl.querySelectorAll("button")];
+    buttons.forEach(b=>b.disabled=true);
+
+    if(isCorrect){
+      button.classList.add("correct");
+    }else{
+      button.classList.add("wrong");
+      const correctButton=buttons.find(b=>
+        normalize(b.textContent)===normalize(getItem(current).answer)
+      );
+      if(correctButton)correctButton.classList.add("correct");
+    }
+  }
+
+  if(isCorrect)handleCorrect();
+  else handleWrong();
+}
+
+function checkTyped(){
+  if(locked || !current)return;
+  const value=typedEl.value.trim();
+  if(!value)return;
+
+  checkAnswer(normalize(value)===normalize(getItem(current).answer));
+}
+
+/* =========================================================
+   12. RESPUESTA CORRECTA
+========================================================= */
+
+function handleCorrect(){
+  correctAnswers++;
+  globalStreak++;
+  current.streak++;
+
+  const answer=getItem(current).answer;
+  speak(answer);
+
+  if(current.streak>=3){
+    showFeedback("good","¡DOMINADA! ✓",answer+" · Tres aciertos consecutivos.");
+    updateAll();
+    saveProgress();
+
+    timer=setTimeout(()=>{
+      timer=null;
+      masterQuestion();
+    },700);
+    return;
+  }
+
+  showFeedback("good","¡CORRECTO! ✓","Racha "+current.streak+"/3 · "+answer);
+  previousId=current.id;
+
+  updateAll();
+  saveProgress();
+
+  timer=setTimeout(()=>{
+    timer=null;
+    selectNext();
+    updateAll();
+    render();
+  },600);
+}
+
+/* =========================================================
+   13. RESPUESTA INCORRECTA
+========================================================= */
+
+function handleWrong(){
+  wrongAnswers++;
+  globalStreak=0;
+
+  const failed=current;
+  failed.streak=0;
+  forcedId=failed.id;
+
+  showFeedback(
+    "bad",
+    "VOLVEMOS A EMPEZAR",
+    "Respuesta correcta: "+getItem(failed).answer+
+    ". La racha de esta pregunta vuelve a cero."
+  );
+
+  updateAll();
+  saveProgress();
+
+  timer=setTimeout(()=>{
+    timer=null;
+    selectNext();
+    updateAll();
+    render();
+  },1000);
+}
+
+/* =========================================================
+   14. DOMINAR UNA PREGUNTA
+========================================================= */
+
+function masterQuestion(){
+  if(!current)return;
+
+  const finished=current;
+  const item=getItem(finished);
+
+  queue=queue.filter(q=>q.id!==finished.id);
+
+  if(!masteredIds.includes(finished.id)){
+    masteredIds.push(finished.id);
+  }
+
+  if(item && !masteredTenses.includes(item.tenseKey)){
+    const tenseCount=bank.filter(q=>
+      q.tenseKey===item.tenseKey && masteredIds.includes(q.id)
+    ).length;
+
+    if(tenseCount===6)masteredTenses.push(item.tenseKey);
+  }
+
+  current=null;
+  previousId=finished.id;
+
+  fillSlots();
+  checkStageCompletion();
+
+  if(queue.length===0 && pending.length===0){
+    if(activeStage<stages.length-1){
+      advanceStageIfNeeded();
+    }
+  }
+
+  updateAll();
+  saveProgress();
+
+  if(masteredIds.length>=TOTAL){
+    finishGame();
+    return;
+  }
+
+  if(queue.length===0){
+    advanceStageIfNeeded();
+  }
+
+  selectNext();
+  updateAll();
+  render();
+
+  if(masteredIds.length>0 && masteredIds.length%10===0){
+    showCelebration(
+      "¡BRAVISSIMO!",
+      "Has dominado "+masteredIds.length+" de "+TOTAL+
+      " preguntas. Tu progreso está guardado.",
+      "🏆",
+      false
+    );
+  }
+}
+
+/* =========================================================
+   15. ESTADÍSTICAS EN TIEMPO REAL
+========================================================= */
+
+function updateStats(){
+  const mastered=masteredIds.length;
+  const remaining=TOTAL-mastered;
+  const attempts=correctAnswers+wrongAnswers;
+  const accuracy=attempts===0?100:Math.round(correctAnswers/attempts*100);
+  const percent=Math.round(mastered/TOTAL*100);
+
+  $("mastered").textContent=mastered;
+  $("total").textContent=TOTAL;
+  $("remaining").textContent=remaining;
+  $("accuracy").textContent=accuracy+"%";
+  $("streak").textContent=globalStreak;
+  $("coverage").textContent=masteredTenses.length+"/"+tenses.length;
+  $("percent").textContent=percent+"%";
+  $("bar").style.width=percent+"%";
+
+  $("stageName").textContent=stages[activeStage].name;
+  $("stageDescription").textContent=stages[activeStage].description;
+
+  const stageTotal=bank.filter(item=>item.stage===activeStage).length;
+  const stageDone=bank.filter(item=>
+    item.stage===activeStage && masteredIds.includes(item.id)
+  ).length;
+
+  $("stageCount").textContent=stageDone+" / "+stageTotal+" preguntas";
+}
+
+function updateSlots(){
+  slotsEl.replaceChildren();
+
+  for(let slot=1;slot<=3;slot++){
+    const q=queue.find(item=>item.slot===slot);
+    const div=document.createElement("div");
+    div.className="slot";
+
+    if(current && current.slot===slot)div.classList.add("active");
+
+    const title=document.createElement("b");
+    title.textContent="PREGUNTA "+slot;
+
+    const detail=document.createElement("small");
+    detail.textContent=q?q.streak+"/3 aciertos":"Completada";
+
+    const mini=document.createElement("div");
+    mini.className="mini";
+
+    const fill=document.createElement("div");
+    fill.style.width=q?(q.streak/3*100)+"%":"100%";
+
+    mini.appendChild(fill);
+    div.append(title,detail,mini);
+    slotsEl.appendChild(div);
+  }
+}
+
+function updateAll(){
+  updateStats();
+  updateSlots();
+}
+
+/* =========================================================
+   16. SONIDO
+========================================================= */
 
 function speak(text){
   if(!soundEnabled || !("speechSynthesis" in window))return;
@@ -644,6 +1088,10 @@ function speak(text){
   utterance.rate=0.85;
   window.speechSynthesis.speak(utterance);
 }
+
+/* =========================================================
+   17. MENSAJES
+========================================================= */
 
 function showFeedback(type,title,message){
   feedbackEl.className="feedback "+type;
@@ -658,438 +1106,35 @@ function showFeedback(type,title,message){
   feedbackEl.append(strong,span);
 }
 
-function createQuestion(item,slot){
-  return {item,slot,streak:0};
-}
-
-/* ============================================
-   7. INICIAR
-   Siempre tres preguntas activas.
-============================================ */
-
-function initialize(){
-  if(timer!==null){
-    clearTimeout(timer);
-    timer=null;
-  }
-
-  pending=shuffle(bank);
-  queue=[];
-
-  mastered=0;
-  correctAnswers=0;
-  wrongAnswers=0;
-  globalStreak=0;
-
-  current=null;
-  previous=null;
-  forced=null;
-  locked=false;
-  completed=false;
-
-  $("celebration").classList.remove("show");
-  $("continue").textContent="VOLVER A EMPEZAR";
-
-  for(let slot=1;slot<=3;slot++){
-    queue.push(createQuestion(pending.shift(),slot));
-  }
-
-  selectNext();
-  updateStats();
-  updateSlots();
-  render();
-}
-
-/* ============================================
-   8. SELECCIÓN DE PREGUNTA
-============================================ */
-
-function selectNext(){
-  if(forced){
-    current=forced;
-    forced=null;
-    return;
-  }
-
-  let candidates=queue.filter(q=>q!==previous);
-
-  if(candidates.length===0){
-    candidates=queue;
-  }
-
-  if(candidates.length===0){
-    current=null;
-    return;
-  }
-
-  current=candidates[
-    Math.floor(Math.random()*candidates.length)
-  ];
-}
-
-/* ============================================
-   9. PRESENTACIÓN
-   0/3 = alternativas
-   1/3 = alternativas
-   2/3 = escribir
-============================================ */
-
-function render(){
-  if(!current){
-    finishGame();
-    return;
-  }
-
-  locked=false;
-
-  const q=current.item;
-  const isWriting=current.streak===2;
-
-  promptEl.textContent=q.prompt;
-  translationEl.textContent=q.translation;
-
-  $("counter").textContent=current.streak+" / 3";
-
-  $("mode").textContent=isWriting
-    ?"ESCRIBE · TERCER INTENTO"
-    :"ALTERNATIVAS · INTENTO "+(current.streak+1);
-
-  $("instruction").textContent=isWriting
-    ?"Escribe la respuesta italiana sin alternativas"
-    :"Selecciona la respuesta correcta en italiano";
-
-  answersEl.replaceChildren();
-  answersEl.style.display=isWriting?"none":"grid";
-  writeEl.style.display=isWriting?"grid":"none";
-
-  if(isWriting){
-    typedEl.value="";
-    typedEl.disabled=false;
-    $("check").disabled=false;
-  }else{
-    renderOptions(q);
-  }
-
-  showFeedback(
-    "neutral",
-    "RACHA "+current.streak+"/3",
-    isWriting
-      ?"Tercer intento: escribe la respuesta de memoria."
-      :"Responde correctamente para avanzar en la racha."
-  );
-}
-
-/* ============================================
-   10. ALTERNATIVAS
-============================================ */
-
-function renderOptions(q){
-  const distractors=shuffle(
-    bank.filter(item=>
-      item.id!==q.id &&
-      normalize(item.answer)!==normalize(q.answer)
-    )
-  ).slice(0,3);
-
-  const options=shuffle([
-    {text:q.answer,correct:true},
-    ...distractors.map(item=>({
-      text:item.answer,
-      correct:false
-    }))
-  ]);
-
-  options.forEach(option=>{
-    const button=document.createElement("button");
-    button.type="button";
-    button.className="answer";
-    button.textContent=option.text;
-
-    button.addEventListener("click",()=>{
-      checkAnswer(option.correct,button);
-    });
-
-    answersEl.appendChild(button);
-  });
-}
-
-/* ============================================
-   11. COMPROBAR
-============================================ */
-
-function checkAnswer(isCorrect,button=null){
-  if(locked || !current)return;
-
-  locked=true;
-
-  if(button){
-    const buttons=[...answersEl.querySelectorAll("button")];
-    buttons.forEach(b=>b.disabled=true);
-
-    if(isCorrect){
-      button.classList.add("correct");
-    }else{
-      button.classList.add("wrong");
-
-      const correctButton=buttons.find(b=>
-        normalize(b.textContent)===normalize(current.item.answer)
-      );
-
-      if(correctButton){
-        correctButton.classList.add("correct");
-      }
-    }
-  }
-
-  if(isCorrect){
-    handleCorrect();
-  }else{
-    handleWrong();
-  }
-}
-
-function checkTyped(){
-  if(locked || !current)return;
-
-  const value=typedEl.value.trim();
-  if(!value)return;
-
-  const correct=
-    normalize(value)===normalize(current.item.answer);
-
-  checkAnswer(correct);
-}
-
-/* ============================================
-   12. ACIERTO
-============================================ */
-
-function handleCorrect(){
-  correctAnswers++;
-  globalStreak++;
-  current.streak++;
-
-  const answer=current.item.answer;
-  speak(answer);
-
-  if(current.streak===3){
-    showFeedback(
-      "good",
-      "¡DOMINADA! ✓",
-      answer+" · Tres aciertos consecutivos."
-    );
-
-    updateStats();
-    updateSlots();
-
-    timer=setTimeout(()=>{
-      timer=null;
-      masterQuestion();
-    },750);
-
-    return;
-  }
-
-  showFeedback(
-    "good",
-    "¡CORRECTO! ✓",
-    "Racha "+current.streak+"/3 · "+answer
-  );
-
-  previous=current;
-
-  updateStats();
-  updateSlots();
-
-  timer=setTimeout(()=>{
-    timer=null;
-    selectNext();
-    updateStats();
-    updateSlots();
-    render();
-  },650);
-}
-
-/* ============================================
-   13. ERROR
-   Reinicia solamente la racha de esa pregunta.
-   Repite inmediatamente la misma pregunta.
-============================================ */
-
-function handleWrong(){
-  wrongAnswers++;
-  globalStreak=0;
-
-  const failed=current;
-  failed.streak=0;
-
-  forced=failed;
-
-  showFeedback(
-    "bad",
-    "VOLVEMOS A EMPEZAR",
-    "Respuesta correcta: "+failed.item.answer+
-    ". Tu racha vuelve a cero. Repite esta pregunta."
-  );
-
-  updateStats();
-  updateSlots();
-
-  timer=setTimeout(()=>{
-    timer=null;
-    selectNext();
-    updateStats();
-    updateSlots();
-    render();
-  },1100);
-}
-
-/* ============================================
-   14. DOMINAR Y REEMPLAZAR
-   Se elimina solo la pregunta completada.
-   Entra otra en el mismo espacio.
-   El grupo siempre conserva tres preguntas.
-============================================ */
-
-function masterQuestion(){
-  if(!current)return;
-
-  const finished=current;
-
-  queue=queue.filter(q=>q!==finished);
-  mastered++;
-
-  if(pending.length>0){
-    const newItem=pending.shift();
-
-    queue.push(
-      createQuestion(newItem,finished.slot)
-    );
-  }
-
-  previous=finished;
-  current=null;
-
-  updateStats();
-  updateSlots();
-
-  if(queue.length===0){
-    finishGame();
-    return;
-  }
-
-  selectNext();
-  render();
-
-  if(mastered>0 && mastered%10===0){
-    showCelebration(
-      "¡BRAVISSIMO!",
-      "Has dominado "+mastered+" preguntas. ¡Continúa!",
-      "🏆",
-      false
-    );
-  }
-}
-
-/* ============================================
-   15. ESTADÍSTICAS
-============================================ */
-
-function updateStats(){
-  $("mastered").textContent=mastered;
-  $("total").textContent=TOTAL;
-  $("streak").textContent=globalStreak;
-
-  const attempts=correctAnswers+wrongAnswers;
-
-  const accuracy=attempts===0
-    ?100
-    :Math.round(correctAnswers/attempts*100);
-
-  $("accuracy").textContent=accuracy+"%";
-
-  const percent=Math.round(mastered/TOTAL*100);
-
-  $("percent").textContent=percent+"%";
-  $("bar").style.width=percent+"%";
-}
-
-/* ============================================
-   16. INDICADORES DE LAS TRES PREGUNTAS
-============================================ */
-
-function updateSlots(){
-  slotsEl.replaceChildren();
-
-  for(let slot=1;slot<=3;slot++){
-    const q=queue.find(item=>item.slot===slot);
-
-    const div=document.createElement("div");
-    div.className="slot";
-
-    if(current && current.slot===slot){
-      div.classList.add("active");
-    }
-
-    const title=document.createElement("b");
-    title.textContent="PREGUNTA "+slot;
-
-    const detail=document.createElement("small");
-    detail.textContent=q
-      ?q.streak+"/3 aciertos"
-      :"Completada";
-
-    const mini=document.createElement("div");
-    mini.className="mini";
-
-    const fill=document.createElement("div");
-    fill.style.width=q
-      ?(q.streak/3*100)+"%"
-      :"100%";
-
-    mini.appendChild(fill);
-    div.append(title,detail,mini);
-    slotsEl.appendChild(div);
-  }
-}
-
-/* ============================================
-   17. CELEBRACIÓN Y FINAL
-============================================ */
-
-function showCelebration(title,message,emoji,final=true){
+function showCelebration(title,message,emoji,final=false){
+  celebrationFinal=final;
   $("celebrationTitle").textContent=title;
   $("celebrationText").textContent=message;
   $("emoji").textContent=emoji;
-
-  $("continue").textContent=final
-    ?"VOLVER A EMPEZAR"
-    :"CONTINUAR";
-
+  $("continue").textContent=final?"VOLVER A EMPEZAR":"CONTINUAR";
   $("celebration").classList.add("show");
 }
 
 function finishGame(){
-  if(completed)return;
+  if(completed && $("celebration").classList.contains("show"))return;
 
   completed=true;
   current=null;
-
-  updateStats();
-  updateSlots();
+  updateAll();
+  saveProgress();
 
   showCelebration(
-    "¡BANCO COMPLETADO!",
+    "¡CURSO COMPLETADO!",
     "Has dominado las "+TOTAL+
-    " preguntas de AVERE en presente. ¡Complimenti!",
+    " combinaciones de AVERE: 14 tiempos y modos verbales, seis personas gramaticales y 84 complementos diferentes.",
     "🏆",
     true
   );
 }
 
-/* ============================================
-   18. EVENTOS
-============================================ */
+/* =========================================================
+   18. EVENTOS Y SEGURIDAD DEL PROGRESO
+========================================================= */
 
 $("check").addEventListener("click",checkTyped);
 
@@ -1102,45 +1147,70 @@ typedEl.addEventListener("keydown",event=>{
 
 typedEl.addEventListener("focus",()=>{
   setTimeout(()=>{
-    typedEl.scrollIntoView({
-      behavior:"smooth",
-      block:"center"
-    });
+    typedEl.scrollIntoView({behavior:"smooth",block:"center"});
   },250);
 });
 
 $("restart").addEventListener("click",()=>{
-  if(confirm("¿Quieres reiniciar todo el entrenamiento?")){
-    initialize();
-  }
-});
+  const confirmed=confirm(
+    "Esto borrará permanentemente tu progreso guardado en este dispositivo. ¿Deseas continuar?"
+  );
+  if(!confirmed)return;
 
-$("sound").addEventListener("click",()=>{
-  soundEnabled=!soundEnabled;
-
-  $("sound").textContent=soundEnabled
-    ?"🔊 Sonido ON"
-    :"🔇 Sonido OFF";
-
-  if(!soundEnabled && "speechSynthesis" in window){
-    window.speechSynthesis.cancel();
-  }
-});
-
-$("continue").addEventListener("click",()=>{
   if(timer!==null){
     clearTimeout(timer);
     timer=null;
   }
-  initialize();
+  if("speechSynthesis" in window)window.speechSynthesis.cancel();
+
+  clearSavedProgress();
+  $("celebration").classList.remove("show");
+  initializeFresh();
 });
 
-/* ============================================
-   19. EJECUCIÓN
-============================================ */
+$("sound").addEventListener("click",()=>{
+  soundEnabled=!soundEnabled;
+  $("sound").textContent=soundEnabled?"🔊 Sonido ON":"🔇 Sonido OFF";
 
-initialize();
+  if(!soundEnabled && "speechSynthesis" in window){
+    window.speechSynthesis.cancel();
+  }
+  saveProgress();
+});
 
+$("continue").addEventListener("click",()=>{
+  $("celebration").classList.remove("show");
+
+  if(celebrationFinal){
+    const confirmed=confirm("¿Quieres empezar un curso nuevo? El progreso actual se borrará.");
+    if(confirmed){
+      if(timer!==null)clearTimeout(timer);
+      timer=null;
+      clearSavedProgress();
+      initializeFresh();
+    }
+    return;
+  }
+
+  saveProgress();
+  if(!current && queue.length){
+    selectNext();
+    render();
+  }
+});
+
+/* Guardar también cuando la página pasa a segundo plano. */
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="hidden")saveProgress();
+});
+window.addEventListener("pagehide",saveProgress);
+window.addEventListener("beforeunload",saveProgress);
+
+/* =========================================================
+   19. ARRANQUE
+========================================================= */
+
+restoreOrStart();
 </script>
 </body>
 </html>
