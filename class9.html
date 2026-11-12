@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080d18">
+<title>ITALIANO MASTER — Vocabolario e Frasi</title>
+<style>
+:root{
+  --bg:#080d18;--panel:#111c2e;--panel2:#1a2b43;
+  --border:#30445f;--text:#f3f6ff;--muted:#91a3bd;
+  --green:#35e6a0;--red:#ff627b;--gold:#ffd166;--blue:#62aaff;
+}
+*{box-sizing:border-box}
+html{min-height:100%;scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;min-height:100dvh;
+  background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,sans-serif
+}
+button,input{font:inherit}
+button{touch-action:manipulation;cursor:pointer}
+.app{
+  max-width:680px;width:100%;margin:auto;
+  padding:max(12px,env(safe-area-inset-top)) 13px max(40px,env(safe-area-inset-bottom))
+}
+header{text-align:center;padding:12px 0 15px}
+.logo{font-size:10px;letter-spacing:4px;color:var(--green);font-weight:900}
+h1{font-size:28px;margin:8px 0}
+.subtitle{font-size:12px;color:var(--muted)}
+.stats{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;margin:13px 0
+}
+.stat{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:13px;padding:10px 3px;text-align:center;min-width:0
+}
+.stat strong{display:block;font-size:21px;font-variant-numeric:tabular-nums}
+.stat span{font-size:9px;color:var(--muted)}
+.progress-info{
+  display:flex;justify-content:space-between;gap:8px;
+  color:var(--muted);font-size:11px;margin-bottom:7px
+}
+.progress{height:9px;background:#26364d;border-radius:20px;overflow:hidden}
+.bar{
+  height:100%;width:0;
+  background:linear-gradient(90deg,var(--green),var(--blue));
+  transition:width .3s
+}
+.stage{
+  margin-top:15px;padding:13px 14px;background:var(--panel);
+  border:1px solid var(--border);border-radius:13px
+}
+.stage-top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.stage-name{font-weight:900;font-size:12px;color:var(--green)}
+.stage-count{font-size:10px;color:var(--muted)}
+.stage-description{font-size:11px;color:var(--muted);line-height:1.5;margin-top:6px}
+.slots{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;margin:15px 0
+}
+.slot{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:12px;padding:11px 4px;text-align:center;min-width:0
+}
+.slot.active{border-color:var(--green)}
+.slot b{font-size:11px}
+.slot small{display:block;color:var(--muted);font-size:10px;margin-top:5px}
+.mini{height:4px;background:#29384f;border-radius:10px;margin-top:8px;overflow:hidden}
+.mini div{height:100%;background:var(--green);transition:width .2s}
+.question{
+  background:linear-gradient(145deg,#182740,#101a2a);
+  border:1px solid var(--border);border-radius:22px;padding:22px 16px
+}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mode{color:var(--green);font-size:10px;letter-spacing:1px;font-weight:900}
+.counter{font-size:11px;color:var(--muted)}
+.prompt{
+  font-size:clamp(22px,5.8vw,32px);font-weight:850;text-align:center;
+  line-height:1.25;overflow-wrap:anywhere;margin:27px 0 9px
+}
+.translation{text-align:center;color:var(--muted);font-size:13px;min-height:20px}
+.instruction{text-align:center;font-size:11px;color:var(--muted);margin:22px 0 13px}
+.answers{display:grid;grid-template-columns:1fr;gap:9px}
+.answer{
+  width:100%;min-height:53px;background:var(--panel2);
+  border:1px solid var(--border);border-radius:13px;padding:12px;
+  color:var(--text);font-size:16px;font-weight:750;text-align:left;
+  overflow-wrap:anywhere
+}
+.answer.correct{background:#104735;border-color:var(--green)}
+.answer.wrong{background:#542433;border-color:var(--red)}
+.answer:disabled{opacity:1}
+.write{display:none;grid-template-columns:minmax(0,1fr);gap:10px}
+.write input{
+  width:100%;min-width:0;height:57px;padding:14px;
+  background:#080f1c;border:2px solid var(--border);
+  border-radius:13px;color:white;font-size:19px;outline:none
+}
+.write input:focus{border-color:var(--green)}
+.check{
+  min-height:54px;border:0;border-radius:13px;
+  background:var(--green);color:#062518;font-weight:950
+}
+.feedback{
+  min-height:65px;margin-top:14px;padding:12px;border-radius:12px;
+  text-align:center;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:5px;
+  font-size:12px;line-height:1.5
+}
+.feedback strong{font-size:17px}
+.neutral{background:#1a2940;color:#d0ddef}
+.good{background:#103d30;color:#91ffce}
+.bad{background:#49222f;color:#ffadbc}
+.controls{display:flex;justify-content:space-between;gap:9px;margin-top:15px}
+.secondary{
+  min-height:43px;padding:9px 12px;background:var(--panel);
+  color:var(--muted);border:1px solid var(--border);
+  border-radius:10px;font-size:11px
+}
+.note{text-align:center;color:var(--muted);font-size:10px;line-height:1.7;margin-top:15px}
+.save-status{text-align:center;color:var(--muted);font-size:10px;margin-top:8px}
+.celebration{
+  display:none;position:fixed;inset:0;z-index:20;background:#050a14ed;
+  align-items:center;justify-content:center;padding:20px;overflow-y:auto
+}
+.celebration.show{display:flex}
+.celebration-box{
+  max-width:390px;width:100%;padding:27px 20px;
+  border:1px solid var(--gold);border-radius:23px;
+  background:#17253c;text-align:center
+}
+.emoji{font-size:60px}
+.celebration-box h2{color:var(--gold);font-size:27px}
+.celebration-box p{line-height:1.7;color:#d7e3f4;font-size:13px}
+.celebration-box button{
+  width:100%;min-height:53px;background:var(--gold);
+  border:0;border-radius:12px;font-weight:950
+}
+@media(max-width:380px){
+  .app{padding-left:10px;padding-right:10px}
+  .question{padding:18px 12px}
+  .prompt{font-size:23px;margin-top:22px}
+  .answer{font-size:14px}
+  .stat strong{font-size:19px}
+}
+@media(max-height:650px){
+  header{padding:4px 0}
+  .stats{margin:7px 0}
+  .question{padding-top:13px;padding-bottom:13px}
+  .prompt{margin-top:15px}
+  .instruction{margin-top:13px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="logo">ITALIANO PROGRESSIVO</div>
+  <h1>ITALIAN MASTER</h1>
+  <div class="subtitle">De palabras clave a locuciones y oraciones complejas</div>
+</header>
+
+<section class="stats">
+  <div class="stat"><strong id="mastered">0</strong><span>DOMINADAS</span></div>
+  <div class="stat"><strong id="total">0</strong><span>TOTAL DEL CURSO</span></div>
+  <div class="stat"><strong id="remaining">0</strong><span>PENDIENTES</span></div>
+  <div class="stat"><strong id="accuracy">100%</strong><span>PRECISIÓN</span></div>
+  <div class="stat"><strong id="streak">0</strong><span>RACHA GLOBAL</span></div>
+  <div class="stat"><strong id="coverage">0/5</strong><span>BLOQUES</span></div>
+</section>
+
+<div class="progress-info">
+  <span>DOMINIO GENERAL DEL IDIOMA</span>
+  <b id="percent">0%</b>
+</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+
+<section class="stage">
+  <div class="stage-top">
+    <span class="stage-name" id="stageName">BLOQUE 1</span>
+    <span class="stage-count" id="stageCount">0 / 0</span>
+  </div>
+  <div class="stage-description" id="stageDescription"></div>
+</section>
+
+<div class="slots" id="slots"></div>
+
+<section class="question">
+  <div class="top">
+    <span class="mode" id="mode">ALTERNATIVAS · INTENTO 1</span>
+    <span class="counter" id="counter">0 / 3</span>
+  </div>
+  <div class="prompt" id="prompt"></div>
+  <div class="translation" id="translation"></div>
+  <div class="instruction" id="instruction"></div>
+  <div class="answers" id="answers"></div>
+  <div class="write" id="write">
+    <input id="typed" type="text" placeholder="Scrivi in italiano..."
+      autocomplete="off" autocapitalize="none" spellcheck="false" enterkeyhint="done">
+    <button class="check" id="check">COMPROBAR →</button>
+  </div>
+  <div class="feedback neutral" id="feedback" aria-live="polite">
+    <strong>ANDIAMO!</strong>
+    Tres aciertos consecutivos por ejercicio.
+  </div>
+</section>
+
+<div class="controls">
+  <button class="secondary" id="restart">↻ Borrar progreso</button>
+  <button class="secondary" id="sound">🔊 Sonido ON</button>
+</div>
+<div class="note">
+  Dos intentos con alternativas · Tercer intento escrito.<br>
+  Un error reinicia únicamente la racha de esa pregunta.<br>
+  Tu progreso se guarda automáticamente en este dispositivo.
+</div>
+<div class="save-status" id="saveStatus">Progreso guardado automáticamente</div>
+</div>
+
+<div class="celebration" id="celebration">
+  <div class="celebration-box">
+    <div class="emoji" id="emoji">🏆</div>
+    <h2 id="celebrationTitle">BRAVISSIMO!</h2>
+    <p id="celebrationText"></p>
+    <button id="continue">CONTINUAR</button>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* =========================================================
+   BASE DE DATOS PROGRESIVA: 
+   Estructurada en 5 bloques graduales (84 elementos):
+   - Bloque 1: Palabras esenciales y vocabulario base.
+   - Bloque 2: Falsos amigos y vocabulario de dificultad media.
+   - Bloque 3: Frases cortas y expresiones cotidianas.
+   - Bloque 4: Locuciones y modismos frecuentes.
+   - Bloque 5: Oraciones complejas y estructuras avanzadas.
+========================================================= */
+
+const database = [
+  // --- BLOQUE 1: PALABRAS ESENCIALES (stage: 0) ---
+  {id:"b1_1", stage:0, cat:"Vocabulario", es:"Hola / Adiós", it:"ciao"},
+  {id:"b1_2", stage:0, cat:"Vocabulario", es:"Por favor", it:"per favore"},
+  {id:"b1_3", stage:0, cat:"Vocabulario", es:"Gracias", it:"grazie"},
+  {id:"b1_4", stage:0, cat:"Vocabulario", es:"De nada", it:"prego"},
+  {id:"b1_5", stage:0, cat:"Vocabulario", es:"Buenos días", it:"buongiorno"},
+  {id:"b1_6", stage:0, cat:"Vocabulario", es:"Buenas tardes / noches", it:"buonasera"},
+  {id:"b1_7", stage:0, cat:"Vocabulario", es:"Sí", it:"sì"},
+  {id:"b1_8", stage:0, cat:"Vocabulario", es:"No", it:"no"},
+  {id:"b1_9", stage:0, cat:"Vocabulario", es:"Disculpa / Perdón", it:"scusa"},
+  {id:"b1_10", stage:0, cat:"Vocabulario", es:"Lo siento", it:"mi dispiace"},
+  {id:"b1_11", stage:0, cat:"Vocabulario", es:"Agua", it:"acqua"},
+  {id:"b1_12", stage:0, cat:"Vocabulario", es:"Café", it:"caffè"},
+  {id:"b1_13", stage:0, cat:"Vocabulario", es:"Casa", it:"casa"},
+  {id:"b1_14", stage:0, cat:"Vocabulario", es:"Amigo", it:"amico"},
+  {id:"b1_15", stage:0, cat:"Vocabulario", es:"Trabajo", it:"lavoro"},
+  {id:"b1_16", stage:0, cat:"Vocabulario", es:"Tiempo", it:"tempo"},
+  {id:"b1_17", stage:0, cat:"Vocabulario", es:"Dinero", it:"soldi"},
+  {id:"b1_18", stage:0, cat:"Vocabulario", es:"Comida", it:"cibo"},
+
+  // --- BLOQUE 2: FALSOS AMIGOS Y TÉRMINOS COMPLEJOS (stage: 1) ---
+  {id:"b2_1", stage:1, cat:"Falsos Amigos", es:"En seguida / Inmediatamente (Subito)", it:"subito"},
+  {id:"b2_2", stage:1, cat:"Falsos Amigos", es:"Oficina (Ufficio)", it:"ufficio"},
+  {id:"b2_3", stage:1, cat:"Falsos Amigos", es:"Traducción / Borrador (Brutta copia)", it:"brutta copia"},
+  {id:"b2_4", stage:1, cat:"Falsos Amigos", es:"Pronto / A su debido tiempo (A suo tempo)", it:"a suo tempo"},
+  {id:"b2_5", stage:1, cat:"Falsos Amigos", es:"Burro (Mantequilla)", it:"burro"},
+  {id:"b2_6", stage:1, cat:"Falsos Amigos", es:"Cartera / Billetera (Portafoglio)", it:"portafoglio"},
+  {id:"b2_7", stage:1, cat:"Vocabulario Difícil", es:"Quizás / Tal vez", it:"forse"},
+  {id:"b2_8", stage:1, cat:"Vocabulario Difícil", es:"Sin embargo / No obstante", it:"tuttavia"},
+  {id:"b2_9", stage:1, cat:"Vocabulario Difícil", es:"Además", it:"inoltre"},
+  {id:"b2_10", stage:1, cat:"Vocabulario Difícil", es:"Incluso / Hasta", it:"anche"},
+  {id:"b2_11", stage:1, cat:"Vocabulario Difícil", es:"De todas formas / Igualmente", it:"comunque"},
+  {id:"b2_12", stage:1, cat:"Vocabulario Difícil", es:"Pronto / Dentro de poco", it:"presto"},
+  {id:"b2_13", stage:1, cat:"Vocabulario Difícil", es:"A menudo", it:"spesso"},
+  {id:"b2_14", stage:1, cat:"Vocabulario Difícil", es:"Rara vez", it:"raramente"},
+  {id:"b2_15", stage:1, cat:"Vocabulario Difícil", es:"En cualquier caso", it:"in ogni caso"},
+  {id:"b2_16", stage:1, cat:"Vocabulario Difícil", es:"A propósito", it:"a proposito"},
+  {id:"b2_17", stage:1, cat:"Vocabulario Difícil", es:"Al menos", it:"almeno"},
+  {id:"b2_18", stage:1, cat:"Vocabulario Difícil", es:"Casi", it:"quasi"},
+
+  // --- BLOQUE 3: FRASES CORTAS Y EXPRESIONES (stage: 2) ---
+  {id:"b3_1", stage:2, cat:"Frases Útiles", es:"¿Cómo estás?", it:"come stai?"},
+  {id:"b3_2", stage:2, cat:"Frases Útiles", es:"Estoy muy bien, gracias.", it:"sto molto bene, grazie."},
+  {id:"b3_3", stage:2, cat:"Frases Útiles", es:"¿Qué hora es?", it:"che ore sono?"},
+  {id:"b3_4", stage:2, cat:"Frases Útiles", es:"No entiendo italiano.", it:"non capisco l'italiano."},
+  {id:"b3_5", stage:2, cat:"Frases Útiles", es:"¿Puedes hablar más lento?", it:"puoi parlare più lentamente?"},
+  {id:"b3_6", stage:2, cat:"Frases Útiles", es:"¿Cuánto cuesta esto?", it:"quanto costa questo?"},
+  {id:"b3_7", stage:2, cat:"Frases Útiles", es:"¿Dónde está el baño?", it:"dov'è il bagno?"},
+  {id:"b3_8", stage:2, cat:"Frases Útiles", es:"Tengo mucha hambre.", it:"ho molta fame."},
+  {id:"b3_9", stage:2, cat:"Frases Útiles", es:"Tengo sueño.", it:"ho sonno."},
+  {id:"b3_10", stage:2, cat:"Frases Útiles", es:"Tengo sed.", it:"ho sete."},
+  {id:"b3_11", stage:2, cat:"Frases Útiles", es:"No pasa nada / No te preocupes.", it:"non importa"},
+  {id:"b3_12", stage:2, cat:"Frases Útiles", es:"Nos vemos mañana.", it:"ci vediamo domani"},
+  {id:"b3_13", stage:2, cat:"Frases Útiles", es:"Buen provecho.", it:"buon appetito"},
+  {id:"b3_14", stage:2, cat:"Frases Útiles", es:"¡Qué tengas un buen día!", it:"buona giornata!"},
+  {id:"b3_15", stage:2, cat:"Frases Útiles", es:"Hasta luego.", it:"a presto"},
+  {id:"b3_16", stage:2, cat:"Frases Útiles", es:"Tengo prisa.", it:"ho fretta"},
+  {id:"b3_17", stage:2, cat:"Frases Útiles", es:"Es verdad.", it:"è vero"},
+  {id:"b3_18", stage:2, cat:"Frases Útiles", es:"No lo sé.", it:"non lo so"},
+
+  // --- BLOQUE 4: LOCUCIONES Y MODISMOS (stage: 3) ---
+  {id:"b4_1", stage:3, cat:"Locuciones", es:"En boca cerrada no entran moscas (literal: en boca cerrada no entran moscas)", it:"in bocca al lupo"},
+  {id:"b4_2", stage:3, cat:"Locuciones", es:"¡Que tengas mucha suerte! (Respuesta a in bocca al lupo)", it:"crepi il lupo"},
+  {id:"b4_3", stage:3, cat:"Locuciones", es:"Me importa un bledo / No me importa nada", it:"non me ne frega niente"},
+  {id:"b4_4", stage:3, cat:"Locuciones", es:"Costar un ojo de la cara", it:"costare un occhio della testa"},
+  {id:"b4_5", stage:3, cat:"Locuciones", es:"Perder la paciencia / Irse de los cabales", it:"perdere le staffe"},
+  {id:"b4_6", stage:3, cat:"Locuciones", es:"Tener los pies en la tierra", it:"avere i piedi per terra"},
+  {id:"b4_7", stage:3, cat:"Locuciones", es:"Hacer la vista gorda", it:"chiudere un occhio"},
+  {id:"b4_8", stage:3, cat:"Locuciones", es:"Estar en las nubes", it:"essere tra le nuvole"},
+  {id:"b4_9", stage:3, cat:"Locuciones", es:"Hablar claro sin rodeos", it:"parlare chiaro"},
+  {id:"b4_10", stage:3, cat:"Locuciones", es:"Meter la pata (cometer un error)", it:"fare una gaffe"},
+  {id:"b4_11", stage:3, cat:"Locuciones", es:"Tomar el pelo (burlarse)", it:"prendere in giro"},
+  {id:"b4_12", stage:3, cat:"Locuciones", es:"Estar hecho un lío", it:"essere in un pasticcio"},
+  {id:"b4_13", stage:3, cat:"Locuciones", es:"Poner la mano en el fuego", it:"mettere la mano nel fuoco"},
+  {id:"b4_14", stage:3, cat:"Locuciones", es:"Andar con pies de plomo", it:"procedere con i piedi di piombo"},
+  {id:"b4_15", stage:3, cat:"Locuciones", es:"A duras penas", it:"a stento"},
+  {id:"b4_16", stage:3, cat:"Locuciones", es:"De repente / Súbitamente", it:"all'improvviso"},
+  {id:"b4_17", stage:3, cat:"Locuciones", es:"Paso a paso", it:"passo dopo passo"},
+  {id:"b4_18", stage:3, cat:"Locuciones", es:"A lo largo y a lo ancho", it:"in lungo e in largo"},
+
+  // --- BLOQUE 5: ORACIONES COMPLEJAS Y AVANZADAS (stage: 4) ---
+  {id:"b5_1", stage:4, cat:"Oraciones Complejas", es:"Si tuviera más tiempo libre, viajaría por todo el mundo.", it:"se avessi più tempo libero, viaggierei in tutto il mondo."},
+  {id:"b5_2", stage:4, cat:"Oraciones Complejas", es:"Espero que hayas tenido un excelente viaje de negocios.", it:"spero che tu abbia fatto un eccellente viaggio di lavoro."},
+  {id:"b5_3", stage:4, cat:"Oraciones Complejas", es:"Aunque llueva mañana, saldremos a dar un largo paseo.", it:"anche se piove domani, usciremo a fare una lunga passeggiata."},
+  {id:"b5_4", stage:4, cat:"Oraciones Complejas", es:"No creo que ellos sepan la verdad sobre este asunto.", it:"non credo che loro sappiano la verità su questa questione."},
+  {id:"b5_5", stage:4, cat:"Oraciones Complejas", es:"Habría terminado el proyecto ayer si no hubiera tenido tantos problemas.", it:"avrei finito il progetto ieri se non avessi avuto così tanti problemi."},
+  {id:"b5_6", stage:4, cat:"Oraciones Complejas", es:"Dime con quién andas y te diré quién eres.", it:"dimmi con chi vai e ti dirò chi sei."},
+  {id:"b5_7", stage:4, cat:"Oraciones Complejas", es:"Más vale tarde que nunca.", it:"meglio tardi che mai"},
+  {id:"b5_8", stage:4, cat:"Oraciones Complejas", es:"Quien ríe último ríe mejor.", it:"chi ride ultimo ride meglio"},
+  {id:"b5_9", stage:4, cat:"Oraciones Complejas", es:"No todo lo que brilla es oro.", it:"non è oro tutto ciò che luccica"},
+  {id:"b5_10", stage:4, cat:"Oraciones Complejas", es:"El que busca encuentra.", it:"chi cerca trova"},
+  {id:"b5_11", stage:4, cat:"Oraciones Complejas", es:"Vale más un pájaro en mano que ciento volando.", it:"meglio un uovo oggi che una gallina domani"},
+  {id:"b5_12", stage:4, cat:"Oraciones Complejas", es:"Quien bien te quiere te hará llorar.", it:"chi ama ben punisce ben"}
+];
+
+/* =========================================================
+   BLOQUES DEL CURSO
+========================================================= */
+
+const stages = [
+  {
+    name:"BLOQUE 1 · PALABRAS BÁSICAS",
+    description:"Términos fundamentales y saludos esenciales para romper el hielo en italiano."
+  },
+  {
+    name:"BLOQUE 2 · FALSOS AMIGOS Y NIVEL MEDIO",
+    description:"Palabras que se prestan a confusión y conectores avanzados para ganar fluidez."
+  },
+  {
+    name:"BLOQUE 3 · FRASES COTIDIANAS",
+    description:"Oraciones cortas e indispensables para desenvolverse en situaciones diarias."
+  },
+  {
+    name:"BLOQUE 4 · LOCUCIONES Y MODISMOS",
+    description:"Expresiones idiomáticas y giros populares que usan los nativos."
+  },
+  {
+    name:"BLOQUE 5 · ORACIONES COMPLEJAS Y PROVERBIOS",
+    description:"Estructuras gramaticales avanzadas, subjuntivo y sabiduría popular italiana."
+  }
+];
+
+const TOTAL = database.length;
+const bankById = new Map(database.map(item => [item.id, item]));
+
+/* =========================================================
+   ESTADO Y PERSISTENCIA
+========================================================= */
+
+const STORAGE_KEY = "italian_master_progress_v5";
+
+let pending = [];
+let queue = [];
+let current = null;
+let previousId = null;
+let forcedId = null;
+
+let masteredIds = [];
+let correctAnswers = 0;
+let wrongAnswers = 0;
+let globalStreak = 0;
+let soundEnabled = true;
+let locked = false;
+let completed = false;
+let timer = null;
+let celebrationFinal = false;
+let activeStage = 0;
+let masteredCategories = [];
+
+const $ = id => document.getElementById(id);
+const promptEl = $("prompt");
+const translationEl = $("translation");
+const answersEl = $("answers");
+const writeEl = $("write");
+const typedEl = $("typed");
+const feedbackEl = $("feedback");
+const slotsEl = $("slots");
+
+function shuffle(array){
+  const result = [...array];
+  for(let i = result.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function normalize(value){
+  return String(value)
+    .toLowerCase().trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[’']/g,"'")
+    .replace(/[.,!?;:]/g,"")
+    .replace(/\s+/g," ");
+}
+
+function getItem(q){
+  return q ? bankById.get(q.id) : null;
+}
+
+function saveProgress(){
+  const data = {
+    version: 5,
+    pending,
+    queue,
+    current: current ? {...current} : null,
+    previousId,
+    forcedId,
+    masteredIds,
+    correctAnswers,
+    wrongAnswers,
+    globalStreak,
+    activeStage,
+    masteredCategories,
+    soundEnabled,
+    completed
+  };
+
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    $("saveStatus").textContent = "✓ Progreso guardado automáticamente";
+  }catch(error){
+    $("saveStatus").textContent = "No se pudo guardar: revisa el almacenamiento";
+    console.error("Error guardando:", error);
+  }
+}
+
+function loadProgress(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return false;
+
+    const data = JSON.parse(raw);
+    if(!data || data.version !== 5) return false;
+
+    const validIds = new Set(database.map(item => item.id));
+
+    masteredIds = Array.isArray(data.masteredIds)
+      ? data.masteredIds.filter(id => validIds.has(id)) : [];
+    pending = Array.isArray(data.pending)
+      ? data.pending.filter(id => validIds.has(id) && !masteredIds.includes(id)) : [];
+    queue = Array.isArray(data.queue)
+      ? data.queue.filter(q => q && validIds.has(q.id) && !masteredIds.includes(q.id))
+      : [];
+
+    current = data.current && validIds.has(data.current.id) &&
+      !masteredIds.includes(data.current.id)
+      ? {id: data.current.id, slot: data.current.slot, streak: data.current.streak} : null;
+
+    previousId = validIds.has(data.previousId) ? data.previousId : null;
+    forcedId = validIds.has(data.forcedId) ? data.forcedId : null;
+
+    correctAnswers = Math.max(0, Number(data.correctAnswers) || 0);
+    wrongAnswers = Math.max(0, Number(data.wrongAnswers) || 0);
+    globalStreak = Math.max(0, Number(data.globalStreak) || 0);
+    activeStage = Math.min(stages.length - 1, Math.max(0, Number(data.activeStage) || 0));
+    masteredCategories = Array.isArray(data.masteredCategories) ? data.masteredCategories : [];
+    soundEnabled = data.soundEnabled !== false;
+    completed = data.completed === true;
+
+    if(!current && queue.length){
+      current = queue[0];
+    }
+    return true;
+  }catch(error){
+    console.error("Error recuperando progreso:", error);
+    return false;
+  }
+}
+
+function clearSavedProgress(){
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+}
+
+/* =========================================================
+   INICIALIZACIÓN
+========================================================= */
+
+function initializeFresh(){
+  pending = shuffle(database.filter(item => item.stage === 0).map(item => item.id));
+  queue = [];
+  current = null;
+  previousId = null;
+  forcedId = null;
+  masteredIds = [];
+  correctAnswers = 0;
+  wrongAnswers = 0;
+  globalStreak = 0;
+  activeStage = 0;
+  masteredCategories = [];
+  completed = false;
+  locked = false;
+
+  fillSlots();
+  selectNext();
+  updateAll();
+  render();
+  saveProgress();
+}
+
+function restoreOrStart(){
+  const restored = loadProgress();
+
+  if(!restored){
+    initializeFresh();
+    return;
+  }
+
+  if(masteredIds.length >= TOTAL){
+    completed = true;
+    current = null;
+  }else{
+    if(queue.length === 0 && pending.length === 0){
+      advanceStageIfNeeded();
+    }
+    if(!current) selectNext();
+  }
+
+  $("sound").textContent = soundEnabled ? "🔊 Sonido ON" : "🔇 Sonido OFF";
+  updateAll();
+
+  if(completed){
+    finishGame();
+  }else{
+    render();
+  }
+
+  saveProgress();
+}
+
+function fillSlots(){
+  for(let slot = 1; slot <= 3; slot++){
+    if(queue.some(q => q.slot === slot)) continue;
+    if(pending.length === 0) break;
+    queue.push({id: pending.shift(), slot, streak: 0});
+  }
+}
+
+function advanceStageIfNeeded(){
+  if(queue.length > 0) return;
+
+  const remainingInStage = database.some(item =>
+    item.stage === activeStage &&
+    !masteredIds.includes(item.id) &&
+    pending.includes(item.id)
+  );
+
+  if(remainingInStage) return;
+
+  if(activeStage < stages.length - 1){
+    activeStage++;
+    pending = shuffle(
+      database.filter(item => item.stage === activeStage &&
+        !masteredIds.includes(item.id)).map(item => item.id)
+    );
+    fillSlots();
+  }
+}
+
+function checkStageCompletion(){
+  const unfinished = database.some(item =>
+    item.stage === activeStage && !masteredIds.includes(item.id)
+  );
+
+  if(!unfinished && activeStage < stages.length - 1){
+    activeStage++;
+    pending = shuffle(
+      database.filter(item => item.stage === activeStage &&
+        !masteredIds.includes(item.id)).map(item => item.id)
+    );
+    fillSlots();
+    showCelebration(
+      "¡BLOQUE SUPERADO!",
+      "Has terminado " + stages[activeStage - 1].name +
+      ". Ahora comienza: " + stages[activeStage].name + ".",
+      "🚀",
+      false
+    );
+  }
+}
+
+function selectNext(){
+  if(forcedId){
+    const forced = queue.find(q => q.id === forcedId);
+    forcedId = null;
+    if(forced){
+      current = forced;
+      return;
+    }
+  }
+
+  if(queue.length === 0){
+    current = null;
+    return;
+  }
+
+  let candidates = queue.filter(q => q.id !== previousId);
+  if(candidates.length === 0) candidates = queue;
+
+  current = candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+/* =========================================================
+   INTERFAZ Y RENDERIZADO
+========================================================= */
+
+function render(){
+  if(!current){
+    finishGame();
+    return;
+  }
+
+  locked = false;
+  const item = getItem(current);
+  if(!item){
+    finishGame();
+    return;
+  }
+
+  const isWriting = current.streak === 2;
+
+  promptEl.textContent = item.es;
+  translationEl.textContent = "Categoría: " + item.cat;
+  $("counter").textContent = current.streak + " / 3";
+
+  $("mode").textContent = isWriting
+    ? "ESCRIBE · TERCER INTENTO"
+    : "ALTERNATIVAS · INTENTO " + (current.streak + 1);
+
+  $("instruction").textContent = isWriting
+    ? "Escribe la frase o palabra en italiano exacta."
+    : "Traduce al italiano seleccionando la opción correcta.";
+
+  answersEl.replaceChildren();
+  answersEl.style.display = isWriting ? "none" : "grid";
+  writeEl.style.display = isWriting ? "grid" : "none";
+
+  if(isWriting){
+    typedEl.value = "";
+    typedEl.disabled = false;
+    $("check").disabled = false;
+  }else{
+    renderOptions(item);
+  }
+
+  showFeedback(
+    "neutral",
+    "RACHA " + current.streak + "/3",
+    isWriting
+      ? "Recuerda la estructura y escribe la frase completa en italiano."
+      : "Necesitas tres respuestas correctas consecutivas para dominar este ejercicio."
+  );
+
+  updateSlots();
+  updateStats();
+  saveProgress();
+}
+
+function renderOptions(item){
+  const distractors = shuffle(
+    database.filter(other =>
+      other.id !== item.id &&
+      normalize(other.it) !== normalize(item.it)
+    )
+  ).slice(0, 3);
+
+  const options = shuffle([
+    {text: item.it, correct: true},
+    ...distractors.map(other => ({text: other.it, correct: false}))
+  ]);
+
+  options.forEach(option => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "answer";
+    button.textContent = option.text;
+    button.addEventListener("click", () => checkAnswer(option.correct, button));
+    answersEl.appendChild(button);
+  });
+}
+
+/* =========================================================
+   VERIFICACIÓN Y RESPUESTAS
+========================================================= */
+
+function checkAnswer(isCorrect, button = null){
+  if(locked || !current || completed) return;
+  locked = true;
+
+  if(button){
+    const buttons = [...answersEl.querySelectorAll("button")];
+    buttons.forEach(b => b.disabled = true);
+
+    if(isCorrect){
+      button.classList.add("correct");
+    }else{
+      button.classList.add("wrong");
+      const correctButton = buttons.find(b =>
+        normalize(b.textContent) === normalize(getItem(current).it)
+      );
+      if(correctButton) correctButton.classList.add("correct");
+    }
+  }
+
+  if(isCorrect) handleCorrect();
+  else handleWrong();
+}
+
+function checkTyped(){
+  if(locked || !current) return;
+  const value = typedEl.value.trim();
+  if(!value) return;
+
+  checkAnswer(normalize(value) === normalize(getItem(current).it));
+}
+
+function handleCorrect(){
+  correctAnswers++;
+  globalStreak++;
+  current.streak++;
+
+  const answer = getItem(current).it;
+  speak(answer);
+
+  if(current.streak >= 3){
+    showFeedback("good", "¡DOMINADA! ✓", answer + " · Tres aciertos consecutivos.");
+    updateAll();
+    saveProgress();
+
+    timer = setTimeout(() => {
+      timer = null;
+      masterQuestion();
+    }, 700);
+    return;
+  }
+
+  showFeedback("good", "¡CORRECTO! ✓", "Racha " + current.streak + "/3 · " + answer);
+  previousId = current.id;
+
+  updateAll();
+  saveProgress();
+
+  timer = setTimeout(() => {
+    timer = null;
+    selectNext();
+    updateAll();
+    render();
+  }, 600);
+}
+
+function handleWrong(){
+  wrongAnswers++;
+  globalStreak = 0;
+
+  const failed = current;
+  failed.streak = 0;
+  forcedId = failed.id;
+
+  showFeedback(
+    "bad",
+    "VOLVEMOS A EMPEZAR",
+    "Respuesta correcta: " + getItem(failed).it +
+    ". La racha de esta pregunta vuelve a cero."
+  );
+
+  updateAll();
+  saveProgress();
+
+  timer = setTimeout(() => {
+    timer = null;
+    selectNext();
+    updateAll();
+    render();
+  }, 1000);
+}
+
+function masterQuestion(){
+  if(!current) return;
+
+  const finished = current;
+  const item = getItem(finished);
+
+  queue = queue.filter(q => q.id !== finished.id);
+
+  if(!masteredIds.includes(finished.id)){
+    masteredIds.push(finished.id);
+  }
+
+  current = null;
+  previousId = finished.id;
+
+  fillSlots();
+  checkStageCompletion();
+
+  if(queue.length === 0 && pending.length === 0){
+    if(activeStage < stages.length - 1){
+      advanceStageIfNeeded();
+    }
+  }
+
+  updateAll();
+  saveProgress();
+
+  if(masteredIds.length >= TOTAL){
+    finishGame();
+    return;
+  }
+
+  if(queue.length === 0){
+    advanceStageIfNeeded();
+  }
+
+  selectNext();
+  updateAll();
+  render();
+
+  if(masteredIds.length > 0 && masteredIds.length % 15 === 0){
+    showCelebration(
+      "¡EXCELENTE PROGRESO!",
+      "Has dominado " + masteredIds.length + " de " + TOTAL +
+      " elementos. Tu constancia da frutos.",
+      "🔥",
+      false
+    );
+  }
+}
+
+/* =========================================================
+   ESTADÍSTICAS Y VISTAS
+========================================================= */
+
+function updateStats(){
+  const mastered = masteredIds.length;
+  const remaining = TOTAL - mastered;
+  const attempts = correctAnswers + wrongAnswers;
+  const accuracy = attempts === 0 ? 100 : Math.round(correctAnswers / attempts * 100);
+  const percent = Math.round(mastered / TOTAL * 100);
+
+  $("mastered").textContent = mastered;
+  $("total").textContent = TOTAL;
+  $("remaining").textContent = remaining;
+  $("accuracy").textContent = accuracy + "%";
+  $("streak").textContent = globalStreak;
+  $("coverage").textContent = (activeStage + 1) + "/" + stages.length;
+  $("percent").textContent = percent + "%";
+  $("bar").style.width = percent + "%";
+
+  $("stageName").textContent = stages[activeStage].name;
+  $("stageDescription").textContent = stages[activeStage].description;
+
+  const stageTotal = database.filter(item => item.stage === activeStage).length;
+  const stageDone = database.filter(item =>
+    item.stage === activeStage && masteredIds.includes(item.id)
+  ).length;
+
+  $("stageCount").textContent = stageDone + " / " + stageTotal + " completadas";
+}
+
+function updateSlots(){
+  slotsEl.replaceChildren();
+
+  for(let slot = 1; slot <= 3; slot++){
+    const q = queue.find(item => item.slot === slot);
+    const div = document.createElement("div");
+    div.className = "slot";
+
+    if(current && current.slot === slot) div.classList.add("active");
+
+    const title = document.createElement("b");
+    title.textContent = "ITEM " + slot;
+
+    const detail = document.createElement("small");
+    detail.textContent = q ? q.streak + "/3 aciertos" : "Completado";
+
+    const mini = document.createElement("div");
+    mini.className = "mini";
+
+    const fill = document.createElement("div");
+    fill.style.width = q ? (q.streak / 3 * 100) + "%" : "100%";
+
+    mini.appendChild(fill);
+    div.append(title, detail, mini);
+    slotsEl.appendChild(div);
+  }
+}
+
+function updateAll(){
+  updateStats();
+  updateSlots();
+}
+
+/* =========================================================
+   AUDIO Y CELEBRACIÓN
+========================================================= */
+
+function speak(text){
+  if(!soundEnabled || !("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = "it-IT";
+  utterance.rate = 0.85;
+  window.speechSynthesis.speak(utterance);
+}
+
+function showFeedback(type, title, message){
+  feedbackEl.className = "feedback " + type;
+  feedbackEl.replaceChildren();
+
+  const strong = document.createElement("strong");
+  strong.textContent = title;
+
+  const span = document.createElement("span");
+  span.textContent = message;
+
+  feedbackEl.append(strong, span);
+}
+
+function showCelebration(title, message, emoji, final = false){
+  celebrationFinal = final;
+  $("celebrationTitle").textContent = title;
+  $("celebrationText").textContent = message;
+  $("emoji").textContent = emoji;
+  $("continue").textContent = final ? "VOLVER A EMPEZAR" : "CONTINUAR";
+  $("celebration").classList.add("show");
+}
+
+function finishGame(){
+  if(completed && $("celebration").classList.contains("show")) return;
+
+  completed = true;
+  current = null;
+  updateAll();
+  saveProgress();
+
+  showCelebration(
+    "¡CURSO COMPLETADO!",
+    "Has dominado con éxito todo el contenido: desde palabras clave y falsos amigos hasta complejas oraciones y locuciones italianas.",
+    "🏆",
+    true
+  );
+}
+
+/* =========================================================
+   EVENTOS
+========================================================= */
+
+$("check").addEventListener("click", checkTyped);
+
+typedEl.addEventListener("keydown", event => {
+  if(event.key === "Enter"){
+    event.preventDefault();
+    checkTyped();
+  }
+});
+
+typedEl.addEventListener("focus", () => {
+  setTimeout(() => {
+    typedEl.scrollIntoView({behavior: "smooth", block: "center"});
+  }, 250);
+});
+
+$("restart").addEventListener("click", () => {
+  const confirmed = confirm("¿Deseas reiniciar todo tu progreso y empezar desde cero?");
+  if(!confirmed) return;
+
+  if(timer !== null){
+    clearTimeout(timer);
+    timer = null;
+  }
+  if("speechSynthesis" in window) window.speechSynthesis.cancel();
+
+  clearSavedProgress();
+  $("celebration").classList.remove("show");
+  initializeFresh();
+});
+
+$("sound").addEventListener("click", () => {
+  soundEnabled = !soundEnabled;
+  $("sound").textContent = soundEnabled ? "🔊 Sonido ON" : "🔇 Sonido OFF";
+
+  if(!soundEnabled && "speechSynthesis" in window){
+    window.speechSynthesis.cancel();
+  }
+  saveProgress();
+});
+
+$("continue").addEventListener("click", () => {
+  $("celebration").classList.remove("show");
+
+  if(celebrationFinal){
+    const confirmed = confirm("¿Quieres empezar un nuevo ciclo? El progreso actual se restablecerá.");
+    if(confirmed){
+      if(timer !== null) clearTimeout(timer);
+      timer = null;
+      clearSavedProgress();
+      initializeFresh();
+    }
+    return;
+  }
+
+  saveProgress();
+  if(!current && queue.length){
+    selectNext();
+    render();
+  }
+});
+
+document.addEventListener("visibilitychange", () => {
+  if(document.visibilityState === "hidden") saveProgress();
+});
+window.addEventListener("pagehide", saveProgress);
+window.addEventListener("beforeunload", saveProgress);
+
+/* =========================================================
+   ARRANQUE
+========================================================= */
+
+restoreOrStart();
+</script>
+</body>
+</html>
