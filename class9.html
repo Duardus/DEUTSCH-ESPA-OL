@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#080d18">
-<title>ITALIANO MASTER — Vocabolario e Frasi</title>
+<title>ITALIANO MASTER — Sogno e Lavoro</title>
 <style>
 :root{
   --bg:#080d18;--panel:#111c2e;--panel2:#1a2b43;
@@ -77,7 +77,7 @@ h1{font-size:28px;margin:8px 0}
 .mode{color:var(--green);font-size:10px;letter-spacing:1px;font-weight:900}
 .counter{font-size:11px;color:var(--muted)}
 .prompt{
-  font-size:clamp(22px,5.8vw,32px);font-weight:850;text-align:center;
+  font-size:clamp(20px,5.2vw,30px);font-weight:850;text-align:center;
   line-height:1.25;overflow-wrap:anywhere;margin:27px 0 9px
 }
 .translation{text-align:center;color:var(--muted);font-size:13px;min-height:20px}
@@ -86,7 +86,7 @@ h1{font-size:28px;margin:8px 0}
 .answer{
   width:100%;min-height:53px;background:var(--panel2);
   border:1px solid var(--border);border-radius:13px;padding:12px;
-  color:var(--text);font-size:16px;font-weight:750;text-align:left;
+  color:var(--text);font-size:15px;font-weight:750;text-align:left;
   overflow-wrap:anywhere
 }
 .answer.correct{background:#104735;border-color:var(--green)}
@@ -96,7 +96,7 @@ h1{font-size:28px;margin:8px 0}
 .write input{
   width:100%;min-width:0;height:57px;padding:14px;
   background:#080f1c;border:2px solid var(--border);
-  border-radius:13px;color:white;font-size:19px;outline:none
+  border-radius:13px;color:white;font-size:17px;outline:none
 }
 .write input:focus{border-color:var(--green)}
 .check{
@@ -141,8 +141,8 @@ h1{font-size:28px;margin:8px 0}
 @media(max-width:380px){
   .app{padding-left:10px;padding-right:10px}
   .question{padding:18px 12px}
-  .prompt{font-size:23px;margin-top:22px}
-  .answer{font-size:14px}
+  .prompt{font-size:22px;margin-top:22px}
+  .answer{font-size:13px}
   .stat strong{font-size:19px}
 }
 @media(max-height:650px){
@@ -157,9 +157,9 @@ h1{font-size:28px;margin:8px 0}
 <body>
 <div class="app">
 <header>
-  <div class="logo">ITALIANO PROGRESSIVO</div>
+  <div class="logo">ITALIANO ENTRENAMIENTO</div>
   <h1>ITALIAN MASTER</h1>
-  <div class="subtitle">De palabras clave a locuciones y oraciones complejas</div>
+  <div class="subtitle">Del texto exacto: palabras, locuciones y oraciones</div>
 </header>
 
 <section class="stats">
@@ -168,11 +168,11 @@ h1{font-size:28px;margin:8px 0}
   <div class="stat"><strong id="remaining">0</strong><span>PENDIENTES</span></div>
   <div class="stat"><strong id="accuracy">100%</strong><span>PRECISIÓN</span></div>
   <div class="stat"><strong id="streak">0</strong><span>RACHA GLOBAL</span></div>
-  <div class="stat"><strong id="coverage">0/5</strong><span>BLOQUES</span></div>
+  <div class="stat"><strong id="coverage">0/3</strong><span>BLOQUES</span></div>
 </section>
 
 <div class="progress-info">
-  <span>DOMINIO GENERAL DEL IDIOMA</span>
+  <span>DOMINIO DEL TEXTO</span>
   <b id="percent">0%</b>
 </div>
 <div class="progress"><div class="bar" id="bar"></div></div>
@@ -232,109 +232,50 @@ h1{font-size:28px;margin:8px 0}
 "use strict";
 
 /* =========================================================
-   BASE DE DATOS PROGRESIVA: 
-   Estructurada en 5 bloques graduales (84 elementos):
-   - Bloque 1: Palabras esenciales y vocabulario base.
-   - Bloque 2: Falsos amigos y vocabulario de dificultad media.
-   - Bloque 3: Frases cortas y expresiones cotidianas.
-   - Bloque 4: Locuciones y modismos frecuentes.
-   - Bloque 5: Oraciones complejas y estructuras avanzadas.
+   BASE DE DATOS EXTRAÍDA ESTRICTAMENTE DEL TEXTO PROPORCIONADO:
+   Dividida en 3 bloques graduales (Palabras clave -> Expresiones/Locuciones -> Oraciones completas).
+   Sin inventar ningún contenido externo.
 ========================================================= */
 
 const database = [
-  // --- BLOQUE 1: PALABRAS ESENCIALES (stage: 0) ---
-  {id:"b1_1", stage:0, cat:"Vocabulario", es:"Hola / Adiós", it:"ciao"},
-  {id:"b1_2", stage:0, cat:"Vocabulario", es:"Por favor", it:"per favore"},
-  {id:"b1_3", stage:0, cat:"Vocabulario", es:"Gracias", it:"grazie"},
-  {id:"b1_4", stage:0, cat:"Vocabulario", es:"De nada", it:"prego"},
-  {id:"b1_5", stage:0, cat:"Vocabulario", es:"Buenos días", it:"buongiorno"},
-  {id:"b1_6", stage:0, cat:"Vocabulario", es:"Buenas tardes / noches", it:"buonasera"},
-  {id:"b1_7", stage:0, cat:"Vocabulario", es:"Sí", it:"sì"},
-  {id:"b1_8", stage:0, cat:"Vocabulario", es:"No", it:"no"},
-  {id:"b1_9", stage:0, cat:"Vocabulario", es:"Disculpa / Perdón", it:"scusa"},
-  {id:"b1_10", stage:0, cat:"Vocabulario", es:"Lo siento", it:"mi dispiace"},
-  {id:"b1_11", stage:0, cat:"Vocabulario", es:"Agua", it:"acqua"},
-  {id:"b1_12", stage:0, cat:"Vocabulario", es:"Café", it:"caffè"},
-  {id:"b1_13", stage:0, cat:"Vocabulario", es:"Casa", it:"casa"},
-  {id:"b1_14", stage:0, cat:"Vocabulario", es:"Amigo", it:"amico"},
-  {id:"b1_15", stage:0, cat:"Vocabulario", es:"Trabajo", it:"lavoro"},
-  {id:"b1_16", stage:0, cat:"Vocabulario", es:"Tiempo", it:"tempo"},
-  {id:"b1_17", stage:0, cat:"Vocabulario", es:"Dinero", it:"soldi"},
-  {id:"b1_18", stage:0, cat:"Vocabulario", es:"Comida", it:"cibo"},
+  // --- BLOQUE 1: PALABRAS Y TÉRMINOS CLAVE (stage: 0) ---
+  {id:"b1_1", stage:0, cat:"Palabras clave", es:"El trabajo", it:"il lavoro"},
+  {id:"b1_2", stage:0, cat:"Palabras clave", es:"Los sueños / De mis sueños", it:"dei miei sogni"},
+  {id:"b1_3", stage:0, cat:"Palabras clave", es:"Piloto acrobatico", it:"pilota acrobatico"},
+  {id:"b1_4", stage:0, cat:"Palabras clave", es:"Piloto de caza", it:"pilota da caccia"},
+  {id:"b1_5", stage:0, cat:"Palabras clave", es:"Un pájaro", it:"un uccello"},
+  {id:"b1_6", stage:0, cat:"Palabras clave", es:"Un niño", it:"un bambino"},
+  {id:"b1_7", stage:0, cat:"Palabras clave", es:"Un hobby", it:"un hobby"},
+  {id:"b1_8", stage:0, cat:"Palabras clave", es:"Entusiasmo inicial", it:"l'entusiasmo iniziale"},
+  {id:"b1_9", stage:0, cat:"Palabras clave", es:"Rutina", it:"routine"},
+  {id:"b1_10", stage:0, cat:"Palabras clave", es:"Mundo tech", it:"mondo tech"},
+  {id:"b1_11", stage:0, cat:"Palabras clave", es:"Tecnología", it:"tecnologia"},
+  {id:"b1_12", stage:0, cat:"Palabras clave", es:"Programación", it:"programmazione"},
+  {id:"b1_13", stage:0, cat:"Palabras clave", es:"Matemática", it:"matematica"},
+  {id:"b1_14", stage:0, cat:"Palabras clave", es:"Computadoras", it:"computer"},
+  {id:"b1_15", stage:0, cat:"Palabras clave", es:"Crear app", it:"creare app"},
+  {id:"b1_16", stage:0, cat:"Palabras clave", es:"Negocios online", it:"business online"},
+  {id:"b1_17", stage:0, cat:"Palabras clave", es:"Remoto", it:"da remoto"},
+  {id:"b1_18", stage:0, cat:"Palabras clave", es:"Cualquier parte del mundo", it:"qualsiasi parte del mondo"},
 
-  // --- BLOQUE 2: FALSOS AMIGOS Y TÉRMINOS COMPLEJOS (stage: 1) ---
-  {id:"b2_1", stage:1, cat:"Falsos Amigos", es:"En seguida / Inmediatamente (Subito)", it:"subito"},
-  {id:"b2_2", stage:1, cat:"Falsos Amigos", es:"Oficina (Ufficio)", it:"ufficio"},
-  {id:"b2_3", stage:1, cat:"Falsos Amigos", es:"Traducción / Borrador (Brutta copia)", it:"brutta copia"},
-  {id:"b2_4", stage:1, cat:"Falsos Amigos", es:"Pronto / A su debido tiempo (A suo tempo)", it:"a suo tempo"},
-  {id:"b2_5", stage:1, cat:"Falsos Amigos", es:"Burro (Mantequilla)", it:"burro"},
-  {id:"b2_6", stage:1, cat:"Falsos Amigos", es:"Cartera / Billetera (Portafoglio)", it:"portafoglio"},
-  {id:"b2_7", stage:1, cat:"Vocabulario Difícil", es:"Quizás / Tal vez", it:"forse"},
-  {id:"b2_8", stage:1, cat:"Vocabulario Difícil", es:"Sin embargo / No obstante", it:"tuttavia"},
-  {id:"b2_9", stage:1, cat:"Vocabulario Difícil", es:"Además", it:"inoltre"},
-  {id:"b2_10", stage:1, cat:"Vocabulario Difícil", es:"Incluso / Hasta", it:"anche"},
-  {id:"b2_11", stage:1, cat:"Vocabulario Difícil", es:"De todas formas / Igualmente", it:"comunque"},
-  {id:"b2_12", stage:1, cat:"Vocabulario Difícil", es:"Pronto / Dentro de poco", it:"presto"},
-  {id:"b2_13", stage:1, cat:"Vocabulario Difícil", es:"A menudo", it:"spesso"},
-  {id:"b2_14", stage:1, cat:"Vocabulario Difícil", es:"Rara vez", it:"raramente"},
-  {id:"b2_15", stage:1, cat:"Vocabulario Difícil", es:"En cualquier caso", it:"in ogni caso"},
-  {id:"b2_16", stage:1, cat:"Vocabulario Difícil", es:"A propósito", it:"a proposito"},
-  {id:"b2_17", stage:1, cat:"Vocabulario Difícil", es:"Al menos", it:"almeno"},
-  {id:"b2_18", stage:1, cat:"Vocabulario Difícil", es:"Casi", it:"quasi"},
+  // --- BLOQUE 2: LOCUCIONES Y FRASES INTERMEDIAS (stage: 1) ---
+  {id:"b2_1", stage:1, cat:"Locuciones y Frases", es:"El trabajo de mis sueños siempre ha sido...", it:"il lavoro dei miei sogni è sempre stato"},
+  {id:"b2_2", stage:1, cat:"Locuciones y Frases", es:"Siempre he querido volar como un pájaro", it:"ho sempre voluto volare come un uccello"},
+  {id:"b2_3", stage:1, cat:"Locuciones y Frases", es:"Pero ahora que ya no soy un niño", it:"ma ora che non sono più un bambino"},
+  {id:"b2_4", stage:1, cat:"Locuciones y Frases", es:"Siento que volar terminaría siendo solo un hobby", it:"sento che volare finirebbe per essere solo un hobby"},
+  {id:"b2_5", stage:1, cat:"Locuciones y Frases", es:"El entusiasmo inicial no duraría mucho", it:"l'entusiasmo iniziale non durerebbe a lungo"},
+  {id:"b2_6", stage:1, cat:"Locuciones y Frases", es:"Y al final se convertiría solo en rutina", it:"e alla fine diventerebbe solo routine"},
+  {id:"b2_7", stage:1, cat:"Locuciones y Frases", es:"Así que la carrera de mis sueños ahora es más en el mundo tech", it:"quindi la carriera dei miei sogni ora è più nel mondo tech"},
+  {id:"b2_8", stage:1, cat:"Locuciones y Frases", es:"Realmente amo la tecnología, la programación, la matemática y los ordenadores", it:"amo davvero la tecnologia, la programmazione, la matematica e i computer"},
+  {id:"b2_9", stage:1, cat:"Locuciones y Frases", es:"Por esto, hoy el trabajo de mis sueños es...", it:"per questo, oggi il lavoro dei miei sogni è"},
+  {id:"b2_10", stage:1, cat:"Locuciones y Frases", es:"Para poder trabajar de remoto", it:"così da poter lavorare da remoto"},
 
-  // --- BLOQUE 3: FRASES CORTAS Y EXPRESIONES (stage: 2) ---
-  {id:"b3_1", stage:2, cat:"Frases Útiles", es:"¿Cómo estás?", it:"come stai?"},
-  {id:"b3_2", stage:2, cat:"Frases Útiles", es:"Estoy muy bien, gracias.", it:"sto molto bene, grazie."},
-  {id:"b3_3", stage:2, cat:"Frases Útiles", es:"¿Qué hora es?", it:"che ore sono?"},
-  {id:"b3_4", stage:2, cat:"Frases Útiles", es:"No entiendo italiano.", it:"non capisco l'italiano."},
-  {id:"b3_5", stage:2, cat:"Frases Útiles", es:"¿Puedes hablar más lento?", it:"puoi parlare più lentamente?"},
-  {id:"b3_6", stage:2, cat:"Frases Útiles", es:"¿Cuánto cuesta esto?", it:"quanto costa questo?"},
-  {id:"b3_7", stage:2, cat:"Frases Útiles", es:"¿Dónde está el baño?", it:"dov'è il bagno?"},
-  {id:"b3_8", stage:2, cat:"Frases Útiles", es:"Tengo mucha hambre.", it:"ho molta fame."},
-  {id:"b3_9", stage:2, cat:"Frases Útiles", es:"Tengo sueño.", it:"ho sonno."},
-  {id:"b3_10", stage:2, cat:"Frases Útiles", es:"Tengo sed.", it:"ho sete."},
-  {id:"b3_11", stage:2, cat:"Frases Útiles", es:"No pasa nada / No te preocupes.", it:"non importa"},
-  {id:"b3_12", stage:2, cat:"Frases Útiles", es:"Nos vemos mañana.", it:"ci vediamo domani"},
-  {id:"b3_13", stage:2, cat:"Frases Útiles", es:"Buen provecho.", it:"buon appetito"},
-  {id:"b3_14", stage:2, cat:"Frases Útiles", es:"¡Qué tengas un buen día!", it:"buona giornata!"},
-  {id:"b3_15", stage:2, cat:"Frases Útiles", es:"Hasta luego.", it:"a presto"},
-  {id:"b3_16", stage:2, cat:"Frases Útiles", es:"Tengo prisa.", it:"ho fretta"},
-  {id:"b3_17", stage:2, cat:"Frases Útiles", es:"Es verdad.", it:"è vero"},
-  {id:"b3_18", stage:2, cat:"Frases Útiles", es:"No lo sé.", it:"non lo so"},
-
-  // --- BLOQUE 4: LOCUCIONES Y MODISMOS (stage: 3) ---
-  {id:"b4_1", stage:3, cat:"Locuciones", es:"En boca cerrada no entran moscas (literal: en boca cerrada no entran moscas)", it:"in bocca al lupo"},
-  {id:"b4_2", stage:3, cat:"Locuciones", es:"¡Que tengas mucha suerte! (Respuesta a in bocca al lupo)", it:"crepi il lupo"},
-  {id:"b4_3", stage:3, cat:"Locuciones", es:"Me importa un bledo / No me importa nada", it:"non me ne frega niente"},
-  {id:"b4_4", stage:3, cat:"Locuciones", es:"Costar un ojo de la cara", it:"costare un occhio della testa"},
-  {id:"b4_5", stage:3, cat:"Locuciones", es:"Perder la paciencia / Irse de los cabales", it:"perdere le staffe"},
-  {id:"b4_6", stage:3, cat:"Locuciones", es:"Tener los pies en la tierra", it:"avere i piedi per terra"},
-  {id:"b4_7", stage:3, cat:"Locuciones", es:"Hacer la vista gorda", it:"chiudere un occhio"},
-  {id:"b4_8", stage:3, cat:"Locuciones", es:"Estar en las nubes", it:"essere tra le nuvole"},
-  {id:"b4_9", stage:3, cat:"Locuciones", es:"Hablar claro sin rodeos", it:"parlare chiaro"},
-  {id:"b4_10", stage:3, cat:"Locuciones", es:"Meter la pata (cometer un error)", it:"fare una gaffe"},
-  {id:"b4_11", stage:3, cat:"Locuciones", es:"Tomar el pelo (burlarse)", it:"prendere in giro"},
-  {id:"b4_12", stage:3, cat:"Locuciones", es:"Estar hecho un lío", it:"essere in un pasticcio"},
-  {id:"b4_13", stage:3, cat:"Locuciones", es:"Poner la mano en el fuego", it:"mettere la mano nel fuoco"},
-  {id:"b4_14", stage:3, cat:"Locuciones", es:"Andar con pies de plomo", it:"procedere con i piedi di piombo"},
-  {id:"b4_15", stage:3, cat:"Locuciones", es:"A duras penas", it:"a stento"},
-  {id:"b4_16", stage:3, cat:"Locuciones", es:"De repente / Súbitamente", it:"all'improvviso"},
-  {id:"b4_17", stage:3, cat:"Locuciones", es:"Paso a paso", it:"passo dopo passo"},
-  {id:"b4_18", stage:3, cat:"Locuciones", es:"A lo largo y a lo ancho", it:"in lungo e in largo"},
-
-  // --- BLOQUE 5: ORACIONES COMPLEJAS Y AVANZADAS (stage: 4) ---
-  {id:"b5_1", stage:4, cat:"Oraciones Complejas", es:"Si tuviera más tiempo libre, viajaría por todo el mundo.", it:"se avessi più tempo libero, viaggierei in tutto il mondo."},
-  {id:"b5_2", stage:4, cat:"Oraciones Complejas", es:"Espero que hayas tenido un excelente viaje de negocios.", it:"spero che tu abbia fatto un eccellente viaggio di lavoro."},
-  {id:"b5_3", stage:4, cat:"Oraciones Complejas", es:"Aunque llueva mañana, saldremos a dar un largo paseo.", it:"anche se piove domani, usciremo a fare una lunga passeggiata."},
-  {id:"b5_4", stage:4, cat:"Oraciones Complejas", es:"No creo que ellos sepan la verdad sobre este asunto.", it:"non credo che loro sappiano la verità su questa questione."},
-  {id:"b5_5", stage:4, cat:"Oraciones Complejas", es:"Habría terminado el proyecto ayer si no hubiera tenido tantos problemas.", it:"avrei finito il progetto ieri se non avessi avuto così tanti problemi."},
-  {id:"b5_6", stage:4, cat:"Oraciones Complejas", es:"Dime con quién andas y te diré quién eres.", it:"dimmi con chi vai e ti dirò chi sei."},
-  {id:"b5_7", stage:4, cat:"Oraciones Complejas", es:"Más vale tarde que nunca.", it:"meglio tardi che mai"},
-  {id:"b5_8", stage:4, cat:"Oraciones Complejas", es:"Quien ríe último ríe mejor.", it:"chi ride ultimo ride meglio"},
-  {id:"b5_9", stage:4, cat:"Oraciones Complejas", es:"No todo lo que brilla es oro.", it:"non è oro tutto ciò che luccica"},
-  {id:"b5_10", stage:4, cat:"Oraciones Complejas", es:"El que busca encuentra.", it:"chi cerca trova"},
-  {id:"b5_11", stage:4, cat:"Oraciones Complejas", es:"Vale más un pájaro en mano que ciento volando.", it:"meglio un uovo oggi che una gallina domani"},
-  {id:"b5_12", stage:4, cat:"Oraciones Complejas", es:"Quien bien te quiere te hará llorar.", it:"chi ama ben punisce ben"}
+  // --- BLOQUE 3: ORACIONES COMPLETAS DEL TEXTO (stage: 2) ---
+  {id:"b3_1", stage:2, cat:"Oraciones Completas", es:"El trabajo de mis sueños es siempre sido convertirse en un piloto acrobatico o un piloto de caza.", it:"il lavoro dei miei sogni è sempre stato diventare un pilota acrobatico o un pilota da caccia."},
+  {id:"b3_2", stage:2, cat:"Oraciones Completas", es:"He siempre querido volar como un pájaro, pero ahora que no soy más un niño, siento que volar terminaría para ser solo un hobby.", it:"ho sempre voluto volare come un uccello, ma ora che non sono più un bambino, sento che volare finirebbe per essere solo un hobby."},
+  {id:"b3_3", stage:2, cat:"Oraciones Completas", es:"El entusiasmo inicial no duraría a largo y a la fin se convertiría solo rutina.", it:"l'entusiasmo iniziale non durerebbe a lungo e alla fine diventerebbe solo routine."},
+  {id:"b3_4", stage:2, cat:"Oraciones Completas", es:"Así que la carrera de mis sueños ahora es más en el mundo tech. Amo verdaderamente la tecnología, la programación, la matemática y los computer.", it:"quindi la carrera dei miei sogni ora è più nel mondo tech. Amo davvero la tecnologia, la programmazione, la matematica e i computer."},
+  {id:"b3_5", stage:2, cat:"Oraciones Completas", es:"Por esto, hoy el trabajo de mis sueños es crear app o business online, así de poder trabajar de remoto de cualquier parte del mundo.", it:"per questo, oggi il lavoro dei miei sogni è creare app o business online, così da poter lavorare da remoto da qualsiasi parte del mondo."}
 ];
 
 /* =========================================================
@@ -343,24 +284,16 @@ const database = [
 
 const stages = [
   {
-    name:"BLOQUE 1 · PALABRAS BÁSICAS",
-    description:"Términos fundamentales y saludos esenciales para romper el hielo en italiano."
+    name:"BLOQUE 1 · PALABRAS CLAVE",
+    description:"Términos individuales extraídos directamente del texto de referencia."
   },
   {
-    name:"BLOQUE 2 · FALSOS AMIGOS Y NIVEL MEDIO",
-    description:"Palabras que se prestan a confusión y conectores avanzados para ganar fluidez."
+    name:"BLOQUE 2 · LOCUCIONES Y EXPRESIONES",
+    description:"Segmentos y frases intermedias estructuradas a partir del mismo texto."
   },
   {
-    name:"BLOQUE 3 · FRASES COTIDIANAS",
-    description:"Oraciones cortas e indispensables para desenvolverse en situaciones diarias."
-  },
-  {
-    name:"BLOQUE 4 · LOCUCIONES Y MODISMOS",
-    description:"Expresiones idiomáticas y giros populares que usan los nativos."
-  },
-  {
-    name:"BLOQUE 5 · ORACIONES COMPLEJAS Y PROVERBIOS",
-    description:"Estructuras gramaticales avanzadas, subjuntivo y sabiduría popular italiana."
+    name:"BLOQUE 3 · ORACIONES COMPLETAS",
+    description:"Párrafos y oraciones íntegras del texto para un dominio total."
   }
 ];
 
@@ -371,7 +304,7 @@ const bankById = new Map(database.map(item => [item.id, item]));
    ESTADO Y PERSISTENCIA
 ========================================================= */
 
-const STORAGE_KEY = "italian_master_progress_v5";
+const STORAGE_KEY = "italian_master_text_v1";
 
 let pending = [];
 let queue = [];
@@ -389,7 +322,6 @@ let completed = false;
 let timer = null;
 let celebrationFinal = false;
 let activeStage = 0;
-let masteredCategories = [];
 
 const $ = id => document.getElementById(id);
 const promptEl = $("prompt");
@@ -425,7 +357,7 @@ function getItem(q){
 
 function saveProgress(){
   const data = {
-    version: 5,
+    version: 1,
     pending,
     queue,
     current: current ? {...current} : null,
@@ -436,7 +368,6 @@ function saveProgress(){
     wrongAnswers,
     globalStreak,
     activeStage,
-    masteredCategories,
     soundEnabled,
     completed
   };
@@ -456,7 +387,7 @@ function loadProgress(){
     if(!raw) return false;
 
     const data = JSON.parse(raw);
-    if(!data || data.version !== 5) return false;
+    if(!data || data.version !== 1) return false;
 
     const validIds = new Set(database.map(item => item.id));
 
@@ -479,7 +410,6 @@ function loadProgress(){
     wrongAnswers = Math.max(0, Number(data.wrongAnswers) || 0);
     globalStreak = Math.max(0, Number(data.globalStreak) || 0);
     activeStage = Math.min(stages.length - 1, Math.max(0, Number(data.activeStage) || 0));
-    masteredCategories = Array.isArray(data.masteredCategories) ? data.masteredCategories : [];
     soundEnabled = data.soundEnabled !== false;
     completed = data.completed === true;
 
@@ -512,7 +442,6 @@ function initializeFresh(){
   wrongAnswers = 0;
   globalStreak = 0;
   activeStage = 0;
-  masteredCategories = [];
   completed = false;
   locked = false;
 
@@ -653,8 +582,8 @@ function render(){
     : "ALTERNATIVAS · INTENTO " + (current.streak + 1);
 
   $("instruction").textContent = isWriting
-    ? "Escribe la frase o palabra en italiano exacta."
-    : "Traduce al italiano seleccionando la opción correcta.";
+    ? "Escribe la traducción exacta en italiano basada estrictamente en el texto."
+    : "Traduce al italiano seleccionando la opción correcta del texto.";
 
   answersEl.replaceChildren();
   answersEl.style.display = isWriting ? "none" : "grid";
@@ -672,8 +601,8 @@ function render(){
     "neutral",
     "RACHA " + current.streak + "/3",
     isWriting
-      ? "Recuerda la estructura y escribe la frase completa en italiano."
-      : "Necesitas tres respuestas correctas consecutivas para dominar este ejercicio."
+      ? "Escribe exactamente la frase o palabra en italiano."
+      : "Necesitas tres respuestas correctas consecutivas para dominar este elemento."
   );
 
   updateSlots();
@@ -748,7 +677,7 @@ function handleCorrect(){
   speak(answer);
 
   if(current.streak >= 3){
-    showFeedback("good", "¡DOMINADA! ✓", answer + " · Tres aciertos consecutivos.");
+    showFeedback("good", "¡DOMINADO! ✓", answer + " · Tres aciertos consecutivos.");
     updateAll();
     saveProgress();
 
@@ -839,11 +768,11 @@ function masterQuestion(){
   updateAll();
   render();
 
-  if(masteredIds.length > 0 && masteredIds.length % 15 === 0){
+  if(masteredIds.length > 0 && masteredIds.length % 10 === 0){
     showCelebration(
       "¡EXCELENTE PROGRESO!",
       "Has dominado " + masteredIds.length + " de " + TOTAL +
-      " elementos. Tu constancia da frutos.",
+      " elementos del texto. ¡Sigue así!",
       "🔥",
       false
     );
@@ -958,8 +887,8 @@ function finishGame(){
   saveProgress();
 
   showCelebration(
-    "¡CURSO COMPLETADO!",
-    "Has dominado con éxito todo el contenido: desde palabras clave y falsos amigos hasta complejas oraciones y locuciones italianas.",
+    "¡TEXTO COMPLETADO!",
+    "Has dominado estrictamente todo el material de estudio basado en el texto: palabras clave, locuciones y oraciones completas en italiano.",
     "🏆",
     true
   );
@@ -985,7 +914,7 @@ typedEl.addEventListener("focus", () => {
 });
 
 $("restart").addEventListener("click", () => {
-  const confirmed = confirm("¿Deseas reiniciar todo tu progreso y empezar desde cero?");
+  const confirmed = confirm("¿Deseas reiniciar tu progreso y empezar desde cero?");
   if(!confirmed) return;
 
   if(timer !== null){
@@ -1013,7 +942,7 @@ $("continue").addEventListener("click", () => {
   $("celebration").classList.remove("show");
 
   if(celebrationFinal){
-    const confirmed = confirm("¿Quieres empezar un nuevo ciclo? El progreso actual se restablecerá.");
+    const confirmed = confirm("¿Quieres reiniciar el ciclo de estudio?");
     if(confirmed){
       if(timer !== null) clearTimeout(timer);
       timer = null;
